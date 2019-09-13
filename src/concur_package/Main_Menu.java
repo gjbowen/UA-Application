@@ -71,7 +71,6 @@ public class Main_Menu
 	}
 	private void initialize()
 	{
-		fun.validateFupload("concur_sae_pCard_EXAMPLE.processed");
 		frameMenu = new JFrame();
 		frameMenu.setIconImage(Toolkit.getDefaultToolkit().getImage(Main_Menu.class.getResource("/Jar Files/ua_background_mobile.jpg")));
 		frameMenu.setTitle("Main Menu ("+fun.environment+") - Welcome, " + fun.firstName);
@@ -172,7 +171,7 @@ public class Main_Menu
 		}));
 		panel.add(btnFeed);
 		panel.add(btnMoveToProd);
-		
+
 		JButton btnApi = new JButton("API");
 		btnApi.addActionListener(arg0 -> EventQueue.invokeLater(() -> {
 			try {
@@ -184,14 +183,19 @@ public class Main_Menu
 			}
 		}));
 		panel.add(btnApi);
-/*
-*
-    public Main_Menu(Connection connection, SftpClient conn_sftp, String user, String pass, String mode){
-		fun = new concur_package.Function_Library(connection,conn_sftp,user,pass,mode);
-		getFiles();
-		initialize();
-	}
-* */
+
+		JButton btnFupload = new JButton("FUPLOAD");
+		btnFupload.addActionListener(arg0 -> EventQueue.invokeLater(() -> {
+			try {
+				Fupload_Menu window = new Fupload_Menu(fun);
+				window.frame.setVisible(true);
+				//frameMenu.dispose();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}));
+		panel.add(btnFupload);
+
 		JButton btnClose = new JButton("Close");
 		btnClose.addActionListener(arg0 -> {
 			EventQueue.invokeLater(() -> {

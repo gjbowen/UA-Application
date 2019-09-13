@@ -1,5 +1,6 @@
 package concur_package;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -295,5 +296,25 @@ class SFTP_Connection extends public_package.SFTP_Connection{
 			e2.printStackTrace();
 		}
 		System.out.println("Done getting files in " + environment + ".");
+	}
+
+	public void downloadFile(String fileName,String location) {
+		try{
+			connection.cd(location);
+			String localPath = System.getProperty("user.home") + dirDelim+"Concur_Files"+dirDelim + "misc" + dirDelim;
+			connection.lcd(localPath);
+			connection.get(fileName);
+
+		} catch (SshException e) {
+			e.printStackTrace();
+		} catch (SftpStatusException e) {
+			e.printStackTrace();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (TransferCancelledException e) {
+			e.printStackTrace();
+		}
+
+
 	}
 }

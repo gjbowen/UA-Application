@@ -10,19 +10,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a9a87d5d-51ac-4abc-a9bd-83782288ae98" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/ar_package/SFTP_Connection.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/concur_package/Fupload_Menu.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ar_package/Function_Library.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ar_package/Function_Library.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ar_package/Main_Menu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ar_package/Main_Menu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/concur_package/Function_Library.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/concur_package/Function_Library.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Driver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Driver.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/concur_package/Main_Menu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/concur_package/Main_Menu.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/concur_package/SFTP_Connection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/concur_package/SFTP_Connection.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/public_package/Encryption.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/public_package/Encryption.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/public_package/JDBC_Connection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/public_package/JDBC_Connection.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/public_package/Master_Menu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/public_package/Master_Menu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/public_package/Preferences.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/public_package/Preferences.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/public_package/SFTP_Connection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/public_package/SFTP_Connection.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/public_package/Login.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/public_package/Login.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -47,30 +42,6 @@
   <component name="DefaultGradleProjectSettings">
     <option name="isMigrated" value="true" />
   </component>
-  <component name="FindInProjectRecents">
-    <findStrings>
-      <find>frameMainMenu.setBounds</find>
-      <find>frameMainMenu</find>
-      <find>GITprogramExists</find>
-      <find>button_exit</find>
-      <find>generateKeys</find>
-      <find>sshMenu</find>
-      <find>setSelected</find>
-      <find>setEnabled</find>
-      <find>textField_switch</find>
-      <find>getRecentBranches</find>
-      <find>System.out</find>
-      <find>select</find>
-      <find>ttvdcat_code</find>
-      <find>108</find>
-      <find>359</find>
-      <find>&quot;Search</find>
-      <find>moveSAE</find>
-      <find>urlSuffix</find>
-      <find>setAccessToken</find>
-      <find>responseCode</find>
-    </findStrings>
-  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
@@ -79,12 +50,6 @@
     <setting file="file://$PROJECT_DIR$/src/concur_package/SFTP_Connection.java" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/src/git_package/Function_Library.java" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/src/git_package/SSH_Menu.java" root0="SKIP_INSPECTION" />
-  </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="95" />
-    <option name="y" value="-8" />
-    <option name="width" value="1440" />
-    <option name="height" value="780" />
   </component>
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
@@ -112,8 +77,8 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyClassDialog.RECENTS_KEY">
-      <recent name="ar_package" />
       <recent name="concur_package" />
+      <recent name="ar_package" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -228,7 +193,14 @@
       <option name="project" value="LOCAL" />
       <updated>1567712550041</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="cleaned.">
+      <created>1568399339016</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1568399339016</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TodoView">
@@ -290,7 +262,7 @@
           <line>349</line>
           <option name="timeStamp" value="3" />
         </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
+        <line-breakpoint type="java-line">
           <url>file://$PROJECT_DIR$/src/public_package/Preferences.java</url>
           <line>74</line>
           <option name="timeStamp" value="4" />
@@ -316,14 +288,24 @@
           <option name="timeStamp" value="14" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/concur_package/Main_Menu.java</url>
-          <line>195</line>
-          <option name="timeStamp" value="17" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/concur_package/Function_Library.java</url>
           <line>39</line>
           <option name="timeStamp" value="18" />
+        </line-breakpoint>
+        <line-breakpoint type="java-line">
+          <url>file://$PROJECT_DIR$/src/public_package/Preferences.java</url>
+          <line>18</line>
+          <option name="timeStamp" value="19" />
+        </line-breakpoint>
+        <line-breakpoint type="java-line">
+          <url>file://$PROJECT_DIR$/src/public_package/Preferences.java</url>
+          <line>95</line>
+          <option name="timeStamp" value="20" />
+        </line-breakpoint>
+        <line-breakpoint type="java-line">
+          <url>file://$PROJECT_DIR$/src/concur_package/Main_Menu.java</url>
+          <line>72</line>
+          <option name="timeStamp" value="22" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-method">
           <url>file://$PROJECT_DIR$/src/ar_package/Function_Library.java</url>
@@ -364,6 +346,14 @@
             <option name="EMULATED" value="true" />
           </properties>
           <option name="timeStamp" value="12" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/src/public_package/JDBC_Connection.java</url>
+          <line>596</line>
+          <properties class="public_package.JDBC_Connection" method="jdbcConnect">
+            <option name="EMULATED" value="true" />
+          </properties>
+          <option name="timeStamp" value="21" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

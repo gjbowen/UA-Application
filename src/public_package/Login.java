@@ -48,7 +48,6 @@ public class Login
 			//holds off until both are done...
 		}
 
-
 		if(jdbc.connected()) {
 			frameLogin.dispose(); // hide login menu
 			//use for passing in parameters via shortcuts in Windows
@@ -184,8 +183,7 @@ public class Login
 				rdbtnTEST.setSelected(false);
 			}
 		});
-
-
+		
 		if (Encryption.readFile() != null){
 			Map<String, String> map = Encryption.readFile();
 			userField.setText(map.get("alpha"));

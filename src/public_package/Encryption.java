@@ -14,18 +14,13 @@ import java.util.Map;
 class Encryption {
 	protected static String fileName;
 	protected static void setFileName() {
-		if(System.getProperty("os.name").toLowerCase().contains("windows")) 
-			fileName = "H:\\.project2";
-		else 
-			fileName = System.getProperty("user.home")+"/.ssh/.project2";
+		fileName = System.getProperty("user.home")+"/.ssh/.project2";
 	}
 	protected boolean fileExists() {
 		setFileName();
 		File f=new File(fileName);
-		if(f.exists()) {
-			System.out.println("YAY IT EXISTS!");
+		if(f.exists())
 			return true;
-		}
 		else {
 			System.out.println("BOOOOO");
 			return false;

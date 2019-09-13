@@ -165,7 +165,7 @@ public class JDBC_Connection {
 	}
 
 	public String getCWIDFromName(String name) {
-		if(name==null || name.equals("TOO_MANY_RETURNED")|| name.equals("NONE_RETURNED")) 
+		if(name==null || name.equals("TOO_MANY_RETURNED")|| name.equals("NONE_RETURNED"))
 			return name;
 
 		String first = "";
@@ -175,17 +175,17 @@ public class JDBC_Connection {
 			first = name.substring(name.indexOf(", ") + 2, name.lastIndexOf(" "));
 			middle = name.substring(name.lastIndexOf(" ") + 1);
 			last = name.substring(0, name.indexOf(","));
-		} 
+		}
 		else if (name.contains(",") && name.split(" ").length == 2) {// Last, First (Smith, John)
 			first = name.substring(name.indexOf(", ") + 2);
 			middle = null;
 			last = name.substring(0, name.indexOf(","));
-		} 
+		}
 		else if (!name.contains(",") && name.split(" ").length == 3) {// First MI Last (John T Smith)
 			first = name.substring(0, name.indexOf(" "));
 			middle = name.substring(name.indexOf(" ") + 1, name.lastIndexOf(" "));
 			last = name.substring(name.lastIndexOf(" ") + 1);
-		} 
+		}
 		else if (!name.contains(",") && name.split(" ").length == 2) {// First Last (John Smith)
 			first = name.substring(0, name.indexOf(" "));
 			middle = null;
@@ -200,16 +200,16 @@ public class JDBC_Connection {
 			if(middle == null) {
 				query =   "select spriden_id "
 						+ "from saturn.spriden "
-						+ "where upper(spriden_last_name) = upper('" + last + "') " 
-						+ "and upper(spriden_first_name) like upper('" + first + "%') " 
+						+ "where upper(spriden_last_name) = upper('" + last + "') "
+						+ "and upper(spriden_first_name) like upper('" + first + "%') "
 						+ "and spriden_change_ind is null";
 
 			}
 			else {
 				query =  "select spriden_id "
 						+ "from saturn.spriden "
-						+ "where upper(spriden_last_name) = upper('" + last + "') " 
-						+ "and upper(spriden_first_name) like upper('" + first + "%') " 
+						+ "where upper(spriden_last_name) = upper('" + last + "') "
+						+ "and upper(spriden_first_name) like upper('" + first + "%') "
 						+ "and upper(spriden_mi) like upper('" + middle + "%') "
 						+ "and spriden_change_ind is null";
 			}
@@ -234,7 +234,7 @@ public class JDBC_Connection {
 		return null;
 	}
 	public String getPIDMFromCWID(String cwid) {
-		if(cwid==null || cwid.equals("TOO_MANY_RETURNED")|| cwid.equals("NONE_RETURNED")) 
+		if(cwid==null || cwid.equals("TOO_MANY_RETURNED")|| cwid.equals("NONE_RETURNED"))
 			return cwid;
 
 		String pidm = null;
@@ -245,7 +245,7 @@ public class JDBC_Connection {
 			ResultSet rs = stmt.executeQuery(
 					"select spriden_pidm "
 							+ "from saturn.spriden "
-							+ "where spriden_id = '" + cwid.trim() + "' " 
+							+ "where spriden_id = '" + cwid.trim() + "' "
 							+ "and spriden_change_ind is null");
 
 
@@ -268,7 +268,7 @@ public class JDBC_Connection {
 		return null;
 	}
 	private String getPIDMFromMyBama(String myBama) {
-		if(myBama==null || myBama.equals("TOO_MANY_RETURNED")|| myBama.equals("NONE_RETURNED")) 
+		if(myBama==null || myBama.equals("TOO_MANY_RETURNED")|| myBama.equals("NONE_RETURNED"))
 			return myBama;
 
 		String pidm = null;
@@ -277,7 +277,7 @@ public class JDBC_Connection {
 			stmt = connection.createStatement();
 
 			ResultSet rs = stmt.executeQuery(
-					"select GOBTPAC_pidm from GENERAL.GOBTPAC " + 
+					"select GOBTPAC_pidm from GENERAL.GOBTPAC " +
 							"where upper(GOBTPAC_EXTERNAL_USER) = upper('"+myBama+"')");
 
 
@@ -309,9 +309,9 @@ public class JDBC_Connection {
 			stmt = connection.createStatement();
 
 			ResultSet rs = stmt.executeQuery(
-					"select distinct GOREMAL_PIDM from goremal " + 
-							"where upper(goremal_email_address) = upper('"+email+"') " + 
-							"and GOREMAL_PREFERRED_IND = 'Y' " + 
+					"select distinct GOREMAL_PIDM from goremal " +
+							"where upper(goremal_email_address) = upper('"+email+"') " +
+							"and GOREMAL_PREFERRED_IND = 'Y' " +
 					"and GOREMAL_STATUS_IND = 'A'");
 
 
@@ -345,7 +345,7 @@ public class JDBC_Connection {
 			ResultSet rs = stmt.executeQuery(
 					"select spriden_id "
 							+ "from saturn.spriden "
-							+ "where spriden_pidm = " + pidm + " " 
+							+ "where spriden_pidm = " + pidm + " "
 							+ "and spriden_change_ind is null");
 
 
@@ -379,7 +379,7 @@ public class JDBC_Connection {
 			ResultSet rs = stmt.executeQuery(
 					"select spriden_first_name || ' ' || spriden_last_name "
 							+ "from saturn.spriden "
-							+ "where spriden_pidm = '" + pidm + "' " 
+							+ "where spriden_pidm = '" + pidm + "' "
 							+ "and spriden_change_ind is null");
 
 
@@ -413,7 +413,7 @@ public class JDBC_Connection {
 			rs = stmt.executeQuery(
 					"select spriden_first_name || ' ' || spriden_last_name "
 							+ "from saturn.spriden "
-							+ "where spriden_id = '" + cwid + "' " 
+							+ "where spriden_id = '" + cwid + "' "
 							+ "and spriden_change_ind is null");
 
 
@@ -436,7 +436,7 @@ public class JDBC_Connection {
 		return null;
 	}
 	private String getEmailFromPIDM(String pidm) {
-		if(pidm==null || pidm.equals("TOO_MANY_RETURNED")|| pidm.equals("NONE_RETURNED")) 
+		if(pidm==null || pidm.equals("TOO_MANY_RETURNED")|| pidm.equals("NONE_RETURNED"))
 			return pidm;
 
 		String email = null;
@@ -445,8 +445,8 @@ public class JDBC_Connection {
 			stmt = connection.createStatement();
 
 			ResultSet rs = stmt.executeQuery(
-					"select distinct GOREMAL_EMAIL_ADDRESS from goremal " + 
-							"where goremal_preferred_ind = 'Y' " + 
+					"select distinct GOREMAL_EMAIL_ADDRESS from goremal " +
+							"where goremal_preferred_ind = 'Y' " +
 							"and GOREMAL_STATUS_IND = 'A' " +
 							"and goremal_pidm = " + pidm );
 
@@ -469,7 +469,7 @@ public class JDBC_Connection {
 		return null;
 	}
 	private String getMyBamaFromPIDM(String pidm) {
-		if(pidm==null || pidm.equals("TOO_MANY_RETURNED")|| pidm.equals("NONE_RETURNED")) 
+		if(pidm==null || pidm.equals("TOO_MANY_RETURNED")|| pidm.equals("NONE_RETURNED"))
 			return pidm;
 
 		String email = null;
@@ -478,7 +478,7 @@ public class JDBC_Connection {
 			stmt = connection.createStatement();
 
 			ResultSet rs = stmt.executeQuery(
-					"select GOBTPAC_EXTERNAL_USER from GENERAL.GOBTPAC " + 
+					"select GOBTPAC_EXTERNAL_USER from GENERAL.GOBTPAC " +
 							"where gobtpac_pidm = " + pidm );
 
 			int count = 0;
@@ -601,7 +601,6 @@ public class JDBC_Connection {
 		}
 		catch (ClassNotFoundException e2) {
 			System.out.println("Failed to register ODBC Driver");
-			e2.printStackTrace();
 		}
 		System.out.println("Connecting to database...");
 		try {
@@ -610,8 +609,7 @@ public class JDBC_Connection {
 			System.out.println("Successfully connected to " + getDBHost(environment));
 		}
 		catch (SQLException e3) {
-			System.out.println("Failed to open connection to DB");
-			e3.printStackTrace();
+			System.err.println("Failed connection to DB - "+e3.getMessage());
 		}
 	}
 	private void setUsersFirstName() {
