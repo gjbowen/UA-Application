@@ -1,0 +1,12 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Application:jar">
+    <output-path>$USER_HOME$/Desktop</output-path>
+    <root id="archive" name="Application.jar">
+      <element id="module-output" name="Application" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/jars/java-json.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/jars/icon.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/jars/ojdbc7.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/jars/j2ssh-maverick-1.5.5.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
