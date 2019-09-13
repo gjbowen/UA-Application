@@ -48,7 +48,7 @@ class API_Package {
 		else
 			url="https://implementation.concursolutions.com";
 
-		setEnvironment();
+		setCredentials();
 
 		setAccessToken();
 
@@ -107,7 +107,7 @@ class API_Package {
 		}
 		return retStr.toString();
 	}
-	private void setEnvironment() {
+	private void setCredentials() {
 		if(functions.environment.equals("PROD"))
 			tokenParameters =
 					functions.getContents("S:\\EDAS\\Aux Serv\\Banner Finance\\Concur Project\\" +
