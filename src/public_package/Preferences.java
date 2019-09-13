@@ -35,7 +35,7 @@ public class Preferences {
 			br.close();
 		}
 		catch (IOException e) {
-			e.printStackTrace();
+			System.err.println("Cannot read "+getFileName());
 		}
 		return cons;
 	}
@@ -43,10 +43,7 @@ public class Preferences {
         return System.getProperty("os.name").toLowerCase().contains("windows");
 		}
 	static String getFileName() {
-		if(isWindows()) 
-			return "H:\\.preferences";
-		else 
-			return System.getProperty("user.home")+"/.preferences";
+		return System.getProperty("user.home")+"/.preferences";
 	}
 	static void writeFile(Map<String,String> m)  {
 		deleteFile();
@@ -66,7 +63,7 @@ public class Preferences {
 			hide(getFileName());
 		}
 		catch (IOException e2) {
-			e2.printStackTrace();
+			System.err.println("Cannot write to "+getFileName());
 		}
 	}
 	public static void addPreference(String key,String value) {
@@ -92,7 +89,7 @@ public class Preferences {
 			br.close();
 		}
 		catch (IOException e) {
-			e.printStackTrace();
+			System.err.println("Cannot read "+getFileName());
 		}
 	}
 	static void deleteFile(){

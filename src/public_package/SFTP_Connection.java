@@ -27,7 +27,9 @@ public class SFTP_Connection {
 	protected SftpClient connection;
 	protected String dirDelim;
 
-
+	public SftpClient getConnection(){
+		return connection;
+	}
 	protected SFTP_Connection(String env, String user, String pass) {
 		environment = env;
 		username = user;
@@ -193,8 +195,7 @@ public class SFTP_Connection {
 					System.err.println("File failed to transfer");
 				}
 			}else {
-				th.printStackTrace();
-				System.out.println("FAIL");
+				System.err.println(th.getMessage());
 			}
 		}
 	}

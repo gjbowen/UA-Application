@@ -268,7 +268,13 @@ public class Main_Menu
 		btnClose.addActionListener(arg0 -> {
 			frameMenu.dispose();
 			EventQueue.invokeLater(() -> {
-				new public_package.Login(null);
+				new public_package.Master_Menu(
+						fun.jdbc.connection,//jdbc.connection,
+						fun.firstName,//jdbc.userFirstName,
+						fun.userName,
+						fun.password,
+						fun.sftp.getConnection(),
+						fun.environment);
 			});
 		});
 		btnClose.setFont(new Font("Dialog", Font.PLAIN, 15));

@@ -30,6 +30,7 @@ class Function_Library {
 	protected String environment;
 	protected String userName;
 	protected String firstName;
+	protected String password;
 
 	Function_Library(
 			Connection conn_jdbc,
@@ -43,6 +44,7 @@ class Function_Library {
 		firstName = jdbc.getUserFirstName(user);
 		environment = mode;
 		userName = user;
+		password = pass;
 		rs = null;
 	}
 

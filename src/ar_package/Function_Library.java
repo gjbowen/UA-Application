@@ -16,13 +16,17 @@ class Function_Library {
 	protected String environment;
 	protected String firstName;
 	protected JDBC_Connection jdbc;
+	protected SFTP_Connection sftp;
 	String userName;
+	protected String password;
 	Function_Library(Connection conn_jdbc,SftpClient conn_sftp,String user,String pass,String mode) {
 		jdbc=new JDBC_Connection(conn_jdbc,mode,user,pass);
+		sftp=new SFTP_Connection(conn_sftp,mode,user,pass);
 
 		firstName=jdbc.getUserFirstName(user);
 		environment = mode;
 		userName=user;
+		password = pass;
 	}
 
  	protected String getYear() {

@@ -16,6 +16,7 @@ import javax.swing.JProgressBar;
 import javax.swing.SwingWorker;
 
 import com.sshtools.sftp.SftpClient;
+import public_package.JDBC_Connection;
 
 
 public class Main_Menu
@@ -183,11 +184,24 @@ public class Main_Menu
 			}
 		}));
 		panel.add(btnApi);
-
+/*
+*
+    public Main_Menu(Connection connection, SftpClient conn_sftp, String user, String pass, String mode){
+		fun = new concur_package.Function_Library(connection,conn_sftp,user,pass,mode);
+		getFiles();
+		initialize();
+	}
+* */
 		JButton btnClose = new JButton("Close");
 		btnClose.addActionListener(arg0 -> {
 			EventQueue.invokeLater(() -> {
-				new public_package.Login(null);
+				new public_package.Master_Menu(
+						fun.jdbc.connection,//jdbc.connection,
+						fun.firstName,//jdbc.userFirstName,
+						fun.userName,
+						fun.password,
+						fun.sftp.getConnection(),
+						fun.environment);
 			});
 			frameMenu.dispose();
 		});

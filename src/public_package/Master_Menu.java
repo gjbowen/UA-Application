@@ -35,7 +35,7 @@ public class Master_Menu
 	JMenuItem m1,m2,m4,env_SEVL,env_TEST,env_PROD;
     JButton arProgram,btnConcur,btnGitProgram,btnFileFetchProgram;
 
-	Master_Menu(Connection conn_jdbc, String first, String user, String pass, SftpClient conn_sftp, String env){
+	public Master_Menu(Connection conn_jdbc, String first, String user, String pass, SftpClient conn_sftp, String env){
 		jdbc=conn_jdbc;
 		userName=user;
 		password=pass;

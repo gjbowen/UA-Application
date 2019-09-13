@@ -13,7 +13,7 @@ public class JDBC_Connection {
 	public Connection connection;
 	protected String environment;
 	private String username;
-	protected String password;
+	static public String password;
 	protected String userFirstName;
 
 	protected JDBC_Connection(String env, String user, String pass) {
