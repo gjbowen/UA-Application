@@ -10,14 +10,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a9a87d5d-51ac-4abc-a9bd-83782288ae98" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/concur_package/Fupload_Menu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Driver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Driver.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/concur_package/Main_Menu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/concur_package/Main_Menu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/concur_package/Fupload_Menu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/concur_package/Fupload_Menu.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/concur_package/SFTP_Connection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/concur_package/SFTP_Connection.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/public_package/Encryption.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/public_package/Encryption.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/public_package/JDBC_Connection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/public_package/JDBC_Connection.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/public_package/Login.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/public_package/Login.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -42,17 +38,125 @@
   <component name="DefaultGradleProjectSettings">
     <option name="isMigrated" value="true" />
   </component>
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/concur_package/Fupload_Menu.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="3024">
+              <caret line="114" selection-start-line="114" selection-end-line="114" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/concur_package/SFTP_Connection.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="304">
+              <caret line="305" selection-start-line="305" selection-end-line="305" />
+              <folding>
+                <element signature="method#getCurrentDownloaded#0;class#SFTP_Connection#0" />
+                <element signature="e#4532#4533#0" expanded="true" />
+                <element signature="e#4584#4585#0" expanded="true" />
+                <element signature="method#syncFiles#0;class#SFTP_Connection#0" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/public_package/SFTP_Connection.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="324">
+              <caret line="32" column="15" selection-start-line="32" selection-start-column="15" selection-end-line="32" selection-end-column="15" />
+              <folding>
+                <element signature="method#setDirDelim#0;class#SFTP_Connection#0" />
+                <element signature="method#sftpConnect#0;class#SFTP_Connection#0" />
+                <element signature="method#sftpDisconnect#0;class#SFTP_Connection#0" />
+                <element signature="method#getInstance#0;class#SFTP_Connection#0" />
+                <element signature="method#gunzipIt#0;class#SFTP_Connection#0" />
+                <element signature="method#getFilePath#0;class#SFTP_Connection#0" />
+                <element signature="method#getFileSize#0;class#SFTP_Connection#0" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/src/concur_package/Function_Library.java" root0="SKIP_INSPECTION" />
-    <setting file="file://$PROJECT_DIR$/src/concur_package/SFTP_Connection.java" root0="SKIP_INSPECTION" />
-    <setting file="file://$PROJECT_DIR$/src/git_package/Function_Library.java" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/src/git_package/SSH_Menu.java" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/src/git_package/Function_Library.java" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/src/concur_package/SFTP_Connection.java" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/src/concur_package/Function_Library.java" root0="SKIP_INSPECTION" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/src/concur_package/Fupload_Menu.java" />
+        <option value="$PROJECT_DIR$/src/concur_package/SFTP_Connection.java" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="95" />
+    <option name="y" value="-8" />
+    <option name="width" value="1440" />
+    <option name="height" value="780" />
   </component>
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="Application" type="b2602c69:ProjectViewProjectNode" />
+              <item name="UA-Application" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Application" type="b2602c69:ProjectViewProjectNode" />
+              <item name="UA-Application" type="462c0819:PsiDirectoryNode" />
+              <item name="jars" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Application" type="b2602c69:ProjectViewProjectNode" />
+              <item name="UA-Application" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Application" type="b2602c69:ProjectViewProjectNode" />
+              <item name="UA-Application" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="concur_package" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Application" type="b2602c69:ProjectViewProjectNode" />
+              <item name="UA-Application" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="file_fetch_package" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Application" type="b2602c69:ProjectViewProjectNode" />
+              <item name="UA-Application" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="public_package" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="PackagesPane" />
+      <pane id="Scope" />
+    </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="DatabaseDriversLRU" value="oracle" />
@@ -68,7 +172,7 @@
     <property name="last_opened_file_path" value="$USER_HOME$/Desktop" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
-    <property name="project.structure.last.edited" value="Artifacts" />
+    <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="restartRequiresConfirmation" value="false" />
@@ -143,6 +247,7 @@
       <workItem from="1567689915809" duration="1632000" />
       <workItem from="1567712177143" duration="2610000" />
       <workItem from="1568213917095" duration="19400000" />
+      <workItem from="1568423924397" duration="598000" />
     </task>
     <task id="LOCAL-00001" summary="added registry entry for tortoise ssh support">
       <created>1560346206312</created>
@@ -203,6 +308,9 @@
     <option name="localTasksCounter" value="9" />
     <servers />
   </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="6135000" />
+  </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
       <is-autoscroll-to-source value="true" />
@@ -211,6 +319,78 @@
       <are-packages-shown value="true" />
       <is-autoscroll-to-source value="true" />
     </todo-panel>
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <editor active="true" />
+    <layout>
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.817734" visible="true" weight="0.12908325" />
+      <window_info id="Database" order="1" sideWeight="0.18226601" side_tool="true" weight="0.09272919" />
+      <window_info id="Structure" order="2" side_tool="true" weight="0.25" />
+      <window_info id="Designer" order="3" />
+      <window_info id="Image Layers" order="4" />
+      <window_info id="Capture Tool" order="5" />
+      <window_info id="UI Designer" order="6" />
+      <window_info id="Favorites" order="7" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.46912244" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49947312" weight="0.27410617" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.3997833" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" weight="0.32936078" />
+      <window_info anchor="bottom" id="Terminal" order="7" weight="0.32936078" />
+      <window_info anchor="bottom" id="Docker" order="8" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Inspection Results" order="9" weight="0.32936078" />
+      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.50052685" side_tool="true" weight="0.12026002" />
+      <window_info anchor="bottom" id="Messages" order="11" weight="0.33044422" />
+      <window_info anchor="bottom" id="Database Changes" order="12" weight="0.32936078" />
+      <window_info anchor="bottom" id="Version Control" order="13" weight="0.2567714" />
+      <window_info anchor="bottom" id="Duplicates" order="14" weight="0.32936078" />
+      <window_info anchor="bottom" id="Database Console" order="15" weight="0.32936078" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" show_stripe_button="false" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="Maven" order="3" show_stripe_button="false" />
+      <window_info anchor="right" id="Palette" order="4" />
+      <window_info anchor="right" id="Capture Analysis" order="5" />
+      <window_info anchor="right" id="Palette&#9;" order="6" />
+      <window_info anchor="right" id="Theme Preview" order="7" />
+    </layout>
+    <layout-to-restore>
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.817734" visible="true" weight="0.113804005" />
+      <window_info id="Database" order="1" sideWeight="0.18226601" side_tool="true" weight="0.09272919" />
+      <window_info id="Structure" order="2" side_tool="true" weight="0.25" />
+      <window_info id="Designer" order="3" />
+      <window_info id="Image Layers" order="4" />
+      <window_info id="Capture Tool" order="5" />
+      <window_info id="UI Designer" order="6" />
+      <window_info id="Favorites" order="7" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32936078" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49947312" visible="true" weight="0.34236187" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" weight="0.32936078" />
+      <window_info anchor="bottom" id="Terminal" order="7" weight="0.32936078" />
+      <window_info anchor="bottom" id="Docker" order="8" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Inspection Results" order="9" weight="0.32936078" />
+      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.50052685" side_tool="true" weight="0.12026002" />
+      <window_info anchor="bottom" id="Messages" order="11" weight="0.33044422" />
+      <window_info anchor="bottom" id="Database Changes" order="12" weight="0.32936078" />
+      <window_info anchor="bottom" id="Version Control" order="13" weight="0.32936078" />
+      <window_info anchor="bottom" id="Duplicates" order="14" weight="0.32936078" />
+      <window_info anchor="bottom" id="Database Console" order="15" weight="0.32936078" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" show_stripe_button="false" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="Maven" order="3" show_stripe_button="false" />
+      <window_info anchor="right" id="Palette" order="4" />
+      <window_info anchor="right" id="Capture Analysis" order="5" />
+      <window_info anchor="right" id="Palette&#9;" order="6" />
+      <window_info anchor="right" id="Theme Preview" order="7" />
+    </layout-to-restore>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
@@ -221,6 +401,12 @@
         <entry key="MAIN">
           <value>
             <State>
+              <option name="RECENTLY_FILTERED_USER_GROUPS">
+                <collection />
+              </option>
+              <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
+                <collection />
+              </option>
               <option name="COLUMN_ORDER" />
             </State>
           </value>
@@ -255,62 +441,73 @@
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/ar_package/Function_Library.java</url>
           <line>44</line>
+          <properties />
           <option name="timeStamp" value="1" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/ar_package/JDBC_Connection.java</url>
           <line>349</line>
+          <properties />
           <option name="timeStamp" value="3" />
         </line-breakpoint>
         <line-breakpoint type="java-line">
           <url>file://$PROJECT_DIR$/src/public_package/Preferences.java</url>
           <line>74</line>
+          <properties />
           <option name="timeStamp" value="4" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/ar_package/JDBC_Connection.java</url>
           <line>306</line>
+          <properties />
           <option name="timeStamp" value="6" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/ar_package/JDBC_Connection.java</url>
           <line>308</line>
+          <properties />
           <option name="timeStamp" value="7" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/concur_package/Function_Library.java</url>
           <line>1415</line>
+          <properties />
           <option name="timeStamp" value="9" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/concur_package/Function_Library.java</url>
           <line>1207</line>
+          <properties />
           <option name="timeStamp" value="14" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/concur_package/Function_Library.java</url>
           <line>39</line>
+          <properties />
           <option name="timeStamp" value="18" />
         </line-breakpoint>
         <line-breakpoint type="java-line">
           <url>file://$PROJECT_DIR$/src/public_package/Preferences.java</url>
           <line>18</line>
+          <properties />
           <option name="timeStamp" value="19" />
         </line-breakpoint>
         <line-breakpoint type="java-line">
           <url>file://$PROJECT_DIR$/src/public_package/Preferences.java</url>
           <line>95</line>
+          <properties />
           <option name="timeStamp" value="20" />
         </line-breakpoint>
         <line-breakpoint type="java-line">
           <url>file://$PROJECT_DIR$/src/concur_package/Main_Menu.java</url>
           <line>72</line>
+          <properties />
           <option name="timeStamp" value="22" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-method">
           <url>file://$PROJECT_DIR$/src/ar_package/Function_Library.java</url>
           <line>43</line>
-          <properties class="ar_package.Function_Library" method="getApexLink">
+          <properties class="ar_package.Function_Library">
             <option name="EMULATED" value="true" />
           </properties>
           <option name="timeStamp" value="2" />
@@ -350,10 +547,18 @@
         <line-breakpoint enabled="true" type="java-method">
           <url>file://$PROJECT_DIR$/src/public_package/JDBC_Connection.java</url>
           <line>596</line>
-          <properties class="public_package.JDBC_Connection" method="jdbcConnect">
+          <properties class="public_package.JDBC_Connection">
             <option name="EMULATED" value="true" />
           </properties>
           <option name="timeStamp" value="21" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/src/file_fetch_package/SFTP_Connection.java</url>
+          <line>18</line>
+          <properties class="file_fetch_package.SFTP_Connection" method="getFiles">
+            <option name="EMULATED" value="true" />
+          </properties>
+          <option name="timeStamp" value="23" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
@@ -361,6 +566,51 @@
   <component name="antWorkspaceConfiguration">
     <option name="IS_AUTOSCROLL_TO_SOURCE" value="false" />
     <option name="FILTER_TARGETS" value="false" />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/src/file_fetch_package/SFTP_Connection.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1080">
+          <caret line="49" column="22" selection-start-line="49" selection-start-column="12" selection-end-line="49" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/concur_package/Fupload_Menu.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3024">
+          <caret line="114" selection-start-line="114" selection-end-line="114" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/public_package/SFTP_Connection.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="324">
+          <caret line="32" column="15" selection-start-line="32" selection-start-column="15" selection-end-line="32" selection-end-column="15" />
+          <folding>
+            <element signature="method#setDirDelim#0;class#SFTP_Connection#0" />
+            <element signature="method#sftpConnect#0;class#SFTP_Connection#0" />
+            <element signature="method#sftpDisconnect#0;class#SFTP_Connection#0" />
+            <element signature="method#getInstance#0;class#SFTP_Connection#0" />
+            <element signature="method#gunzipIt#0;class#SFTP_Connection#0" />
+            <element signature="method#getFilePath#0;class#SFTP_Connection#0" />
+            <element signature="method#getFileSize#0;class#SFTP_Connection#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/concur_package/SFTP_Connection.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="304">
+          <caret line="305" selection-start-line="305" selection-end-line="305" />
+          <folding>
+            <element signature="method#getCurrentDownloaded#0;class#SFTP_Connection#0" />
+            <element signature="e#4532#4533#0" expanded="true" />
+            <element signature="e#4584#4585#0" expanded="true" />
+            <element signature="method#syncFiles#0;class#SFTP_Connection#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
   </component>
   <component name="masterDetails">
     <states>
@@ -372,7 +622,6 @@
             <option name="proportions">
               <list>
                 <option value="0.2" />
-                <option value="0.5" />
               </list>
             </option>
           </splitter-proportions>

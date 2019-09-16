@@ -301,8 +301,9 @@ class SFTP_Connection extends public_package.SFTP_Connection{
 	public void downloadFile(String fileName,String location) {
 		try{
 			connection.cd(location);
-			String localPath = System.getProperty("user.home") + dirDelim+"Concur_Files"+dirDelim + "misc" + dirDelim;
+			String localPath = System.getProperty("user.home") + dirDelim + "Concur_Files" + dirDelim + "misc" + dirDelim;
 			connection.lcd(localPath);
+
 			connection.get(fileName);
 
 		} catch (SshException e) {

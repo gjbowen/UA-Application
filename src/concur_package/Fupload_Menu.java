@@ -108,9 +108,13 @@ public class Fupload_Menu {
 			String input = textField.getText();
 			String[] inputList = input.split("/");
 			String fileName = inputList[inputList.length-1];
+			String path = input.replace(fileName,"");
 
-			System.out.println("File Name : "+fileName);
-			//connection.sftp.downloadFile(inputList[inputList.length],input);
+			System.out.println("File Name : " + fileName);
+			System.out.println("Path : " + path);
+
+
+			connection.sftp.downloadFile(fileName,path);
 
 		});
 
