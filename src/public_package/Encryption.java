@@ -14,7 +14,7 @@ import java.util.Map;
 class Encryption {
 	protected static String fileName;
 	protected static void setFileName() {
-		fileName = System.getProperty("user.home")+"/.ssh/.project2";
+		fileName = System.getProperty("user.home")+"/.project2";
 	}
 	protected boolean fileExists() {
 		setFileName();

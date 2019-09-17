@@ -195,7 +195,8 @@ public class Login
 			else
 				mode = "PROD";
 			connect();
-		}else {
+		}
+		else {
 			frameLogin.setVisible(true);
 		}
 	}

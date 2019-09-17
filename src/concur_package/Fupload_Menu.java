@@ -3,6 +3,10 @@ package concur_package;
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import java.awt.*;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class Fupload_Menu {
 	protected JFrame frame;
@@ -40,23 +44,23 @@ public class Fupload_Menu {
 		btnClose.setBounds(313, 305, 122, 57);
 		frame.getContentPane().add(btnClose);
 		// Text Field for file name
-		TextField textField = new TextField(System.getProperty("user.home"));
+		TextField textField = new TextField(System.getProperty("user.home")+"\\Downloads\\my-resume.pdf");
 		frame.getContentPane().add(textField);
-		textField.setBounds(10, 75, 209, 23);
+		textField.setBounds(10, 75, 300, 23);
 
 		JButton btnExplore = new JButton("Browse local..");
 		btnExplore.addActionListener(e -> {
 			JFileChooser chooser = new JFileChooser();
 			chooser.setCurrentDirectory(new java.io.File(System.getProperty("user.home")));
 			chooser.setDialogTitle("Select file for validation");
-			chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-			chooser.setAcceptAllFileFilterUsed(false);
+			chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+			//chooser.setAcceptAllFileFilterUsed(false);
 
 			if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 				textField.setText(chooser.getSelectedFile().toString());
 			}
 		});
-		btnExplore.setBounds(230, 75, 89, 23);
+		btnExplore.setBounds(220, 100, 90, 23);
 		frame.getContentPane().add(btnExplore);
 
 		// location assets
@@ -97,7 +101,7 @@ public class Fupload_Menu {
 		});
 		rdbtnExport.addActionListener(e2 -> {
 			location="EXPORT";
-			textField.setText("/u03/export/"+connection.environment+"/");
+			textField.setText("/u03/export/"+connection.environment+"/concur_sae_DashCard.txt");
 			rdbtnLocal.setSelected(false);
 			rdbtnImport.setSelected(false);
 			rdbtnExport.setSelected(true);
@@ -105,17 +109,30 @@ public class Fupload_Menu {
 		});
 
 		btnSubmit.addActionListener(e2 ->{
-			String input = textField.getText();
-			String[] inputList = input.split("/");
-			String fileName = inputList[inputList.length-1];
-			String path = input.replace(fileName,"");
+			String input = textField.getText().trim();
+			String fileName;
+			if(location.equals("LOCAL")) {
+				input=input.replace("\\",",");
+				String[] inputList = input.split(",");
+				fileName = inputList[inputList.length - 1];
+				try {
+					Path temp = Files.copy(
+							Paths.get(textField.getText().trim()),
+							Paths.get(System.getProperty("user.home")+"\\Concur_Files\\misc\\"+fileName)
+					);
+				} catch (IOException e) {
+					System.err.println("Failed to move file - "+textField.getText().trim());
+				}
+			}
+			else{// in EXPORT or IMPORT folder
+				String[] inputList = input.split("/");
+				fileName = inputList[inputList.length - 1];
+				String path = input.replace(fileName, "");
 
-			System.out.println("File Name : " + fileName);
-			System.out.println("Path : " + path);
+				connection.sftp.downloadFile(fileName, path);
+			}
 
-
-			connection.sftp.downloadFile(fileName,path);
-
+			connection.validateFupload(fileName);
 		});
 
 

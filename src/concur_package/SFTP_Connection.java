@@ -110,10 +110,18 @@ class SFTP_Connection extends public_package.SFTP_Connection{
 				allFiles.add(files[i].getName());
 		}
 		File saeReports = new File(rootPath + "SAE_Report_Files");
-		if (!saeReports.isDirectory()) 
+		if (!saeReports.isDirectory())
 			saeReports.mkdir();
 		else {
 			files = saeReports.listFiles();
+			for(int i=0;i<files.length;++i)
+				allFiles.add(files[i].getName());
+		}
+		File sreReports = new File(rootPath + "SRE_Report_Files");
+		if (!sreReports.isDirectory())
+			sreReports.mkdir();
+		else {
+			files = sreReports.listFiles();
 			for(int i=0;i<files.length;++i)
 				allFiles.add(files[i].getName());
 		}
@@ -235,24 +243,29 @@ class SFTP_Connection extends public_package.SFTP_Connection{
 						if (fileName.toLowerCase().contains("report")) {
 							connection.lcd(localPath + "PRAE_Report_Files");
 							connection.get(fileName);
-							if (fileName.endsWith(".gz")) {
+							if (fileName.endsWith(".gz"))
 								gunzipIt(fileName, localPath + "PRAE_Report_Files");
-							}
 						}
 						else {
 							connection.lcd(localPath + "PRAE_Files");
 							connection.get(fileName);
-							if (fileName.endsWith(".gz")) {
+							if (fileName.endsWith(".gz"))
 								gunzipIt(fileName, localPath + "PRAE_Files");
-							}
 						}
 					}
 					else if (fileName.toLowerCase().contains("sre") && !myFiles.contains(trimmedFileName)) {
+						if (fileName.toLowerCase().contains("report")) {
+							connection.lcd(localPath + "SRE_Report_Files");
+							connection.get(fileName);
+							if (fileName.endsWith(".gz"))
+								gunzipIt(fileName, localPath + "SRE_Report_Files");
+						}
+						else {
 							connection.lcd(localPath + "SRE_Files");
 							connection.get(fileName);
-							if (fileName.endsWith(".gz")) {
+							if (fileName.endsWith(".gz"))
 								gunzipIt(fileName, localPath + "SRE_Files");
-							}
+						}
 					}
 					else if (fileName.toLowerCase().contains("vendor_feed") && !myFiles.contains(trimmedFileName)) {
 						connection.lcd(localPath + "Vendor_Feed_Files");
