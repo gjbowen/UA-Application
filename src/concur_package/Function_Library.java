@@ -1495,5 +1495,32 @@ line := rpad(v_system_id,8)         || --8 SYSTEM_ID*
 		return key.toString();
 	}
 
+	protected void rewrite() {
+		System.out.println("Initiating PRAE rewrite...");
+		String line = "";
+		String content = "";
+		File[] files = new File(System.getProperty("user.home") + "//Downloads//ACH_RETURNS").listFiles();
+		File file = null;
+		ArrayList<String> parsedLine = null;
+		String[] parsedIndexes = null;
+		ArrayList<String> arrayOfLines = new ArrayList<String>();
+		for (int i = 0; i < files.length; ++i) {
+			file = files[i];
+				try {
+					BufferedReader br = new BufferedReader(new FileReader(file));
+					while ((line = br.readLine()) != null) {
 
+						arrayOfLines.add(line);
+					}
+					br.close();
+				} catch (IOException e2) {
+					System.out.println("File not found");
+				}
+
+		}
+		String header = "";
+
+		writeListToFile("MASTER.txt", header, arrayOfLines);
+		System.out.println("DONE");
+	}
 }

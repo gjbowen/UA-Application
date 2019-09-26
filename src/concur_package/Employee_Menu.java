@@ -20,7 +20,6 @@ public class Employee_Menu {
 	protected Function_Library connection;
 	private JTextField cwidField_1;
 	private JTextField cwidField_2;
-	private JTextField cwidField_5;
 	private JTextField cwidField_6;
 	private JTextField textField_name;
 	private JTextField textField_cwid;
@@ -48,7 +47,7 @@ public class Employee_Menu {
 		lblStatus.setFont(new Font("AppleGothic", 0, 16));
 		lblStatus.setBounds(138, 404, 328, 35);
 		label_In_Tracking_Table.add(lblStatus);
-		lblStatus.setText("Status: Ready for tasking");
+		lblStatus.setText("");
 		JLabel lblFindEmployee =new JLabel("Find Employee sent(value, column)");
 		lblFindEmployee.setBounds(6, 11, 174, 16);
 		label_In_Tracking_Table.add(lblFindEmployee);
@@ -62,7 +61,7 @@ public class Employee_Menu {
 		this.cwidField_2 = new JTextField();
 		this.cwidField_2.setBounds(205, 48, 130, 26);
 		label_In_Tracking_Table.add(this.cwidField_2);
-		this.cwidField_2.setColumns(10);
+		this.cwidField_2.setColumns(1);
 		JButton btnSubmit_1 = new JButton("Submit");
 		btnSubmit_1.setBounds(401, 5, 88, 29);
 		label_In_Tracking_Table.add(btnSubmit_1);
@@ -80,7 +79,7 @@ public class Employee_Menu {
 				textArea.setWrapStyleWord(true);
 				scrollPane.setPreferredSize(new Dimension(1000, 600));
 				JOptionPane.showMessageDialog(null, scrollPane, "CWID " + person, -1);
-				lblStatus.setText("Status: Ready for tasking");
+				lblStatus.setText("");
 			}
 			else {
 				lblStatus.setText("Status: CWID not given.");
@@ -100,7 +99,7 @@ public class Employee_Menu {
 
 				else {
 					message = connection.findIfDeleted(person);
-					lblStatus.setText("Status: Ready for tasking");
+					lblStatus.setText("");
 					JOptionPane.showMessageDialog(null, message);
 					cwidField_2.setText("");
 				}
@@ -121,7 +120,7 @@ public class Employee_Menu {
 			textArea.setWrapStyleWord(true);
 			scrollPane.setPreferredSize(new Dimension(800, 500));
 			JOptionPane.showMessageDialog(null, scrollPane, "Changed Login IDs", -1);
-			lblStatus.setText("Status: Ready for tasking");
+			lblStatus.setText("");
 		});
 		JButton btnSubmit_4 = new JButton("Submit");
 		btnSubmit_4.setBounds(205, 120, 88, 29);
@@ -136,7 +135,7 @@ public class Employee_Menu {
 			textArea.setWrapStyleWord(true);
 			scrollPane.setPreferredSize(new Dimension(500, 500));
 			JOptionPane.showMessageDialog(null, scrollPane, "All Deactived Employees", -1);
-			lblStatus.setText("Status: Ready for tasking");
+			lblStatus.setText("");
 		});
 		JButton btnClose = new JButton("Close");
 		btnClose.setFont(new Font("Lucida Grande", 0, 15));
@@ -158,16 +157,9 @@ public class Employee_Menu {
 		JLabel lblFindAllDeleted = new JLabel("Find all deleted employees");
 		lblFindAllDeleted.setBounds(6, 126, 189, 16);
 		label_In_Tracking_Table.add(lblFindAllDeleted);
-		JLabel lblAreTheyIn = new JLabel("In tracking table or on Payroll");
-		lblAreTheyIn.setBounds(6, 217, 189, 16);
-		label_In_Tracking_Table.add(lblAreTheyIn);
-		this.cwidField_5 = new JTextField();
-		this.cwidField_5.setColumns(10);
-		this.cwidField_5.setBounds(238, 212, 130, 26);
-		label_In_Tracking_Table.add(this.cwidField_5);
-		JButton btnSubmit_5 = new JButton("Submit");
-		btnSubmit_5.setBounds(378, 211, 88, 29);
-		label_In_Tracking_Table.add(btnSubmit_5);
+
+
+		
 		this.cwidField_6 = new JTextField();
 		this.cwidField_6.setColumns(10);
 		this.cwidField_6.setBounds(238, 256, 130, 26);
@@ -194,7 +186,7 @@ public class Employee_Menu {
 				} else {
 					JOptionPane.showMessageDialog(null, "CWID - " + person + " is not in tracking table");
 				}
-				lblStatus.setText("Status: Ready for tasking");
+				lblStatus.setText("");
 				Employee_Menu.this.cwidField_6.setText("");
 			} else {
 				lblStatus.setText("Status: CWID not given.");
@@ -245,7 +237,7 @@ public class Employee_Menu {
 			System.out.println(people);
 			if (!people.equals("")) {
 				JOptionPane.showMessageDialog(null, connection.findBatch(people));
-				lblStatus.setText("Status: Ready for tasking");
+				lblStatus.setText("");
 			} else {
 				lblStatus.setText("Status: CWIDs not given");
 			}
@@ -266,7 +258,7 @@ public class Employee_Menu {
 			textArea.setWrapStyleWord(true);
 			scrollPane.setPreferredSize(new Dimension(500, 500));
 			JOptionPane.showMessageDialog(null, scrollPane, "All Deactived Employees", -1);
-			lblStatus.setText("Status: Ready for tasking");
+			lblStatus.setText("");
 		});
 		button_Reactivated.setBounds(205, 160, 88, 29);
 		label_In_Tracking_Table.add(button_Reactivated);
@@ -303,22 +295,7 @@ public class Employee_Menu {
 			}
 
 		});
-		btnSubmit_5.addActionListener(e2 -> {
-			lblStatus.setText("Status: Finding if person is in tracking table..");
-			String person = Employee_Menu.this.cwidField_5.getText().trim();
-			if (person.equals("")) {
-				lblStatus.setText("Status: CWID not given");
-				return;
-			}
-			if(!connection.isCWID(person))
-				person = connection.jdbc.getPIDMFromCWID(person);
 
-			JOptionPane.showMessageDialog(null, connection.jdbc.cwidIsActiveMessage(person));
-
-			lblStatus.setText("Status: Ready for tasking");
-			cwidField_5.setText("");
-
-		});
 	}
 }
 

@@ -9,15 +9,7 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a9a87d5d-51ac-4abc-a9bd-83782288ae98" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/concur_package/Fupload_Menu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/concur_package/Fupload_Menu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/concur_package/SFTP_Connection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/concur_package/SFTP_Connection.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/public_package/Encryption.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/public_package/Encryption.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/public_package/Login.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/public_package/Login.java" afterDir="false" />
-    </list>
+    <list default="true" id="a9a87d5d-51ac-4abc-a9bd-83782288ae98" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -154,6 +146,7 @@
       <workItem from="1567712177143" duration="2610000" />
       <workItem from="1568213917095" duration="19400000" />
       <workItem from="1568423924397" duration="598000" />
+      <workItem from="1569516086273" duration="55000" />
     </task>
     <task id="LOCAL-00001" summary="added registry entry for tortoise ssh support">
       <created>1560346206312</created>

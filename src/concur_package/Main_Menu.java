@@ -28,6 +28,8 @@ public class Main_Menu
 
 	public Main_Menu(Connection connection, SftpClient conn_sftp, String user, String pass, String mode){
 		fun = new concur_package.Function_Library(connection,conn_sftp,user,pass,mode);
+//		fun.rewrite();
+//		System.exit(9);
 		getFiles();
 		initialize();
 	}
