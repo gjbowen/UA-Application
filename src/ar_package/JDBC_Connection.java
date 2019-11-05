@@ -13,7 +13,7 @@ class JDBC_Connection extends public_package.JDBC_Connection{
 	}
 
 	protected String getAccountInformation(String cwid) {
-		String message="";
+		String message;
 		String pidm=cwid;
 		if(isCWID(cwid))
 			pidm=getPIDMFromCWID(cwid);			
@@ -35,7 +35,7 @@ class JDBC_Connection extends public_package.JDBC_Connection{
 			return "TOO_MANY_RETURNED";
 
 		String attributes = "";
-		Statement stmt = null;
+		Statement stmt;
 		try {
 			stmt = connection.createStatement();
 
@@ -76,7 +76,7 @@ class JDBC_Connection extends public_package.JDBC_Connection{
 		else if(isCWID(pidm))
 			pidm=getPIDMFromCWID(pidm);
 
-		Statement stmt = null;
+		Statement stmt;
 		try {
 			stmt = connection.createStatement();
 
@@ -106,7 +106,7 @@ class JDBC_Connection extends public_package.JDBC_Connection{
 		return null;
 	}
 	protected String getDetailCodes(String code) {
-		Statement stmt = null;
+		Statement stmt;
 		try {
 			stmt = connection.createStatement();
 
@@ -144,8 +144,8 @@ class JDBC_Connection extends public_package.JDBC_Connection{
 	}
 
 	protected String getFootballDetailCodes(String cwid,String year) {
-		Statement stmt = null;
-		String pidm = null;
+		Statement stmt;
+		String pidm;
 		try {
 			stmt = connection.createStatement();
 			if(isCWID(cwid))
@@ -184,8 +184,8 @@ class JDBC_Connection extends public_package.JDBC_Connection{
 	}
 
 	protected String getFootballHistory(String cwid,String year) {
-		Statement stmt = null;
-		String pidm = null;
+		Statement stmt;
+		String pidm;
 		try {
 			stmt = connection.createStatement();
 			if(isCWID(cwid))
@@ -224,8 +224,8 @@ class JDBC_Connection extends public_package.JDBC_Connection{
 		return null;
 	}
 	protected String getFootballInfo(String cwid,String year) {
-		Statement stmt = null;
-		String pidm = null;
+		Statement stmt;
+		String pidm;
 		try {
 			stmt = connection.createStatement();
 			if(isCWID(cwid))
@@ -304,7 +304,7 @@ class JDBC_Connection extends public_package.JDBC_Connection{
 		return null;
 	}
 	protected String getFootballGroupDesc(String group,String year) {
-		Statement stmt = null;			
+		Statement stmt;
 		String message = "";
 		try {
 			stmt = connection.createStatement();
@@ -327,7 +327,7 @@ class JDBC_Connection extends public_package.JDBC_Connection{
 		return null;
 	}
 	protected String getFootballYear () {
-		Statement stmt = null;			
+		Statement stmt;
 		String message = "";
 		try {
 			stmt = connection.createStatement();
@@ -347,8 +347,8 @@ class JDBC_Connection extends public_package.JDBC_Connection{
 		return null;
 	}
 	protected String getFootballGroupReason(String cwid,String year) {
-		Statement stmt = null;
-		String pidm = null;
+		Statement stmt;
+		String pidm;
 		try {
 			stmt = connection.createStatement();
 			if(isCWID(cwid))
@@ -459,7 +459,7 @@ class JDBC_Connection extends public_package.JDBC_Connection{
 					"  opt_in_date: "+ opt_in_date;
 	}
 	protected String getFootballGroups(String year) {
-		Statement stmt = null;
+		Statement stmt;
 		try {
 			stmt = connection.createStatement();
 			ResultSet rs = stmt.executeQuery(
@@ -475,7 +475,7 @@ class JDBC_Connection extends public_package.JDBC_Connection{
 		return null;
 	}
 	protected String getFootballGames(String year) {
-		Statement stmt = null;
+		Statement stmt;
 		try {
 			stmt = connection.createStatement();
 			ResultSet rs = stmt.executeQuery(
@@ -501,7 +501,7 @@ class JDBC_Connection extends public_package.JDBC_Connection{
 
 
 	protected String getCategoryCodes(String code) {
-		Statement stmt = null;
+		Statement stmt;
 		try {
 			stmt = connection.createStatement();
 
@@ -532,7 +532,7 @@ class JDBC_Connection extends public_package.JDBC_Connection{
 			pidm=pidm.trim();
 
 		String balance = null;
-		Statement stmt = null;
+		Statement stmt;
 		try {
 			stmt = connection.createStatement();
 

@@ -74,7 +74,7 @@ public class Vendor_Menu {
                 dlgProgress.setSize(300, 90);
                 dlgProgress.setLocationRelativeTo(vendorFrame);
                 SwingWorker<Void, Void> sw = new SwingWorker<Void, Void>() {
-                    protected Void doInBackground() throws Exception {
+                    protected Void doInBackground() {
                         status.setText("Status: Finding Vendor..");
                         System.out.println("SEARCHING..");
                         String message = connection.searchVendor(textField.getText().trim());

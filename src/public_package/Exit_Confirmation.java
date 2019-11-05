@@ -10,11 +10,8 @@ import javax.swing.JCheckBox;
 public class Exit_Confirmation
 {
 	public JFrame frameExitConfirmation;
-
-	Preferences p;
 	public Exit_Confirmation(String name){
-		p = new Preferences();
-		
+
 		if(Preferences.contents.containsKey("promptOnExit") && Preferences.contents.get("promptOnExit").equals("false"))
 			System.exit(0);
 
@@ -40,7 +37,7 @@ public class Exit_Confirmation
 		button_no.setFont(new Font("Dialog", Font.PLAIN, 15));
 		button_no.setBounds(231, 133, 122, 57);
 		frameExitConfirmation.getContentPane().add(button_no);
-		String message="";
+		String message;
 		if(name==null || name.equals("")) 
 			message = "Are you sure you want to quit?";
 		else

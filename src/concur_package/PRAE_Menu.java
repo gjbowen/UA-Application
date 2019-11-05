@@ -74,7 +74,7 @@ public class PRAE_Menu {
         this.searchColumn.setText("");
         this.searchColumn.setColumns(10);
         panel.add(this.searchColumn);
-        this.setMode("contains");
+        this.setMode("equals");
         JPanel panel_1 = new JPanel();
         panel_1.setBounds(422, 11, 135, 146);
         FlowLayout flowLayout_1 = (FlowLayout)panel_1.getLayout();
@@ -201,7 +201,7 @@ public class PRAE_Menu {
                 dlgProgress.setSize(300, 90);
                 dlgProgress.setLocationRelativeTo(praeFrame);
                 SwingWorker<Void, Void> sw = new SwingWorker<Void, Void>() {
-                    protected Void doInBackground() throws Exception {
+                    protected Void doInBackground() {
                         status.setText("Status: Searching PRAE files..");
                         String message = connection.searchPRAE(searchString.getText().trim(), Integer.parseInt(searchColumn.getText().trim()), mode);
                         JTextArea textArea = new JTextArea(message);

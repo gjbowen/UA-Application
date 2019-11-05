@@ -227,7 +227,7 @@ public class FileFetcher
 			dlgProgress.setSize(300, 90);
 			dlgProgress.setLocationRelativeTo(frameMenu);
 			SwingWorker<Void, Void> sw = new SwingWorker<Void, Void>() {
-				protected Void doInBackground() throws Exception {
+				protected Void doInBackground() {
 					connection.getFiles(textField.getText().trim(), location, mode, count);
 					return null;
 				}

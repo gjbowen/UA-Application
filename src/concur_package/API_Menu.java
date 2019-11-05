@@ -17,8 +17,7 @@ import java.awt.Panel;
 public class API_Menu {
 	protected JFrame frame;
 	private API_Package api;
-	String url;
-	Function_Library connection;
+    Function_Library connection;
 	public API_Menu(Function_Library fun) {
 		connection = fun;
 
@@ -64,7 +63,7 @@ public class API_Menu {
 		panel_1.setBounds(106, 101, 227, 92);
 		frame.getContentPane().add(panel_1);
 		panel_1.setLayout(new GridLayout(0, 2, 0, 0));
-		
+
 		JButton btnUsers = new JButton("Users");
 		panel_1.add(btnUsers);
 		btnUsers.addActionListener(e -> EventQueue.invokeLater(() -> {
@@ -76,8 +75,8 @@ public class API_Menu {
 				e12.printStackTrace();
 			}
 		}));
-		
-		
+
+
 		
 		JButton btnVendors = new JButton("Vendors");
 		btnVendors.addActionListener(e -> EventQueue.invokeLater(() -> {

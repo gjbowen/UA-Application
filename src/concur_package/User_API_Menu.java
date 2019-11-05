@@ -1,17 +1,8 @@
 package concur_package;
 
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Toolkit;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.ScrollPaneConstants;
-import java.awt.Panel;
-import java.awt.Color;
+import java.awt.*;
+import java.util.ArrayList;
+import javax.swing.*;
 
 public class User_API_Menu {
 	protected API_Package api;
@@ -19,18 +10,105 @@ public class User_API_Menu {
 
 	private JTextField textField_users;
 	private JTextField textField_userGET;
-	private JTextField textField_deleteID;
-	private JTextField textField_deleteRT;
+	String message;
 	public User_API_Menu(API_Package a) {
 		api = a;
 		initialize();
 	}
+	private void  getUsersViaAPI() {
 
+		JDialog dlgProgress;
+		dlgProgress = new JDialog((java.awt.Frame)null, "Please wait.", true);//true means that the dialog created is modal
+		dlgProgress.setIconImage(Toolkit.getDefaultToolkit().getImage(Main_Menu.class.getResource("/Jar Files/ua_background_mobile.jpg")));
+
+		JLabel lblStatus = new JLabel("Pulling data from API..");// this is just a label in which you can indicate the state of the processing
+		lblStatus.setFont(new Font("Lucida Grande",Font.BOLD, 15));
+		dlgProgress.getContentPane().add(BorderLayout.NORTH, lblStatus);
+
+		JProgressBar pbProgress = new JProgressBar();
+		pbProgress.setIndeterminate(true); //we'll use an indeterminate progress bar
+		dlgProgress.getContentPane().add(BorderLayout.CENTER, pbProgress);
+
+
+		//DO_NOTHING_ON_CLOSE, HIDE_ON_CLOSE, or DISPOSE_ON_CLOSE
+		dlgProgress.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE); // prevent the user from closing the dialog
+		dlgProgress.setSize(300, 110);
+		dlgProgress.setResizable(true);
+		dlgProgress.setLocationRelativeTo(frame);
+		///////////
+		SwingWorker<Void, Void> sw = new SwingWorker<Void, Void>() {
+			protected Void doInBackground() {
+				api.reinit();
+				// puts in the object variable vendors
+				api.sendGetRequest("/api/v3.0/common/users?Active=true&limit=100");
+				return null;
+			}
+			protected void done() {
+				System.out.println("Done getting API Users.");
+				dlgProgress.dispose();//close the modal dialog
+			}
+		};
+		JButton cancelButton = new JButton("Cancel");
+		cancelButton.addActionListener(e -> sw.cancel(true));
+		dlgProgress.getContentPane().add(BorderLayout.EAST, cancelButton);
+		// this will start the processing on a separate thread
+		sw.execute();
+		//this will block user input as long as the processing task is working
+		dlgProgress.setVisible(true);
+	}
+	private void compareBanner() {
+		JDialog dlgProgress;
+		dlgProgress = new JDialog((java.awt.Frame)null, "Please wait.", true);//true means that the dialog created is modal
+		dlgProgress.setIconImage(Toolkit.getDefaultToolkit().getImage(Main_Menu.class.getResource("/Jar Files/ua_background_mobile.jpg")));
+
+		JLabel lblStatus = new JLabel("Comparing to what's in Banner..");// this is just a label in which you can indicate the state of the processing
+		lblStatus.setFont(new Font("Lucida Grande",Font.BOLD, 15));
+		dlgProgress.getContentPane().add(BorderLayout.NORTH, lblStatus);
+
+		JProgressBar pbProgress = new JProgressBar();
+		pbProgress.setIndeterminate(true); //we'll use an indeterminate progress bar
+		dlgProgress.getContentPane().add(BorderLayout.CENTER, pbProgress);
+
+
+		//DO_NOTHING_ON_CLOSE, HIDE_ON_CLOSE, or DISPOSE_ON_CLOSE
+		dlgProgress.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE); // prevent the user from closing the dialog
+		dlgProgress.setSize(300, 110);
+		dlgProgress.setResizable(true);
+		dlgProgress.setLocationRelativeTo(frame);
+		///////////
+		SwingWorker<Void, Void> sw = new SwingWorker<Void, Void>() {
+			protected Void doInBackground() {
+				ArrayList<User> people = api.functions.jdbc.getActiveUsers();
+
+				message=api.writeApiUsers();
+				message+="\n";
+				message+=api.writeTrackingTableUsers(people);
+				message+="\n";
+				message+=api.compareUsersNotInBanner(people);
+				message+="\n";
+				message+=api.compareUsersNotInConcur(people);
+
+				System.out.println("Done comparing.");
+				return null;
+			}
+			protected void done() {
+				dlgProgress.dispose();//close the modal dialog
+				JOptionPane.showMessageDialog(null,message);
+			}
+		};
+		JButton cancelButton = new JButton("Cancel");
+		cancelButton.addActionListener(e -> sw.cancel(true));
+		dlgProgress.getContentPane().add(BorderLayout.EAST, cancelButton);
+		// this will start the processing on a separate thread
+		sw.execute();
+		//this will block user input as long as the processing task is working
+		dlgProgress.setVisible(true);
+	}
 	private void initialize() {
 		frame = new JFrame();
 		frame.getContentPane().setBackground(Color.GRAY);
 		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(User_API_Menu.class.getResource("/Jar Files/ua_background_mobile.jpg")));
-		frame.setTitle("Vendor API Menu");
+		frame.setTitle("User API Menu");
 		frame.setBounds(100, 100, 461, 355);
 		frame.setDefaultCloseOperation(3);
 		frame.getContentPane().setLayout(null);
@@ -50,12 +128,12 @@ public class User_API_Menu {
 		textField_users.setColumns(10);
 		textField_users.setText("/api/v3.0/common/user");
 
-		JButton btnSubmit_vendors = new JButton("GET");
-		btnSubmit_vendors.addActionListener(e -> {
-			api.prep();
+		JButton btnSubmit_users = new JButton("GET");
+		btnSubmit_users.addActionListener(e -> {
+			api.reinit();
 
 			api.sendGetRequest(textField_users.getText().trim());
-			String message=api.vendorsToString();
+			String message=api.usersToString();
 
 			JTextArea textArea = new JTextArea(message);
 			JScrollPane scrollPane = new JScrollPane(textArea);
@@ -68,16 +146,16 @@ public class User_API_Menu {
 			JOptionPane.showMessageDialog(null, scrollPane, "API Search Results", -1);
 
 		});
-		btnSubmit_vendors.setBounds(340, 176, 95, 50);
-		frame.getContentPane().add(btnSubmit_vendors);
-		
+		btnSubmit_users.setBounds(340, 176, 95, 50);
+		frame.getContentPane().add(btnSubmit_users);
+
 		Panel panel_GET = new Panel();
 		panel_GET.setBackground(Color.LIGHT_GRAY);
 		panel_GET.setBounds(10, 10, 197, 57);
 		frame.getContentPane().add(panel_GET);
 		panel_GET.setLayout(null);
-		
-		
+
+
 		
 		textField_userGET = new JTextField();
 		textField_userGET.setFont(new Font("Tahoma", Font.PLAIN, 16));
@@ -89,62 +167,20 @@ public class User_API_Menu {
 		JButton button_vendorID = new JButton("GET");
 		button_vendorID.setBounds(119, 7, 68, 42);
 		panel_GET.add(button_vendorID);
-		
-		Panel panel_DELETE = new Panel();
-		panel_DELETE.setBackground(Color.LIGHT_GRAY);
-		panel_DELETE.setLayout(null);
-		panel_DELETE.setBounds(238, 10, 197, 118);
-		
-		frame.getContentPane().add(panel_DELETE);
-		
-		textField_deleteID = new JTextField();
-		textField_deleteID.setText("11074958");
-		textField_deleteID.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		textField_deleteID.setColumns(10);
-		textField_deleteID.setBounds(10, 6, 99, 41);
-		panel_DELETE.add(textField_deleteID);
-		
-		JButton btnDelete = new JButton("DELETE");
-		btnDelete.addActionListener(arg0 -> {
-			if (JOptionPane.showConfirmDialog(null,
-					"Are you sure you want to delete this address? There's no going back..",
-					"Warning", JOptionPane.YES_NO_OPTION) == 0) { //Yes
-				api.prep();
-				api.sendDeleteRequest("/api/v3.0/invoice/vendors?vendorCode="+textField_deleteID.getText().trim()+"&addressCode="+textField_deleteRT.getText().trim());
-				JTextArea textArea = new JTextArea(api.serverResponse);
-				JScrollPane scrollPane = new JScrollPane(textArea);
-				textArea.setLineWrap(true);
-				textArea.setWrapStyleWord(true);
-				scrollPane.setPreferredSize(new Dimension(400, 200));
-				//JOptionPane.showMessageDialog(null, scrollPane, "Concur Server Response", -1);
-				JOptionPane.showMessageDialog(null, api.serverResponse);
-
-			}
 
 
 
-		});
-		btnDelete.setBounds(48, 58, 99, 42);
-		panel_DELETE.add(btnDelete);
-		
-		textField_deleteRT = new JTextField();
-		textField_deleteRT.setText("RT-1");
-		textField_deleteRT.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		textField_deleteRT.setColumns(10);
-		textField_deleteRT.setBounds(119, 6, 68, 41);
-		panel_DELETE.add(textField_deleteRT);
-		
 		JButton btn_createReport = new JButton("Inactive Users in Concur");
 		btn_createReport.addActionListener(arg0 -> {
-			api.prep();
-			api.sendGetRequest("/api/v3.0/invoice/vendors");
-			api.compareVendorsNotInBanner(api.functions.jdbc.getVendors());
+			getUsersViaAPI();
+			compareBanner();
 		});
 		btn_createReport.setBounds(10, 92, 197, 48);
 		frame.getContentPane().add(btn_createReport);
+
 		button_vendorID.addActionListener(e -> {
-			api.prep();
-			api.sendGetRequest("/api/v3.0/invoice/vendors?vendorCode="+textField_userGET.getText().trim());
+			api.reinit();
+			api.sendGetRequest("/api/v3.0/common/users?employeeID="+textField_userGET.getText().trim());
 			String message=api.vendorsToString();
 
 			JTextArea textArea = new JTextArea(message);

@@ -28,9 +28,7 @@ public class Master_Menu
 	private String password;
 	String environment;
 	private String firstName;
-	Object frame;
-	Preferences p;
-	JMenuBar mb;
+    JMenuBar mb;
 	JMenu option_button,help_button,environment_button;
 	JMenuItem m1,m2,m4,env_SEVL,env_TEST,env_PROD;
     JButton arProgram,btnConcur,btnGitProgram,btnFileFetchProgram;

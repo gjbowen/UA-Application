@@ -86,14 +86,6 @@ public class Function_Library {
 		}
 	}
 
-	private void setTortoiseSSH() {
-		try {
-			Runtime.getRuntime().exec("reg add HKCU\\SOFTWARE\\TortoiseGit /t REG_SZ /v SSH /d \"C:\\Program Files\\Git\\usr\\bin\\ssh.exe\" /f");
-			print("ALL SET!");
-		} catch (IOException e) {
-			e.printStackTrace();
-		} 
-	}
 	protected boolean GITfolderExists(String location) {
 		File folder = new File(location+"\\.git");
 		return folder.isDirectory();
@@ -241,7 +233,6 @@ public class Function_Library {
 	private void readPreferenceFile(){
 		//public_package.Preferences p = new public_package.Preferences();
 		gitFolder=Preferences.contents.get("git");
-		String sshLocation = Preferences.contents.get("ssh");
 	}
 	public String getSSH_RSA(){
 		String line=null;
@@ -263,14 +254,8 @@ public class Function_Library {
 				"ALERT",
 				JOptionPane.CANCEL_OPTION);
 	}
-	protected int yesNoCancel(String message) {
-		return JOptionPane.showConfirmDialog(
-				null,
-				message,
-				"ALERT",
-				JOptionPane.YES_NO_CANCEL_OPTION);
-	}
-	protected int yesNo(String message) {
+
+    protected int yesNo(String message) {
 		return JOptionPane.showConfirmDialog(
 				null,
 				message,

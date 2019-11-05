@@ -22,6 +22,7 @@ public class emp710_Menu {
     private JTextField textField_fund;
     private JTextField textField_coas;
     private JTextField textField_cwid;
+    private JTextField textField_level;
 
     public emp710_Menu(Function_Library conn) {
         connection = conn;
@@ -82,20 +83,32 @@ public class emp710_Menu {
         textField_coas.setColumns(10);
         textField_coas.setBounds(78, 21, 167, 30);
         frame.getContentPane().add(textField_coas);
-        
+
         textField_cwid = new JTextField();
         textField_cwid.setText("");
         textField_cwid.setColumns(10);
         textField_cwid.setBounds(78, 144, 167, 30);
         frame.getContentPane().add(textField_cwid);
-        
+
+        textField_level = new JTextField();
+        textField_level.setText("");
+        textField_level.setColumns(10);
+        textField_level.setBounds(78, 185, 167, 30);
+        frame.getContentPane().add(textField_level);
+
         JLabel lblCwid = new JLabel("CWID");
         lblCwid.setFont(new Font("Tahoma", Font.PLAIN, 18));
         lblCwid.setBounds(10, 139, 59, 35);
         frame.getContentPane().add(lblCwid);
+
+        JLabel lblLevel = new JLabel("Level");
+        lblLevel.setFont(new Font("Tahoma", Font.PLAIN, 18));
+        lblLevel.setBounds(10, 180, 59, 35);
+        frame.getContentPane().add(lblLevel);
+
         btnReportKey.addActionListener(e2 -> {
             if (textField_coas.getText().trim().equals("")&&textField_fund.getText().trim().equals("")&&textField_orgn.getText().trim().equals("")&&
-                    textField_cwid.getText().trim().equals("")) {
+                    textField_cwid.getText().trim().equals("")&&textField_level.getText().trim().equals("")) {
                 status.setText("Nothing have been given.");
             } else {
                 JDialog dlgProgress;
@@ -111,9 +124,9 @@ public class emp710_Menu {
                 dlgProgress.setSize(300, 100);
                 dlgProgress.setLocationRelativeTo(frame);
                 SwingWorker<Void, Void> sw = new SwingWorker<Void, Void>() {
-                    protected Void doInBackground() throws Exception {
+                    protected Void doInBackground() {
                         status.setText("Status: Finding Vendor..");
-                        String message = connection.search710(textField_coas.getText().trim(),textField_fund.getText().trim(),textField_orgn.getText().trim(),textField_cwid.getText().trim());
+                        String message = connection.search710(textField_coas.getText().trim(),textField_fund.getText().trim(),textField_orgn.getText().trim(),textField_cwid.getText().trim(),textField_level.getText().trim());
                         JTextArea textArea = new JTextArea(message);
                         JScrollPane scrollPane = new JScrollPane(textArea);
                         textArea.setLineWrap(true);

@@ -10,9 +10,7 @@ import java.nio.file.Paths;
 
 public class Fupload_Menu {
 	protected JFrame frame;
-	private API_Package api;
-	String url;
-	Function_Library connection;
+    Function_Library connection;
 	String location="LOCAL";
 
 	public Fupload_Menu(Function_Library fun) {
@@ -44,7 +42,7 @@ public class Fupload_Menu {
 		btnClose.setBounds(313, 305, 122, 57);
 		frame.getContentPane().add(btnClose);
 		// Text Field for file name
-		TextField textField = new TextField(System.getProperty("user.home")+"\\Downloads\\my-resume.pdf");
+		TextField textField = new TextField(System.getProperty("user.home")+"\\Downloads\\concur_sae_pCard_EXAMPLE.processed");
 		frame.getContentPane().add(textField);
 		textField.setBounds(10, 75, 300, 23);
 

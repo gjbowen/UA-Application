@@ -15,19 +15,13 @@ public class Preferences {
 	//static String fileNsame=getFileName();
 	public static Map<String,String> contents = read();
 
-	public Preferences(){
-		if(!fileExists())
-			writeFile(null);
-		readFile();
-
-	}
 	public static Map<String,String> read(){
 		if(!fileExists()) {
 			writeFile(null);
 		}
 
 		HashMap<String,String> cons= new HashMap<String,String>();
-		String line = null;
+		String line;
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(getFileName()));
 			while ((line = br.readLine()) != null) 
@@ -71,17 +65,13 @@ public class Preferences {
 		contents.put(key,value);
 		writeFile(contents);
 	}
-	public void deletePreference(String key) {
-		readFile();
-		contents.remove(key);
-		writeFile(contents);
-	}
+
 	static boolean fileExists() {
         return new File(getFileName()).exists();
 	}
 	static void readFile(){
 		contents = new HashMap<String,String>();
-		String line = null;
+		String line;
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(getFileName()));
 			while ((line = br.readLine()) != null) 
@@ -97,14 +87,7 @@ public class Preferences {
 		if(file.exists())
 			file.delete();
 	}
-	void show() {
-		readFile();
-		System.out.println("SHOWING PREFERENCES:");
-		if(contents!=null)
-			for (Map.Entry<String,String> entry : contents.entrySet())  
-				System.out.println("\t" + entry.getKey() + 
-						"\t" + entry.getValue()); 
-	}
+
 	static void hide(String file)  {
 		// win32 command line variant
 		Process p;

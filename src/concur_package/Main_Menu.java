@@ -16,7 +16,6 @@ import javax.swing.JProgressBar;
 import javax.swing.SwingWorker;
 
 import com.sshtools.sftp.SftpClient;
-import public_package.JDBC_Connection;
 
 
 public class Main_Menu
@@ -28,8 +27,7 @@ public class Main_Menu
 
 	public Main_Menu(Connection connection, SftpClient conn_sftp, String user, String pass, String mode){
 		fun = new concur_package.Function_Library(connection,conn_sftp,user,pass,mode);
-//		fun.rewrite();
-//		System.exit(9);
+
 		getFiles();
 		initialize();
 	}
@@ -55,7 +53,7 @@ public class Main_Menu
 		dlgProgress.setLocationRelativeTo(frameMenu);
 		///////////
 		SwingWorker<Void, Void> sw = new SwingWorker<Void, Void>() {
-			protected Void doInBackground() throws Exception {
+			protected Void doInBackground() {
 				fun.sftp.syncFiles();
 				return null;
 			}
@@ -122,7 +120,57 @@ public class Main_Menu
 		JButton btnVendorTermFeed = new JButton("Vendor Term Feed");
 		panel.add(btnVendorTermFeed);
 
+
+		JButton btnFeed = new JButton("710 Feed");
+		btnFeed.addActionListener(arg0 -> EventQueue.invokeLater(() -> {
+			try {
+				emp710_Menu window = new emp710_Menu(fun);
+				window.frame.setVisible(true);
+				//frameMenu.dispose();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}));
+		panel.add(btnFeed);
+
+		JButton btnApi = new JButton("API");
+		btnApi.addActionListener(arg0 -> EventQueue.invokeLater(() -> {
+			try {
+				API_Menu window = new API_Menu(fun);
+				window.frame.setVisible(true);
+				//frameMenu.dispose();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}));
+		panel.add(btnApi);
+
+
+		JButton btnFupload = new JButton("FUPLOAD");
+		btnFupload.addActionListener(arg0 -> EventQueue.invokeLater(() -> {
+			try {
+				Fupload_Menu window = new Fupload_Menu(fun);
+				window.frame.setVisible(true);
+				//frameMenu.dispose();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}));
+		panel.add(btnFupload);
+
 		JButton btnSHOW = new JButton("Show in Windows Explorer");
+		btnSHOW.addActionListener(e -> {
+			try{
+				if(System.getProperty("os.name").toLowerCase().contains("windows")) { //for Windows..
+					Runtime.getRuntime().exec("explorer.exe /select,"+System.getProperty("user.home")+"\\Concur_Files\\"+fun.environment);
+				}else { //for other..
+
+				}
+			}
+			catch (IOException e1){
+				e1.printStackTrace();
+			}
+		});
 		panel.add(btnSHOW);
 
 		JButton btnMoveToProd = new JButton("Move to SEVL/TEST");
@@ -140,7 +188,7 @@ public class Main_Menu
 			dlgProgress.setSize(300, 90);
 			dlgProgress.setLocationRelativeTo(frameMenu);
 			SwingWorker<Void, Void> sw = new SwingWorker<Void, Void>() {
-				protected Void doInBackground() throws Exception {
+				protected Void doInBackground() {
 					fun.sftp.moveSAE("SEVL", fun.getLatestSAE());
 					fun.sftp.moveSRE("SEVL", fun.getLatestSRE());
 					fun.sftp.movePRAE("SEVL", fun.getLatestPRAE());
@@ -160,43 +208,7 @@ public class Main_Menu
 			dlgProgress.setVisible(true); //this will block user input as long as the processing task is working
 
 		});
-
-		JButton btnFeed = new JButton("710 Feed");
-		btnFeed.addActionListener(arg0 -> EventQueue.invokeLater(() -> {
-			try {
-				emp710_Menu window = new emp710_Menu(fun);
-				window.frame.setVisible(true);
-				//frameMenu.dispose();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}));
-		panel.add(btnFeed);
 		panel.add(btnMoveToProd);
-
-		JButton btnApi = new JButton("API");
-		btnApi.addActionListener(arg0 -> EventQueue.invokeLater(() -> {
-			try {
-				API_Menu window = new API_Menu(fun);
-				window.frame.setVisible(true);
-				//frameMenu.dispose();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}));
-		panel.add(btnApi);
-
-		JButton btnFupload = new JButton("FUPLOAD");
-		btnFupload.addActionListener(arg0 -> EventQueue.invokeLater(() -> {
-			try {
-				Fupload_Menu window = new Fupload_Menu(fun);
-				window.frame.setVisible(true);
-				//frameMenu.dispose();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}));
-		panel.add(btnFupload);
 
 		JButton btnClose = new JButton("Close");
 		btnClose.addActionListener(arg0 -> {
@@ -216,18 +228,7 @@ public class Main_Menu
 		frameMenu.getContentPane().add(btnClose);
 
 
-		btnSHOW.addActionListener(e -> {
-			try{
-				if(System.getProperty("os.name").toLowerCase().contains("windows")) { //for Windows..
-					Runtime.getRuntime().exec("explorer.exe /select,"+System.getProperty("user.home")+"\\Concur_Files\\"+fun.environment);
-				}else { //for other..
 
-				}
-			}
-			catch (IOException e1){
-				e1.printStackTrace();
-			}
-		});
 		btnEmp.addActionListener(e -> EventQueue.invokeLater(() -> {
 			try {
 				Employee_Menu window = new Employee_Menu(fun);

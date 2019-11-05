@@ -16,16 +16,7 @@ class Encryption {
 	protected static void setFileName() {
 		fileName = System.getProperty("user.home")+"/.project2";
 	}
-	protected boolean fileExists() {
-		setFileName();
-		File f=new File(fileName);
-		if(f.exists())
-			return true;
-		else {
-			System.out.println("BOOOOO");
-			return false;
-		}
-	}
+
 	protected static Map<String, String> readFile(){
 		setFileName();
 		Map<String, String> map = new HashMap<String, String>();

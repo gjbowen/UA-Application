@@ -20,7 +20,7 @@ class SFTP_Connection extends public_package.SFTP_Connection{
 		ArrayList<String> fileList = new ArrayList<String>();
 
 
-		String pwd = "";
+		String pwd;
 		if(location.equals("GURJOBS")) {
 			pwd = "/u03/banjobs/bin/gurjobs/"+environment;
 		}else {

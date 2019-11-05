@@ -140,7 +140,7 @@ public class SRE_Menu {
 				dlgProgress.setSize(300, 90);
 				dlgProgress.setLocationRelativeTo(sreFrame);
 				SwingWorker<Void, Void> sw = new SwingWorker<Void, Void>() {
-					protected Void doInBackground() throws Exception {
+					protected Void doInBackground() {
 						String message = connection.searchSRE(searchString.getText().trim(), Integer.parseInt(searchColumn.getText().trim()), mode);
 
 						if(message.startsWith("No results for: ")) {

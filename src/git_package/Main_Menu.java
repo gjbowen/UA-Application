@@ -12,6 +12,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.border.TitledBorder;
 import java.awt.GridLayout;
 import java.awt.Component;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Main_Menu
@@ -61,8 +62,8 @@ public class Main_Menu
 		lbl_branch.setFont(new Font("Tahoma", Font.PLAIN, 19));
 		frameMainMenu.getContentPane().add(lbl_branch);
 
-		JButton btnDeletePreferences = new JButton("restart");
-		btnDeletePreferences.setBounds(267, 225, 89, 23);
+		JButton btnDeletePreferences = new JButton("Reset GIT");
+		btnDeletePreferences.setBounds(300, 225, 89, 23);
 		btnDeletePreferences.addActionListener(e -> {
 
 			int selection;
@@ -113,7 +114,7 @@ public class Main_Menu
 		////////////////////////////////////////////////////////////////////////////
 		////////////////////////////////////////////////////////////////////////////
 		getRecentBranches();
-
+		initDropdown();
 
 		////////////////////////////////////////////////////////////////////////////
 		////////////////////////////////////////////////////////////////////////////
@@ -220,15 +221,29 @@ public class Main_Menu
 			});
 		});
 		btnClose.setFont(new Font("Dialog", Font.PLAIN, 15));
-		btnClose.setBounds(363, 191, 122, 57);
+		btnClose.setBounds(400, 191, 122, 57);
 		frameMainMenu.getContentPane().add(btnClose);
 
 		JButton btnRefresh = new JButton("Refresh");
 		btnRefresh.addActionListener(arg0 -> refreshInfo());
-		btnRefresh.setBounds(267, 191, 89, 23);
+		btnRefresh.setBounds(300, 191, 89, 23);
 		frameMainMenu.getContentPane().add(btnRefresh);
 
+		JButton btnOpen = new JButton("OPEN");
+		btnOpen.addActionListener(e -> {
+			try{
+				System.out.println(f.gitFolder);
+				Runtime.getRuntime().exec("explorer.exe /select,"+f.gitFolder+"\\.git");
+			}
+			catch (IOException e1){
+				e1.printStackTrace();
+			}
+		});
+		btnOpen.setBounds(200, 191, 89, 57);
+		frameMainMenu.getContentPane().add(btnOpen);
 
+
+		//final frame
 		frameMainMenu.setVisible(true);
 	}
 	private void updateRecentBranches(){
@@ -260,13 +275,7 @@ public class Main_Menu
 		recentBranches=stringArray_to_arrayList(branches);
 		System.out.println("Recent Branches from file: " + recentBranches.toString());
 	}
-	private String[] arrayList_to_stringArray(ArrayList<String> aList){
-		String[] sArray=new String[aList.size()];
-		for(int i=0;i<aList.size();++i){
-			sArray[i]=aList.get(i);
-		}
-		return sArray;
-	}
+
 	private ArrayList<String> stringArray_to_arrayList(String[] sArray){
 		ArrayList<String> aList=new ArrayList<String>();
 		for(int i=0;i<sArray.length;++i){
@@ -276,7 +285,7 @@ public class Main_Menu
 	}
 	private void initDropdown(){
 		dropDownBox = new JComboBox(branches);
-		dropDownBox.setBounds(265, 39, 115, 20);
+		dropDownBox.setBounds(265, 39, 105, 20);
 		dropDownBox.addActionListener(e -> {
 			textField_switch.setText(dropDownBox.getSelectedItem().toString());
 		});

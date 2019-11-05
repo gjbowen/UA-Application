@@ -28,7 +28,7 @@ public class SAE_Menu {
 	private JTextField searchString;
 	private JTextField searchColumn;
 	private String mode;
-	private String module;
+	private String module="both";
 	private JTextField textField;
 
 	public SAE_Menu(Function_Library conn) {
@@ -274,7 +274,7 @@ public class SAE_Menu {
 				dlgProgress.setSize(300, 90);
 				dlgProgress.setLocationRelativeTo(saeFrame);
 				SwingWorker<Void, Void> sw = new SwingWorker<Void, Void>() {
-					protected Void doInBackground() throws Exception {
+					protected Void doInBackground() {
 						String message = connection.searchSAE(searchString.getText().trim(), Integer.parseInt(searchColumn.getText().trim()), mode, module);
 
 						if(message.startsWith("No results for: ")) {

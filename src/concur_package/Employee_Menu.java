@@ -1,77 +1,84 @@
 package concur_package;
 
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Toolkit;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JEditorPane;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import java.awt.Color;
+import java.awt.*;
+import javax.swing.*;
 
 public class Employee_Menu {
 	protected JFrame frameEmployeeMenu;
 	protected Function_Library connection;
-	private JTextField cwidField_1;
-	private JTextField cwidField_2;
-	private JTextField cwidField_6;
+	private API_Package api;
+
+	private JTextField cwidField_emp;
+
 	private JTextField textField_name;
 	private JTextField textField_cwid;
 	private JTextField textField_pidm;
 	private JTextField textField_column;
 
 	public Employee_Menu(Function_Library conn) {
-		this.connection = conn;
-		this.initialize();
+		connection = conn;
+		initialize();
+		api = new API_Package(connection);
+
 	}
 
 	private void initialize() {
-		this.frameEmployeeMenu = new JFrame();
-		this.frameEmployeeMenu.setIconImage(Toolkit.getDefaultToolkit().getImage(Employee_Menu.class.getResource("/Jar Files/ua_background_mobile.jpg")));
-		this.frameEmployeeMenu.setTitle("Employee Menu");
-		this.frameEmployeeMenu.setBounds(100, 100, 718, 508);
+		frameEmployeeMenu = new JFrame();
+		frameEmployeeMenu.setIconImage(Toolkit.getDefaultToolkit().getImage(Employee_Menu.class.getResource("/Jar Files/ua_background_mobile.jpg")));
+		frameEmployeeMenu.setTitle("Employee Menu");
+		frameEmployeeMenu.setBounds(100, 100, 718, 508);
 		frameEmployeeMenu.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		this.frameEmployeeMenu.getContentPane().setLayout(null);
-		JPanel label_In_Tracking_Table = new JPanel();
-		label_In_Tracking_Table.setBorder(null);
-		label_In_Tracking_Table.setBounds(6, 6, 686, 453);
-		this.frameEmployeeMenu.getContentPane().add(label_In_Tracking_Table);
-		label_In_Tracking_Table.setLayout(null);
+		frameEmployeeMenu.getContentPane().setLayout(null);
+		frameEmployeeMenu.setResizable(false);
+
+		JPanel panel = new JPanel();
+		panel.setBorder(null);
+		panel.setBounds(6, 6, 686, 453);
+		frameEmployeeMenu.getContentPane().add(panel);
+		panel.setLayout(null);
+
 		final JLabel lblStatus = new JLabel("Status: WAIT!");
 		lblStatus.setFont(new Font("AppleGothic", 0, 16));
 		lblStatus.setBounds(138, 404, 328, 35);
-		label_In_Tracking_Table.add(lblStatus);
+		panel.add(lblStatus);
 		lblStatus.setText("");
-		JLabel lblFindEmployee =new JLabel("Find Employee sent(value, column)");
-		lblFindEmployee.setBounds(6, 11, 174, 16);
-		label_In_Tracking_Table.add(lblFindEmployee);
-		this.cwidField_1 = new JTextField();
-		this.cwidField_1.setBounds(205, 6, 130, 26);
-		label_In_Tracking_Table.add(this.cwidField_1);
-		this.cwidField_1.setColumns(10);
-		JLabel lblFindDeleted = new JLabel("Find if deactivated from Concur");
-		lblFindDeleted.setBounds(6, 53, 231, 16);
-		label_In_Tracking_Table.add(lblFindDeleted);
-		this.cwidField_2 = new JTextField();
-		this.cwidField_2.setBounds(205, 48, 130, 26);
-		label_In_Tracking_Table.add(this.cwidField_2);
-		this.cwidField_2.setColumns(1);
-		JButton btnSubmit_1 = new JButton("Submit");
-		btnSubmit_1.setBounds(401, 5, 88, 29);
-		label_In_Tracking_Table.add(btnSubmit_1);
-		btnSubmit_1.addActionListener(e2 -> {
+
+		Panel subPanel_1 = new Panel();
+		subPanel_1.setBackground(Color.LIGHT_GRAY);
+		subPanel_1.setBounds(5, 10, 300, 150);
+		panel.add(subPanel_1);
+		subPanel_1.setLayout(null);
+
+		//////////////////////////////////////////////////////////////////////////////////
+		JLabel lbl_person = new JLabel("CWID/PIDM");
+		lbl_person.setFont(new Font("Tahoma", 1, 13));
+		lbl_person.setBounds(5, 8, 80, 23);
+		subPanel_1.add(lbl_person);
+
+		cwidField_emp = new JTextField();
+		cwidField_emp.setBounds(150, 6, 130, 26);
+		subPanel_1.add(cwidField_emp);
+		cwidField_emp.setColumns(10);
+
+		//////////////////////////////////////////////////////////////////////
+
+		textField_column = new JTextField();
+		textField_column.setText("5");
+		textField_column.setColumns(10);
+		textField_column.setBounds(220, 35, 46, 26);
+		subPanel_1.add(textField_column);
+		
+		JButton btnSubmit_findEmp = new JButton("Find Employee sent");
+		btnSubmit_findEmp.setBounds(5, 35, 210, 29);
+		subPanel_1.add(btnSubmit_findEmp);
+		
+		btnSubmit_findEmp.addActionListener(e2 -> {
 			lblStatus.setText("Status: Finding CWID info..");
-			String message = null;
-			String person = cwidField_1.getText().trim();
+			String message;
+			String person = cwidField_emp.getText().trim();
 			if (!person.equals("")) {
-				//if(!connection.isCWID(person))
-				//	person = connection.jdbc.getPIDMFromCWID(person);
+				if(textField_column.getText().trim().equals("5") && !connection.isCWID(person))
+					person = connection.jdbc.getCWIDFromPIDM(person);
 				message = connection.findEmployee(person,Integer.parseInt(textField_column.getText().trim()));
 				JTextArea textArea = new JTextArea(message);
 				JScrollPane scrollPane = new JScrollPane(textArea);
@@ -84,98 +91,21 @@ public class Employee_Menu {
 			else {
 				lblStatus.setText("Status: CWID not given.");
 			}
-			cwidField_1.setText("");
 		});
-		JButton btnSubmit_2 = new JButton("Submit");
-		btnSubmit_2.setBounds(345, 47, 88, 29);
-		label_In_Tracking_Table.add(btnSubmit_2);
-		btnSubmit_2.addActionListener(e2 -> {
-			lblStatus.setText("Status: Finding if CWID has been removed.");
-			String message = null;
-			String person = cwidField_2.getText().trim();
-			if (!person.equals("")) {
-				if(!connection.isCWID(person))
-					person = connection.jdbc.getPIDMFromCWID(person);
 
-				else {
-					message = connection.findIfDeleted(person);
-					lblStatus.setText("");
-					JOptionPane.showMessageDialog(null, message);
-					cwidField_2.setText("");
-				}
-			} else {
-				lblStatus.setText("Status: CWID not given.");
-			}
-		});
-		JButton btnSubmit_3 = new JButton("Submit");
-		btnSubmit_3.setBounds(205, 80, 88, 29);
-		label_In_Tracking_Table.add(btnSubmit_3);
-		btnSubmit_3.addActionListener(e2 -> {
-			String message = null;
-			lblStatus.setText("Status: Finding changed Login IDs.");
-			message = Employee_Menu.this.connection.findChangedLogin();
-			JTextArea textArea = new JTextArea(message);
-			JScrollPane scrollPane = new JScrollPane(textArea);
-			textArea.setLineWrap(true);
-			textArea.setWrapStyleWord(true);
-			scrollPane.setPreferredSize(new Dimension(800, 500));
-			JOptionPane.showMessageDialog(null, scrollPane, "Changed Login IDs", -1);
-			lblStatus.setText("");
-		});
-		JButton btnSubmit_4 = new JButton("Submit");
-		btnSubmit_4.setBounds(205, 120, 88, 29);
-		label_In_Tracking_Table.add(btnSubmit_4);
-		btnSubmit_4.addActionListener(e2 -> {
-			String message = null;
-			lblStatus.setText("Status: Finding all deactivated employees.");
-			message = Employee_Menu.this.connection.findAllDeleted();
-			JTextArea textArea = new JTextArea(message);
-			JScrollPane scrollPane = new JScrollPane(textArea);
-			textArea.setLineWrap(true);
-			textArea.setWrapStyleWord(true);
-			scrollPane.setPreferredSize(new Dimension(500, 500));
-			JOptionPane.showMessageDialog(null, scrollPane, "All Deactived Employees", -1);
-			lblStatus.setText("");
-		});
-		JButton btnClose = new JButton("Close");
-		btnClose.setFont(new Font("Lucida Grande", 0, 15));
-		btnClose.addActionListener(e2 -> frameEmployeeMenu.dispose());
-		btnClose.setBounds(554, 386, 122, 54);
-		label_In_Tracking_Table.add(btnClose);
-		JButton btnExit = new JButton("Exit");
-		btnExit.setFont(new Font("Lucida Grande", 0, 15));
-		btnExit.addActionListener(e2 -> {
-			public_package.Exit_Confirmation window = new public_package.Exit_Confirmation(connection.firstName);
-			window.frameExitConfirmation.setVisible(true);
-			System.exit(0);
-		});
-		btnExit.setBounds(6, 385, 122, 57);
-		label_In_Tracking_Table.add(btnExit);
-		JLabel lblFindChangedLogin = new JLabel("Find changed login IDs");
-		lblFindChangedLogin.setBounds(6, 91, 189, 16);
-		label_In_Tracking_Table.add(lblFindChangedLogin);
-		JLabel lblFindAllDeleted = new JLabel("Find all deleted employees");
-		lblFindAllDeleted.setBounds(6, 126, 189, 16);
-		label_In_Tracking_Table.add(lblFindAllDeleted);
+		//////////////////////////////////////////////////////////////////////////////////////////
 
-
-		
-		this.cwidField_6 = new JTextField();
-		this.cwidField_6.setColumns(10);
-		this.cwidField_6.setBounds(238, 256, 130, 26);
-		label_In_Tracking_Table.add(this.cwidField_6);
-
-		JButton submitButton6 = new JButton("Submit");
-		submitButton6.setBounds(378, 255, 88, 29);
-		label_In_Tracking_Table.add(submitButton6);
+		JButton submitButton6 = new JButton("Get information from tracking table");
+		submitButton6.setBounds(5, 70, 255, 29);
+		subPanel_1.add(submitButton6);
 		submitButton6.addActionListener(e2 -> {
 			lblStatus.setText("Status: Getting person info from tracking table..");
-			String person = cwidField_6.getText().trim();
-			String message = "";
+			String person = cwidField_emp.getText().trim();
+			String message;
 			if (!person.equals("")) {
 				if(!connection.isCWID(person))
-					person = connection.jdbc.getPIDMFromCWID(person);
-				if (connection.jdbc.cwidExistsInTrackingTable(person)) {
+					person = connection.jdbc.getCWIDFromPIDM(person);
+				if (connection.jdbc.cwidTracked(person)) {
 					message = connection.jdbc.getInformationTrackingTable(person);
 					JTextArea textArea = new JTextArea(message);
 					JScrollPane scrollPane = new JScrollPane(textArea);
@@ -187,115 +117,256 @@ public class Employee_Menu {
 					JOptionPane.showMessageDialog(null, "CWID - " + person + " is not in tracking table");
 				}
 				lblStatus.setText("");
-				Employee_Menu.this.cwidField_6.setText("");
 			} else {
 				lblStatus.setText("Status: CWID not given.");
 			}
 		});
-		JLabel lblGetInformationFrom = new JLabel("Get information from tracking table");
-		lblGetInformationFrom.setBounds(6, 262, 255, 16);
-		label_In_Tracking_Table.add(lblGetInformationFrom);
-		textField_name = new JTextField();
-		textField_name.setBounds(502, 347, 146, 26);
-		label_In_Tracking_Table.add(textField_name);
-		textField_name.setColumns(10);
-		textField_name.setText("");
-		textField_pidm = new JTextField();
-		textField_pidm.setBounds(344, 347, 146, 26);
-		label_In_Tracking_Table.add(textField_pidm);
-		textField_pidm.setColumns(10);
-		textField_pidm.setText("");
-		textField_cwid = new JTextField();
-		textField_cwid.setColumns(10);
-		textField_cwid.setBounds(189, 347, 146, 26);
-		label_In_Tracking_Table.add(this.textField_cwid);
-		textField_cwid.setText("");
-		JLabel lblCwid = new JLabel("CWID");
-		lblCwid.setBounds(189, 333, 46, 14);
-		label_In_Tracking_Table.add(lblCwid);
-		JButton resetButton = new JButton("RESET");
-		resetButton.setBounds(82, 349, 98, 23);
-		label_In_Tracking_Table.add(resetButton);
-		JButton convertButton = new JButton("CONVERT");
-		convertButton.setBounds(82, 324, 98, 23);
-		label_In_Tracking_Table.add(convertButton);
-		JLabel lblFullName = new JLabel("Full Name");
-		lblFullName.setBounds(502, 333, 80, 14);
-		label_In_Tracking_Table.add(lblFullName);
-		final JEditorPane editorPane = new JEditorPane();
-		editorPane.setForeground(Color.BLACK);
-		editorPane.setBounds(530, 43, 146, 201);
-		label_In_Tracking_Table.add(editorPane);
-		JLabel lblBatchSearch = new JLabel("Batch search");
-		lblBatchSearch.setFont(new Font("Tahoma", 1, 13));
-		lblBatchSearch.setBounds(556, 9, 88, 23);
-		label_In_Tracking_Table.add(lblBatchSearch);
-		JButton button = new JButton("Submit");
-		button.addActionListener(arg0 -> {
-			lblStatus.setText("Status: Finding if person is in tracking table..");
-			String people = editorPane.getText().trim();
-			System.out.println(people);
-			if (!people.equals("")) {
-				JOptionPane.showMessageDialog(null, connection.findBatch(people));
+
+		//////////////////////////////////////////////////////////////////////////
+
+		JButton btnSubmit_API = new JButton("Find via API");
+		btnSubmit_API.setBounds(5, 105, 240, 29);
+		subPanel_1.add(btnSubmit_API);
+		btnSubmit_API.addActionListener(e2 -> {
+			lblStatus.setText("Status: Sending API GET request..");
+			String message;
+			String person = cwidField_emp.getText().trim();
+			if (!person.equals("")) {
+				if(!connection.isCWID(person))
+					person = connection.jdbc.getCWIDFromPIDM(person);
+
+				//do stuff
 				lblStatus.setText("");
+				api.reinit();
+				api.sendGetRequest("/api/v3.0/common/users?employeeID="+person);
+				message=api.usersToString();
+
+				JTextArea textArea = new JTextArea(message);
+				JScrollPane scrollPane = new JScrollPane(textArea);
+                textArea.setFont(new Font("monospaced", Font.BOLD, 16));
+				scrollPane.setPreferredSize(new Dimension(700, 500));
+				scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+				scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+				JOptionPane.showMessageDialog(null, scrollPane, "API Search Results - "+person, -1);
+
 			} else {
-				lblStatus.setText("Status: CWIDs not given");
+				lblStatus.setText("Status: CWID not given.");
 			}
 		});
-		button.setBounds(556, 255, 88, 29);
-		label_In_Tracking_Table.add(button);
-		JLabel lblFindAllReactivated = new JLabel("Find all reactivated employees");
-		lblFindAllReactivated.setBounds(6, 169, 189, 16);
-		label_In_Tracking_Table.add(lblFindAllReactivated);
-		JButton button_Reactivated = new JButton("Submit");
+		////////////////////////////////////////////////////////////////////////////////////
+		////////////////////////////////////////////////////////////////////////////////////
+		Panel subPanel_2 = new Panel();
+		subPanel_2.setBackground(Color.LIGHT_GRAY);
+		subPanel_2.setBounds(5, 170, 230, 102);
+		panel.add(subPanel_2);
+		subPanel_2.setLayout(null);
+		////////////////////////////////////////////////////////////////////////////////////////
+		////////////////////////////////////////////////////////////////////////////////////////
+
+		JButton button_Reactivated = new JButton("Find all reactivated employees");
+		button_Reactivated.setBounds(5, 5, 220, 29);
 		button_Reactivated.addActionListener(arg0 -> {
-			String message = null;
+			String message;
 			lblStatus.setText("Status: Finding all reactivated employees.");
-			message = Employee_Menu.this.connection.findAllDeleted();
+			message = connection.findAllDeleted();
 			JTextArea textArea = new JTextArea(message);
 			JScrollPane scrollPane = new JScrollPane(textArea);
 			textArea.setLineWrap(true);
 			textArea.setWrapStyleWord(true);
 			scrollPane.setPreferredSize(new Dimension(500, 500));
-			JOptionPane.showMessageDialog(null, scrollPane, "All Deactived Employees", -1);
+			JOptionPane.showMessageDialog(null, scrollPane, "All Reactivated Employees", -1);
 			lblStatus.setText("");
 		});
-		button_Reactivated.setBounds(205, 160, 88, 29);
-		label_In_Tracking_Table.add(button_Reactivated);
+		subPanel_2.add(button_Reactivated);
+
+		//////////////////////////////////////////////////////////////////////////
+
+		JButton btnSubmit_changedLogins = new JButton("Find all changed login IDs");
+		btnSubmit_changedLogins.setBounds(5, 35, 220, 29);
+		subPanel_2.add(btnSubmit_changedLogins);
+		btnSubmit_changedLogins.addActionListener(e2 -> {
+			String message;
+			lblStatus.setText("Status: Finding changed Login IDs.");
+			message = connection.findChangedLogin();
+			JTextArea textArea = new JTextArea(message);
+			JScrollPane scrollPane = new JScrollPane(textArea);
+			textArea.setLineWrap(true);
+			textArea.setWrapStyleWord(true);
+			scrollPane.setPreferredSize(new Dimension(800, 500));
+			JOptionPane.showMessageDialog(null, scrollPane, "Changed Login IDs", -1);
+			lblStatus.setText("");
+		});
+
+		/////////////////////////////////////////////////////////////////////////////////////////
+
+		JButton btnSubmit_4 = new JButton("Find all deleted employees");
+		btnSubmit_4.setBounds(5, 65, 220, 29);
+		subPanel_2.add(btnSubmit_4);
+		btnSubmit_4.addActionListener(e2 -> {
+			String message;
+			lblStatus.setText("Status: Finding all deactivated employees.");
+			message = connection.findAllDeleted();
+			JTextArea textArea = new JTextArea(message);
+			JScrollPane scrollPane = new JScrollPane(textArea);
+			textArea.setLineWrap(true);
+			textArea.setWrapStyleWord(true);
+			scrollPane.setPreferredSize(new Dimension(500, 500));
+			JOptionPane.showMessageDialog(null, scrollPane, "All Deactivated Employees", -1);
+			lblStatus.setText("");
+		});
+
+
+		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		JLabel lblBatchSearch = new JLabel("Batch job");
+		lblBatchSearch.setFont(new Font("Tahoma", 1, 13));
+		lblBatchSearch.setBounds(556, 8, 88, 23);
+		panel.add(lblBatchSearch);
+
+		final JEditorPane editorPane = new JEditorPane();
+
+		JScrollPane scrollPane2 = new JScrollPane(editorPane,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollPane2.setForeground(Color.BLACK);
+		scrollPane2.setBounds(556, 30, 100, 211);
+		panel.add(scrollPane2);
+
+		JButton button305 = new JButton("Create 305");
+		button305.setBounds(556, 245, 100, 29);
+		panel.add(button305);
+
+		button305.addActionListener(arg0 -> {
+			lblStatus.setText("Status: Creating 305 file..");
+			String people = editorPane.getText().trim();
+			if (!people.equals("")) {
+				String message = connection.findBatch305(people);
+				JTextArea textArea = new JTextArea(message);
+				JScrollPane scrollPane = new JScrollPane(textArea);
+				textArea.setLineWrap(true);
+				textArea.setWrapStyleWord(true);
+				scrollPane.setPreferredSize(new Dimension(1200, 500));
+				JOptionPane.showMessageDialog(null, scrollPane, "305 Batch Search", -1);
+				lblStatus.setText("");
+			} else {
+				lblStatus.setText("Status: CWIDs not given");
+			}
+		});
+
+
+		JButton button350 = new JButton("Create 350");
+		button350.setBounds(556, 275, 100, 29);
+		panel.add(button350);
+
+		button350.addActionListener(arg0 -> {
+			lblStatus.setText("Status: Creating 350 file..");
+			String people = editorPane.getText().trim();
+			if (!people.equals("")) {
+				String message = connection.findBatch350(people);
+				JTextArea textArea = new JTextArea(message);
+				JScrollPane scrollPane = new JScrollPane(textArea);
+				textArea.setLineWrap(true);
+				textArea.setWrapStyleWord(true);
+				scrollPane.setPreferredSize(new Dimension(600, 500));
+				JOptionPane.showMessageDialog(null, scrollPane, "350 Batch Search", -1);
+				lblStatus.setText("");
+
+			} else {
+				lblStatus.setText("Status: CWIDs not given");
+			}
+		});
+
+		////////////////////////////////////////////////////////////////////////////////////
+		////////////////////////////////////////////////////////////////////////////////////
+		Panel subPanel_3 = new Panel();
+		subPanel_3.setBackground(Color.LIGHT_GRAY);
+		subPanel_3.setBounds(5, 280, 500, 80);
+		panel.add(subPanel_3);
+		subPanel_3.setLayout(null);
+
+		//////////////////////////////////////////////////////////////////
+		JButton convertButton = new JButton("CONVERT");
+		convertButton.setBounds(100, 50, 100, 23);
+		subPanel_3.add(convertButton);
+
+		JButton resetButton = new JButton("RESET");
+		resetButton.setBounds(260, 50, 100, 23);
+		subPanel_3.add(resetButton);
+		//////////////////////////////////////////////////////////////////
+
+		textField_cwid = new JTextField();
+		textField_cwid.setBounds(5, 20, 146, 26);
+		subPanel_3.add(textField_cwid);
+		textField_cwid.setColumns(10);
+		textField_cwid.setText("");
+
+		textField_pidm = new JTextField();
+		textField_pidm.setBounds(155, 20, 146, 26);
+		subPanel_3.add(textField_pidm);
+		textField_pidm.setColumns(10);
+		textField_pidm.setText("");
+
+		textField_name = new JTextField();
+		textField_name.setBounds(305, 20, 146, 26);
+		subPanel_3.add(textField_name);
+		textField_name.setColumns(10);
+		textField_name.setText("");
+
+		JLabel lblCwid = new JLabel("CWID");
+		lblCwid.setBounds(5, 5, 46, 14);
+		subPanel_3.add(lblCwid);
 
 		JLabel lblPidm = new JLabel("PIDM");
-		lblPidm.setBounds(344, 333, 46, 14);
-		label_In_Tracking_Table.add(lblPidm);
-		
-		textField_column = new JTextField();
-		textField_column.setText("5");
-		textField_column.setColumns(10);
-		textField_column.setBounds(345, 6, 46, 26);
-		label_In_Tracking_Table.add(textField_column);
-		resetButton.addActionListener(e2 -> {
+		lblPidm.setBounds(155, 5, 46, 14);
+		subPanel_3.add(lblPidm);
 
+		JLabel lblFullName = new JLabel("Full Name");
+		lblFullName.setBounds(305, 5, 80, 14);
+		subPanel_3.add(lblFullName);
+
+		convertButton.addActionListener(e2 -> {
+			//do stuff
+			String cwid = textField_cwid.getText().trim();
+			String pidm = textField_pidm.getText().trim();
+			String name = textField_name.getText().trim();
+			if(pidm.equals("") && cwid.equals("") && name.equals("")) { //use pidm
+				//nothing given!
+			}
+			else if(cwid.equals("") && name.equals("")) { //use pidm
+				textField_cwid.setText(connection.jdbc.getCWIDFromPIDM(pidm));
+				textField_name.setText(connection.jdbc.getNameFromPIDM(pidm));
+			}
+			else if (pidm.equals("") && name.equals("")){ //use cwid
+				textField_pidm.setText(connection.jdbc.getPIDMFromCWID(cwid));
+				textField_name.setText(connection.jdbc.getNameFromPIDM(cwid));
+			}
+			else if (pidm.equals("") && cwid.equals("")){//use name
+				textField_cwid.setText(connection.jdbc.getCWIDFromName(name));
+				textField_pidm.setText(connection.jdbc.getPIDMFromCWID(textField_cwid.getText()));
+			}
+			cwidField_emp.setText(textField_cwid.getText());
+		});
+
+		resetButton.addActionListener(e2 -> {
 			textField_name.setText("");
 			textField_cwid.setText("");
 			textField_pidm.setText("");
 		});
-		convertButton.addActionListener(e2 -> {
-			//do stuff
 
-			if(textField_cwid.getText().equals("") && textField_name.getText().equals("")) { //use pidm
-				textField_cwid.setText(connection.jdbc.getCWIDFromPIDM(textField_pidm.getText()));
-				textField_name.setText(connection.jdbc.getNameFromPIDM(textField_pidm.getText()));
-			}
-			else if (textField_pidm.getText().equals("") && textField_name.getText().equals("")){ //use cwid
-				String cwid = textField_cwid.getText();
-				textField_pidm.setText(connection.jdbc.getPIDMFromCWID(cwid));
-				textField_name.setText(connection.jdbc.getNameFromPIDM(cwid));			}
-			else if (textField_pidm.getText().equals("") && textField_cwid.getText().equals("")){//use name
-				textField_cwid.setText(connection.jdbc.getCWIDFromName(textField_name.getText()));
-				textField_pidm.setText(connection.jdbc.getPIDMFromName(textField_name.getText()));
-			}
+		/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		JButton btnClose = new JButton("Close");
+		btnClose.setFont(new Font("Lucida Grande", 0, 15));
+		btnClose.addActionListener(e2 -> frameEmployeeMenu.dispose());
+		btnClose.setBounds(554, 395, 122, 54);
+		panel.add(btnClose);
 
+		/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		JButton btnExit = new JButton("Exit");
+		btnExit.setFont(new Font("Lucida Grande", 0, 15));
+		btnExit.addActionListener(e2 -> {
+			public_package.Exit_Confirmation window = new public_package.Exit_Confirmation(connection.firstName);
+			window.frameExitConfirmation.setVisible(true);
+			System.exit(0);
 		});
-
+		btnExit.setBounds(6, 395, 122, 57);
+		panel.add(btnExit);
 	}
 }
 

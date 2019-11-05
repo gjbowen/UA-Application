@@ -29,12 +29,7 @@ class Function_Library {
 		password = pass;
 	}
 
- 	protected String getYear() {
- 		Calendar now = Calendar.getInstance();
- 		int year = now.get(Calendar.YEAR);
- 		return String.valueOf(year);
-	}  
-	public void openLink(String URL) {
+    public void openLink(String URL) {
 		try {
 			Desktop.getDesktop().browse(new URI(URL));
 		} catch (IOException | URISyntaxException   e) {

@@ -44,11 +44,8 @@ public class SFTP_Connection {
 			dirDelim = "/";
 
 	}
-	protected boolean connected() {
 
-        return connection != null && !connection.isClosed();
-    }
-	protected void sftpConnect(){
+    protected void sftpConnect(){
 		try {
 			String hostname = getInstance(environment);
 
@@ -211,23 +208,6 @@ public class SFTP_Connection {
 			path = "/u03/import/" + environment;
 		}		
 		return path;
-	}
-	protected String getFileSize(double size) {
-		double num = 0;
-		if(size >=   1000000000) {//giga bytes
-			num=size/1000000000;
-			return num + " GB";
-		}
-		else if(size>=1000000) {//megabytes
-			num=size/ 1000000;
-
-			return num + " MB";
-		}
-		else if(size>=1000) {//kilobytes
-			num=size/ 1000;
-			return num + " KB";
-		}
-		return num + " Bytes";
 	}
 
 }

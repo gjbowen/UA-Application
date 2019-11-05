@@ -1,10 +1,10 @@
 package concur_package;
 
-public class User {
-	String ID="";
+class User {
+	String ID="";//api ref
 	String URI="";
-	String LoginID="";
-	String EmployeeID="";
+	String LoginID="";//same as email
+	String EmployeeID="";//cwid
 	String FirstName="";
 	String LastName="";
 	String MiddleName="";
@@ -12,82 +12,109 @@ public class User {
 	String Active="";
 	String CellPhoneNumber="";
 	String OrganizationUnit="";
-	@Override
-	public String toString() {
+
+	public void setID(String ID) {
+		this.ID = ID;
+	}
+
+    public void setLoginID(String loginID) {
+		LoginID = loginID;
+	}
+
+	public void setEmployeeID(String employeeID) {
+		EmployeeID = employeeID;
+	}
+
+	public void setFirstName(String firstName) {
+		FirstName = firstName;
+	}
+
+	public void setLastName(String lastName) {
+		LastName = lastName;
+	}
+
+	public void setMiddleName(String middleName) {
+		MiddleName = middleName;
+	}
+
+	public void setPrimaryEmail(String primaryEmail) {
+		PrimaryEmail = primaryEmail;
+	}
+
+	public void setActive(String active) {
+		Active = active;
+	}
+
+	public void setCellPhoneNumber(String cellPhoneNumber) {
+		CellPhoneNumber = cellPhoneNumber;
+	}
+
+	public void setOrganizationUnit(String organizationUnit) {
+		OrganizationUnit = organizationUnit;
+	}
+
+	String CONCUR_PIDM = "";
+	String CONCUR_CWID = "";
+	String CONCUR_FIRST_NAME = "";
+	String CONCUR_MI = "";
+	String CONCUR_LAST_NAME = "";
+	String CONCUR_LOGIN_ID = "";
+	String CONCUR_EMAIL = "";
+	String CONCUR_ACTIVE = "";
+	String CONCUR_RT_CODE = "";
+	String CONCUR_EXP_REP_APPR_ID = "";
+	String CONCUR_TRAVEL_APPR_ID = "";
+	String CONCUR_INVOICE_APPR_ID = "";
+	String CONCUR_EXPENSE_USER = "";
+	String CONCUR_APPROVER = "";
+	String CONCUR_INVOICE_USER = "";
+	String CONCUR_INVOICE_APPR = "";
+	String CONCUR_TRAVEL_REQUEST_USER = "";
+	String CONCUR_TRAVEL_REQUEST_MGR = "";
+	String CONCUR_TRAVEL_WIZARD_USER = "";
+	String CONCUR_TRAVEL_CLASS = "";
+	String CONCUR_APPR_POSN_DESC = "";
+	String CONCUR_COAS_CODE = "";
+	String CONCUR_FUND_CODE = "";
+	String CONCUR_ORGN_CODE = "";
+	String CONCUR_PROG_CODE = "";
+	String CONCUR_VERSION = "";
+	String CONCUR_ACTIVITY_DATE = "";
+
+    static String getHeader() {
+		return "User_ID," + "URI,"  + "LoginID,"  + "EmployeeID,"
+				+ "FirstName,"  + "LastName,"  + "MiddleName,"
+				+ "PrimaryEmail,"  + "Active,"  + "CellPhoneNumber,"
+				+ "OrganizationUnit," ;
+	}
+
+	String toStringCSV_API(){
+		return ID+"," + URI + "," + LoginID + "," + EmployeeID
+				+ "," + FirstName + "," + LastName + "," + MiddleName
+				+ "," + PrimaryEmail + "," + Active + "," + CellPhoneNumber
+				+ "," + OrganizationUnit ;
+	}
+	@Override public String toString() {
 		return "User [\n\tID=" + ID + "\n\tURI=" + URI + "\n\tLoginID=" + LoginID + "\n\tEmployeeID=" + EmployeeID
 				+ "\n\tFirstName=" + FirstName + "\n\tLastName=" + LastName + "\n\tMiddleName=" + MiddleName
 				+ "\n\tPrimaryEmail=" + PrimaryEmail + "\n\tActive=" + Active + "\n\tCellPhoneNumber=" + CellPhoneNumber
 				+ "\n\tOrganizationUnit=" + OrganizationUnit + "\n\t]";
 	}
-	public void printString() {
-		System.out.println(toString());
+	String toStringCSV_Table(){
+		return CONCUR_PIDM+","+CONCUR_CWID +","+CONCUR_FIRST_NAME+","+CONCUR_MI+","+CONCUR_LAST_NAME+","+CONCUR_LOGIN_ID+","+CONCUR_EMAIL+","+CONCUR_ACTIVE +","+
+				CONCUR_RT_CODE+","+CONCUR_EXP_REP_APPR_ID+","+CONCUR_TRAVEL_APPR_ID+","+CONCUR_INVOICE_APPR_ID+","+CONCUR_EXPENSE_USER+"," +
+				CONCUR_APPROVER+","+CONCUR_INVOICE_USER+","+CONCUR_INVOICE_APPR+","+CONCUR_TRAVEL_REQUEST_USER+","+CONCUR_TRAVEL_REQUEST_MGR+"," +
+				CONCUR_TRAVEL_WIZARD_USER+","+CONCUR_TRAVEL_CLASS+","+CONCUR_APPR_POSN_DESC+","+CONCUR_COAS_CODE+","+CONCUR_FUND_CODE+"," +
+				CONCUR_ORGN_CODE+","+CONCUR_PROG_CODE+","+CONCUR_VERSION+","+CONCUR_ACTIVITY_DATE;
+	}
+	static String getEmpHeader(){
+		return "CONCUR_PIDM,"+"CONCUR_CWID," +
+				"CONCUR_FIRST_NAME,"+"CONCUR_MI,"+"CONCUR_LAST_NAME,"+"CONCUR_LOGIN_ID,"+"CONCUR_EMAIL,"+"CONCUR_ACTIVE," +
+				"CONCUR_RT_CODE,"+"CONCUR_EXP_REP_APPR_ID,"+"CONCUR_TRAVEL_APPR_ID,"+"CONCUR_INVOICE_APPR_ID,"+"CONCUR_EXPENSE_USER," +
+				"CONCUR_APPROVER,"+"CONCUR_INVOICE_USER,"+"CONCUR_INVOICE_APPR,"+"CONCUR_TRAVEL_REQUEST_USER,"+"CONCUR_TRAVEL_REQUEST_MGR," +
+				"CONCUR_TRAVEL_WIZARD_USER,"+"CONCUR_TRAVEL_CLASS,"+"CONCUR_APPR_POSN_DESC,"+"CONCUR_coas_CODE,"+"CONCUR_fund_CODE," +
+				"CONCUR_ORGN_CODE,"+"CONCUR_prog_CODE,"+"CONCUR_VERSION,"+"CONCUR_ACTIVITY_DATE";
 	}
 
-	public String getID() {
-		return ID;
-	}
-	public void setID(String iD) {
-		ID = iD;
-	}
-	public String getURI() {
-		return URI;
-	}
-	public void setURI(String uRI) {
-		URI = uRI;
-	}
-	public String getLoginID() {
-		return LoginID;
-	}
-	public void setLoginID(String loginID) {
-		LoginID = loginID;
-	}
-	public String getEmployeeID() {
-		return EmployeeID;
-	}
-	public void setEmployeeID(String employeeID) {
-		EmployeeID = employeeID;
-	}
-	public String getFirstName() {
-		return FirstName;
-	}
-	public void setFirstName(String firstName) {
-		FirstName = firstName;
-	}
-	public String getLastName() {
-		return LastName;
-	}
-	public void setLastName(String lastName) {
-		LastName = lastName;
-	}
-	public String getMiddleName() {
-		return MiddleName;
-	}
-	public void setMiddleName(String middleName) {
-		MiddleName = middleName;
-	}
-	public String getPrimaryEmail() {
-		return PrimaryEmail;
-	}
-	public void setPrimaryEmail(String primaryEmail) {
-		PrimaryEmail = primaryEmail;
-	}
-	public String getActive() {
-		return Active;
-	}
-	public void setActive(String active) {
-		Active = active;
-	}
-	public String getCellPhoneNumber() {
-		return CellPhoneNumber;
-	}
-	public void setCellPhoneNumber(String cellPhoneNumber) {
-		CellPhoneNumber = cellPhoneNumber;
-	}
-	public String getOrganizationUnit() {
-		return OrganizationUnit;
-	}
-	public void setOrganizationUnit(String organizationUnit) {
-		OrganizationUnit = organizationUnit;
-	}
 
 }

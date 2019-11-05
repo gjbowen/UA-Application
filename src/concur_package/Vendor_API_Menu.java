@@ -18,6 +18,7 @@ import javax.swing.SwingWorker;
 import java.awt.Panel;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.util.ArrayList;
 
 public class Vendor_API_Menu {
 	protected API_Package api;
@@ -33,7 +34,7 @@ public class Vendor_API_Menu {
 		api = a;
 		initialize();
 	}
-	private void  getAPI() {
+	private void  getVendorsViaAPI() {
 	
 		JDialog dlgProgress;
 		dlgProgress = new JDialog((java.awt.Frame)null, "Please wait.", true);//true means that the dialog created is modal
@@ -55,13 +56,14 @@ public class Vendor_API_Menu {
 		dlgProgress.setLocationRelativeTo(frame);
 		///////////
 		SwingWorker<Void, Void> sw = new SwingWorker<Void, Void>() {
-			protected Void doInBackground() throws Exception {
-				api.prep();
-				api.sendGetRequest("/api/v3.0/invoice/vendors");
+			protected Void doInBackground() {
+				api.reinit();
+				// puts in the object variable vendors
+				api.sendGetRequest("/api/v3.0/invoice/vendors?limit=1000");
 				return null;
 			}
 			protected void done() {
-				System.out.println("Done with: "+api.writeApiVendors());
+				System.out.println("Done with getting vendors.");
 				dlgProgress.dispose();//close the modal dialog
 			}
 		};
@@ -72,7 +74,6 @@ public class Vendor_API_Menu {
 		sw.execute(); 
 		//this will block user input as long as the processing task is working
 		dlgProgress.setVisible(true);
-		compareBanner();		
 	}
 	private void compareBanner() {
 		JDialog dlgProgress;
@@ -95,8 +96,17 @@ public class Vendor_API_Menu {
 		dlgProgress.setLocationRelativeTo(frame);
 		///////////
 		SwingWorker<Void, Void> sw = new SwingWorker<Void, Void>() {
-			protected Void doInBackground() throws Exception {
-				 message=api.compareVendorsNotInBanner(api.functions.jdbc.getVendors());
+			protected Void doInBackground() {
+				ArrayList<Vendor> vendors = api.functions.jdbc.getActiveVendors();
+
+				message = api.writeTrackingTableVendors(vendors);
+				message += "\n";
+				message += api.writeApiVendors();
+				message += "\n";
+				message +=  api.compareVendorsNotInBanner(vendors);
+				message += "\n";
+				message += api.compareVendorsNotInConcur(vendors);
+
 				return null;
 			}
 			protected void done() {
@@ -121,10 +131,12 @@ public class Vendor_API_Menu {
 		frame.setBounds(100, 100, 462, 407);
 		frame.setDefaultCloseOperation(3);
 		frame.getContentPane().setLayout(null);
+
 		JButton btnExit = new JButton("Exit");
 		btnExit.setFont(new Font("Dialog", 0, 15));
 		btnExit.setBounds(10, 300, 122, 57);
 		frame.getContentPane().add(btnExit);
+
 		JButton btnClose = new JButton("Close");
 		btnClose.setFont(new Font("Dialog", 0, 15));
 		btnClose.setBounds(313, 300, 122, 57);
@@ -139,7 +151,7 @@ public class Vendor_API_Menu {
 
 		JButton btnSubmit_vendors = new JButton("GET");
 		btnSubmit_vendors.addActionListener(e -> {
-			api.prep();
+			api.reinit();
 
 			api.sendGetRequest(textField_vendors.getText().trim());
 			String message=api.vendorsToString();
@@ -178,7 +190,7 @@ public class Vendor_API_Menu {
 		button.setBounds(10, 99, 177, 42);
 		panel_GET.add(button);
 		button.addActionListener(e -> {
-			api.prep();
+			api.reinit();
 
 			String message=api.functions.jdbc.getVendorInfo(textField.getText().trim());
 
@@ -191,7 +203,7 @@ public class Vendor_API_Menu {
 			JOptionPane.showMessageDialog(null, scrollPane, "Banner Tracking", -1);
 		});
 		button_vendorID.addActionListener(e -> {
-			api.prep();
+			api.reinit();
 			api.sendGetRequest("/api/v3.0/invoice/vendors?vendorCode="+textField.getText().trim());
 			String message=api.vendorsToString();
 			System.out.println("OUTPUT MESSAGE: "+message);
@@ -225,7 +237,7 @@ public class Vendor_API_Menu {
 			if (JOptionPane.showConfirmDialog(null,
 					"Are you sure you want to delete this address? There's no going back..",
 					"Warning", JOptionPane.YES_NO_OPTION) == 0) { //Yes
-				api.prep();
+				api.reinit();
 				api.sendDeleteRequest("/api/v3.0/invoice/vendors?vendorCode="+textField_deleteID.getText().trim()+"&addressCode="+textField_deleteRT.getText().trim());
 				JTextArea textArea = new JTextArea(api.serverResponse);
 				JScrollPane scrollPane = new JScrollPane(textArea);
@@ -249,9 +261,13 @@ public class Vendor_API_Menu {
 		textField_deleteRT.setBounds(119, 6, 68, 41);
 		panel_DELETE.add(textField_deleteRT);
 		
-		JButton btn_createReport = new JButton("Inactive Vendors in Concur");
-		btn_createReport.addActionListener(arg0 -> getAPI());
-		btn_createReport.setBounds(10, 182, 197, 48);
+		JButton btn_createReport = new JButton("Analyze Banner/Concur Differences");
+		btn_createReport.addActionListener(arg0 -> {
+			getVendorsViaAPI();
+			compareBanner();
+		});
+
+		btn_createReport.setBounds(10, 182, 250, 48);
 		frame.getContentPane().add(btn_createReport);
 
 		btnExit.addActionListener(e2 -> System.exit(0));

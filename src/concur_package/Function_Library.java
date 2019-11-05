@@ -8,23 +8,16 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
-import java.util.Set;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 import com.sshtools.sftp.SftpClient;
 
 import java.text.ParseException;
-import java.util.Date;
 
 class Function_Library {
-	protected ResultSet rs;
 	protected JDBC_Connection jdbc;
 	protected SFTP_Connection sftp;
 	protected String environment;
@@ -45,59 +38,6 @@ class Function_Library {
 		environment = mode;
 		userName = user;
 		password = pass;
-		rs = null;
-	}
-
-	protected void addHost() {
-		String key;
-		String file;
-		boolean keyExists;
-		String location;
-		File hostFile;
-		location = System.getProperty("user.home") + "\\.ssh\\";
-		file = "known_hosts";
-		File folder = new File(location);
-		if (!folder.isDirectory())
-			folder.mkdir();
-		if (!(hostFile = new File(location + "\\" + file)).isFile()) {
-			try {
-				hostFile.createNewFile();
-			} catch (IOException e2) {
-				e2.printStackTrace();
-			}
-		}
-		Scanner scanner = null;
-		keyExists = false;
-		key = "";
-		if (environment.equals("PROD"))
-			key = "|1|/iXInV+vs5n6Yjy29UghqN2LpSE=|7ZyEQMD5I74meKae4+LnDiDDPVU= ssh-dss AAAAB3NzaC1kc3MAAACBAKGBcMx3ydn5Atbm6PwcUOWiLKU8OQWk6N5DqA9aqRPKEtpTWwNS33Bculs5ExjEFQQ7Bul3SzcqIg1fixr6LJlsq6OXyQ8Y2sDNA6UD3LAvFI/OgIGxTL4B0hd9OZNw9YcxgCl5bDYZQTwshwGFJFBKML+l69XyMuh/bQDzxHLHAAAAFQDpPDnUwKCbYiw7SOC3KuES+T5mWQAAAIBP15ROEk2w+8bbxOnL4yfi71/jU72O1vBDkaVGZ/eKM5m6/p6ozg6QEh5giTccvMcumR7BFEWUGwtF/nZ1r+4VIgXoD3ItuP/72fSBBs3jIlh6+ujiP1xk3aaVPBW5wpQk8VyqRwxvezHSwYcMYHbcb2Uo11uxSs6hSnaFT1T+qwAAAIBQ9Nv3FozsHKmRnf7UTfu5gW2jY2YPBhVRN4+aPXbNe6qpTOwp3As5UzkQse5y1Abp9oAydkYXNV+K+F9h4gD6ZfZeuXYKx9UCMFNuoAagj96hvnjFpYu6UaUaaWGzgTqE9BfmhcfPZIiWmy/YMv7925T/CutzB8aBrSXd5BJG9A==";
-		else if (environment.equals("TEST"))
-			key = "|1|L+qTF0w7jQN/TI0iY9BG+39llQc=|/FwFTkJmfOwipF3cdcp1Ianw+WU= ssh-dss AAAAB3NzaC1kc3MAAACBAKGBcMx3ydn5Atbm6PwcUOWiLKU8OQWk6N5DqA9aqRPKEtpTWwNS33Bculs5ExjEFQQ7Bul3SzcqIg1fixr6LJlsq6OXyQ8Y2sDNA6UD3LAvFI/OgIGxTL4B0hd9OZNw9YcxgCl5bDYZQTwshwGFJFBKML+l69XyMuh/bQDzxHLHAAAAFQDpPDnUwKCbYiw7SOC3KuES+T5mWQAAAIBP15ROEk2w+8bbxOnL4yfi71/jU72O1vBDkaVGZ/eKM5m6/p6ozg6QEh5giTccvMcumR7BFEWUGwtF/nZ1r+4VIgXoD3ItuP/72fSBBs3jIlh6+ujiP1xk3aaVPBW5wpQk8VyqRwxvezHSwYcMYHbcb2Uo11uxSs6hSnaFT1T+qwAAAIBQ9Nv3FozsHKmRnf7UTfu5gW2jY2YPBhVRN4+aPXbNe6qpTOwp3As5UzkQse5y1Abp9oAydkYXNV+K+F9h4gD6ZfZeuXYKx9UCMFNuoAagj96hvnjFpYu6UaUaaWGzgTqE9BfmhcfPZIiWmy/YMv7925T/CutzB8aBrSXd5BJG9A==";
-		else if (environment.equals("SEVL"))
-			key = "|1|gJmGG8UJpoXQWCGcTkscywbeLC0=|gS+zLq0l6GdfwMvCjaRlcdQWNaU= ssh-dss AAAAB3NzaC1kc3MAAACBALb9P14GxU2bK8/K0gQZ6qV5LLdJoFLGpGZdz7jhjHFbXYOjGhRmlZrJd6dBD1tAlzOfH1xCvvBUyRRwgb7319QIKe9shvxcknvu0BY0LAfDugKc8aejErRqSb9eBLzJKI5+YrXx1XbvVQPGPqQQKPvuGNHCn6MPqL4IHqlQg0cHAAAAFQDoRlRjrjRQO/22ndKylo6hH0w9owAAAIBNTOMorYCuUpkt8IbMs+YKHnGHtv2lUaFYU/mFk3JJIVvMSG95Xsf75UvcH2V9a9j11gMuwBWzDEB9MUnIjXZW+wccxEl5+FyNTWTSryZNSEkSyhFHoD63iJqBagp50rorL4q7i7D3jmJ1yOF0/CHupD6Dghu4z5+E3wmImHXiJAAAAIAieNDqm7AwsmZzE9jQUfah625JT53gB0t4Kjnowjo3ZSg8mSKVq6RyQW+bTjNgkk9Caie7J/9FZ7SRBhIoXg/heA7vve4sXCDZEXqGYFaGOLg7o1Li0PZpuzyVfrVVHUBfUlt/6B9kiAH0uow4QWS2g4I955vYyLlask6xq7aKfg==";
-		else
-			System.out.println("ERROR SAVING KEY");
-
-		try {
-			scanner = new Scanner(hostFile);
-			while (scanner.hasNextLine()) {
-				String line = scanner.nextLine();
-				if (!line.equals(key) && line != key)
-					continue;
-				keyExists = true;
-				break;
-			}
-		} catch (FileNotFoundException e1) {
-			e1.printStackTrace();
-		}
-		if (!keyExists)
-			try {
-				BufferedWriter output = new BufferedWriter(new FileWriter(location + "\\" + file, true));
-				output.write(key + '\n');
-				output.close();
-			} catch (IOException e3) {
-				e3.printStackTrace();
-			}
 	}
 
 	protected String findAllDeleted() {
@@ -123,16 +63,17 @@ class Function_Library {
 					if (parsedLine.length > 15) {
 						if (people.contains(parsedLine[4])) {
 							// it contains cwid
-                            // reactivated
-                            removedPeople.remove(parsedLine[4]);
-							if (parsedLine[14].equals("N") && jdbc.cwidExistsInTrackingTable(parsedLine[4])) {
+							// reactivated
+							removedPeople.remove(parsedLine[4]);
+							if (parsedLine[14].equals("N") && jdbc.cwidTracked(parsedLine[4])) {
 								++count;
 								removedPeople.add(parsedLine[4]);
 								retStr.append("Deleted on " + getDateFromFilename(file.getName()) + " - "
 										+ parsedLine[4] + "   " + parsedLine[3] + ", " + parsedLine[1] + " "
 										+ parsedLine[2] + "\n");
 							}
-						} else
+						}
+						else
 							// it does NOT contain CWID, add it.
 							if (parsedLine[14].equals("Y"))
 								people.add(parsedLine[4]);
@@ -143,7 +84,7 @@ class Function_Library {
 			}
 		}
 		for (int i = 0; i < removedPeople.size(); ++i)
-			if (jdbc.cwidExistsInTrackingTable(removedPeople.get(i)))
+			if (jdbc.cwidTracked(removedPeople.get(i)))
 				// reactivated
 				System.out.println(removedPeople.get(i) + " - " + jdbc.getNameFromTrackingTable(removedPeople.get(i)));
 
@@ -153,32 +94,27 @@ class Function_Library {
 		return retStr.toString();
 	}
 
-
 	protected Set<String> parsePeople(String people) {
-		people = people.trim().replaceAll(" +", " ");
+		people = people.trim();
 		String[] parsedPeople = null;
-		Set<String> s2 = null;
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		if (people.contains(",")) {
-			people = people.replaceAll(" ", "");
-			parsedPeople = people.split(",");
-		} else if (people.contains(";")) {
-			people = people.replaceAll(" ", "");
-			parsedPeople = people.split(";");
-		} else if (people.contains("\n")) {
-			people = people.replaceAll("\n", ",");
-			people = people.replaceAll("\n", ",");
-			people = people.replaceAll(" ", "");
-			parsedPeople = people.split(",");
-		} else
-			parsedPeople = people.split(" ");
+		people = people.replace("\r\n",",");
+		people = people.replace("\n",",");
+		people = people.replace(" ",",");
+		people = people.replace(" ",",");
+		people = people.replace("\t",",");
+		people = people.replace(";",",");
 
+		people = people.replace(",,",",");
+		people = people.replace(",,",",");
+
+		parsedPeople = people.split(",");
 		for (int i = 0; i < parsedPeople.length; ++i)
 			if (!parsedPeople[i].trim().equals("") && !map.containsKey(parsedPeople[i].trim()))
 				map.put(parsedPeople[i].trim(), null);
 
-		s2 = map.keySet();
-		return s2;
+		Set<String> set = map.keySet();
+		return set;
 	}
 
 	protected String findChangedLogin() {
@@ -199,19 +135,21 @@ class Function_Library {
 				while ((line = br.readLine()) != null) {
 					parsedLine = line.split(",");
 
-					if (map.containsKey(parsedLine[4]))// it contains cwid
+					if (map.containsKey(parsedLine[4])) {// it contains cwid
 						if (!map.get(parsedLine[4]).equals(parsedLine[5])) {// there has been a change in ID..
 
 							++count;
 							retStr.append(getDateFromFilename(file.getName()) + " - " + parsedLine[4] + "   " // cwid
 									+ parsedLine[3] + ", " + parsedLine[1] + " " + parsedLine[2] // name
-											+ " -  Old: " + map.get(parsedLine[4]) // old ID
-											+ " -  New: " + parsedLine[5] + "\n"); // new ID
+									+ " -  Old: " + map.get(parsedLine[4]) // old ID
+									+ " -  New: " + parsedLine[5] + "\n"); // new ID
 							map.put(parsedLine[4], parsedLine[5]);
 						}
+					}
+					else{// it does NOT contain cwid
+						map.put(parsedLine[4], parsedLine[5]);
 
-						else// it does NOT contain cwid
-							map.put(parsedLine[4], parsedLine[5]);
+					}
 				}
 			} catch (IOException e) {
 				System.out.println("File not found");
@@ -260,15 +198,18 @@ class Function_Library {
 		return retStr.toString();
 	}
 
-	protected String findBatch(String cwid) {
+	protected String findBatch305(String cwid) {
 		String line = "";
 		int count = 0;
 		Set<String> people = parsePeople(cwid);
-		System.out.println("People: " + people.toString());
 		File[] files = new File(System.getProperty("user.home") + "//Concur_Files//" + environment + "//Employee_Files").listFiles();
 		File file = null;
 		String[] parsedLine = null;
 		StringBuilder retStr = new StringBuilder();
+
+		HashMap<String,String> approvers = new HashMap<String,String>();
+		HashMap<String,String> nonApprovers = new HashMap<String,String>();
+
 		for (int i = 0; i < files.length; ++i) {
 			file = files[i];
 
@@ -280,6 +221,19 @@ class Function_Library {
 						continue;
 					}
 					++count;
+
+					if(parsedLine[63].equals("Y")){
+						if(approvers.containsKey(parsedLine[4]))
+							approvers.replace(parsedLine[4],line);
+						else
+							approvers.put(parsedLine[4],line);
+					}
+
+					if (nonApprovers.containsKey(parsedLine[4]))
+						nonApprovers.replace(parsedLine[4], line);
+					else
+						nonApprovers.put(parsedLine[4], line);
+
 					retStr.append(getDateFromFilename(file.getName()) + "  -  " + parsedLine[4] + "  -  "
 							+ parsedLine[3] + ", " + parsedLine[1] + " " + parsedLine[2] + "  -  Email: "
 							+ parsedLine[5] + "  -  Active: " + parsedLine[14] + "  -  Orgn: "
@@ -292,44 +246,80 @@ class Function_Library {
 				System.out.println("File not found");
 			}
 		}
-		System.out.println("Done with Employee search.");
-		if (count == 0) 
+		ArrayList<String> results = new ArrayList<String>();
+		approvers.forEach((k, v) -> {
+			results.add(v);
+		});
+		nonApprovers.forEach((k, v) -> {
+			results.add(v);
+		});
+		if (count == 0)
 			return "CWID " + cwid + " not found.";
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMdd");
+		LocalDateTime now = LocalDateTime.now();
+
+		writeListToFile("concur_employee_feed_305_"+dtf.format(now)+"_fix.txt","100,0,SSO,UPDATE,EN,N,N",results);
+		System.out.println("Done with 305 search.");
+
 		return retStr.toString();
 	}
 
-	protected String findIfDeleted(String cwid) {
-		System.out.println("Initiating Employee delete search...");
+	protected String findBatch350(String cwid) {
 		String line = "";
 		int count = 0;
-		File[] files = new File(System.getProperty("user.home") + "//Concur_Files//" + environment + "//Employee_Files").listFiles();
+		Set<String> people = parsePeople(cwid);
+		File[] files = new File(System.getProperty("user.home") + "//Concur_Files//" + environment + "//350_Files").listFiles();
 		File file = null;
 		String[] parsedLine = null;
 		StringBuilder retStr = new StringBuilder();
-		String name = cwid;
+
+		HashMap<String,String> found = new HashMap<String,String>();
+
 		for (int i = 0; i < files.length; ++i) {
 			file = files[i];
+
 			try {
 				BufferedReader br = new BufferedReader(new FileReader(file));
 				while ((line = br.readLine()) != null) {
 					parsedLine = line.split(",");
-					if (parsedLine.length <= 14 || !parsedLine[4].contentEquals(cwid)
-							|| !parsedLine[14].contentEquals("N"))
-						continue;
-					++count;
-					name = parsedLine[4] + " - " + parsedLine[3] + ", " + parsedLine[1] + " " + parsedLine[2];
-					retStr.append("\t-\tDeleted on: " + getDateFromFilename(file.getName()) + "\n");
-				}
 
+
+					if (parsedLine.length <= 10 || !people.contains(parsedLine[1].trim())) {
+						continue;
+					}
+					++count;
+
+					if (found.containsKey(parsedLine[1])) {
+						found.replace(parsedLine[1], line);
+					} else {
+						found.put(parsedLine[1], line);
+					}
+
+					retStr.append(getDateFromFilename(file.getName()) + "  -  " + parsedLine[1] + "  -  "
+							+ parsedLine[17]+ "  -  "
+							+ parsedLine[19]+"\n");
+				}
 				br.close();
+
 			} catch (IOException e2) {
 				System.out.println("File not found");
 			}
 		}
-		System.out.println("Done with Deleted Employee search.");
+		ArrayList<String> results = new ArrayList<String>();
+
+		found.forEach((k, v) -> {
+			results.add(v);
+		});
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMdd");
+		LocalDateTime now = LocalDateTime.now();
+
+		writeListToFile("concur_employee_feed_350_"+dtf.format(now)+"_fix.txt","100,0,SSO,UPDATE,EN,N,N",results);
+
 		if (count == 0)
-			return "CWID " + cwid + " has not been removed/deleted.";
-		return "Count: " + count + "\n" + "Person: " + name + "\n" + retStr.toString();
+			return "CWID " + cwid + " not found.";
+		System.out.println("Done with 350 search.");
+
+		return retStr.toString();
 	}
 
 	protected String get305ORGN(String cwid, String fileName) {
@@ -367,8 +357,8 @@ class Function_Library {
 		} catch (NumberFormatException e2) {
 			return false;
 		}
-        return x >= 1980 && x <= 2099;
-    }
+		return x >= 1980 && x <= 2099;
+	}
 
 	protected String getDateFromFilename(String str) {
 		String year = null;
@@ -381,35 +371,6 @@ class Function_Library {
 				day = str.substring(i + 6, i + 8);
 			}
 		return month + "/" + day + "/" + year;
-	}
-
-	protected String getFilePath(String location) {
-		String path = "";
-		switch (location.toUpperCase()) {
-		case "ARCHIVE":
-			path = "/u03/archive/" + environment;
-		case "EXPORT":
-			path = "/u03/export/" + environment;
-		case "IMPORT":
-			path = "/u03/import/" + environment;
-		}
-		return path;
-	}
-
-	protected String getFileSize(double size) {
-		double num = 0;
-		if (size >= 1000000000) {// giga bytes
-			num = size / 1000000000;
-			return num + " GB";
-		} else if (size >= 1000000) {// megabytes
-			num = size / 1000000;
-
-			return num + " MB";
-		} else if (size >= 1000) {// kilobytes
-			num = size / 1000;
-			return num + " KB";
-		}
-		return num + " Bytes";
 	}
 
 	protected String getLatestPRAE() {
@@ -478,15 +439,7 @@ class Function_Library {
 		if ((cwid = cwid.trim()).length() != 8)
 			return false;
 		try {
-            return Integer.parseInt(cwid) >= 0;
-		} catch (NumberFormatException nfe) {
-			return false;
-		}
-	}
-
-	protected boolean isPIDM(String pidm) {
-		try {
-            return Integer.parseInt(pidm.trim()) >= 0;
+			return Integer.parseInt(cwid) >= 0;
 		} catch (NumberFormatException nfe) {
 			return false;
 		}
@@ -494,14 +447,14 @@ class Function_Library {
 
 	protected boolean isPcard(ArrayList<String> parsedLine) {
 		if (parsedLine.get(125).toUpperCase().equals("CBCP"))
-            return !parsedLine.get(17).equals("") && Float.valueOf(parsedLine.get(17)) != 0;
+			return !parsedLine.get(17).equals("") && Float.valueOf(parsedLine.get(17)) != 0;
 		return false;
 	}
 
 	protected boolean isExpense(ArrayList<String> parsedLine) {
 		if (parsedLine.get(125).toUpperCase().equals("CASH"))
 			//if (!parsedLine.get(184).equals(""))
-            return !parsedLine.get(17).equals("") && Float.valueOf(parsedLine.get(17)) != 0;
+			return !parsedLine.get(17).equals("") && Float.valueOf(parsedLine.get(17)) != 0;
 		return false;
 	}
 
@@ -584,14 +537,14 @@ class Function_Library {
 		return System.getProperty("user.home") + "\\Concur_Files\\" + environment + "\\Generated_Files\\Vendors_Terminated.txt";
 	}
 
-	protected String getPwd() {		
+	protected String getPwd() {
 		return System.getProperty("user.dir");
 	}
 	protected String pwd() {
 		return getPwd();
 	}
 	protected boolean validItem(String object, ArrayList<ArrayList<String>> list, String item1, String item2,
-			Date date) {
+								Date date) {
 		for (int i = 0; i < list.size(); ++i) {
 			if (list.get(i).get(0).equals(item1) && list.get(i).get(1).equals(item2)) {
 				// FUND
@@ -737,8 +690,8 @@ class Function_Library {
 							continue;
 						else if (parsedLine.size() != 399) {
 							System.err.println("ERROR! Incorrect Length - Skipping line");
-							System.err.println("File Name: " + 
-									file.getName() + 
+							System.err.println("File Name: " +
+									file.getName() +
 									" - Line: " + lineNumber +
 									" - Length: " + parsedLine.size());
 							continue;
@@ -840,13 +793,13 @@ class Function_Library {
 
 		writeListToFile("SAE_GENERATED.txt", header, arrayOfLines);
 		if(transfer.contains("SEVL")) {
-			sftp.moveFile("SEVL","Generated_Files","SAE_GENERATED.txt","SAE_GENERATED.txt");	
+			sftp.moveFile("SEVL","Generated_Files","SAE_GENERATED.txt","SAE_GENERATED.txt");
 		}
 		if(transfer.contains("TEST")) {
-			sftp.moveFile("TEST","Generated_Files","SAE_GENERATED.txt","SAE_GENERATED.txt");	
+			sftp.moveFile("TEST","Generated_Files","SAE_GENERATED.txt","SAE_GENERATED.txt");
 		}
 		if(transfer.contains("PROD")) {
-			sftp.moveFile("PROD","Generated_Files","SAE_GENERATED.txt","SAE_GENERATED.txt");	
+			sftp.moveFile("PROD","Generated_Files","SAE_GENERATED.txt","SAE_GENERATED.txt");
 		}
 
 		if(validateItems) {
@@ -969,8 +922,8 @@ class Function_Library {
 									+ getDateFromFilename(file.getName()) + "\n" + "Line: " + fileLine + "\n"
 									+ "\tPerson: " + parsedLine[164] + "\n" + "\tReport Key: " + parsedLine[1] + "\n"
 									+ "\tHold Code: " + parsedLine[18] + "\n" + "\tDispursement Code: " + parsedLine[19]
-											+ "\n" + "\tTransaction Amount: " + transAmount + "\n" + "\tAccount Code: "
-											+ parsedLine[134] + "\n");
+									+ "\n" + "\tTransaction Amount: " + transAmount + "\n" + "\tAccount Code: "
+									+ parsedLine[134] + "\n");
 							++count;
 						}
 						if (contains_or_equals.equals("startsWith") && parsedLine[column].startsWith(str)) {
@@ -978,8 +931,8 @@ class Function_Library {
 									+ getDateFromFilename(file.getName()) + "\n" + "Line: " + fileLine + "\n"
 									+ "\tPerson: " + parsedLine[164] + "\n" + "\tReport Key: " + parsedLine[1] + "\n"
 									+ "\tHold Code: " + parsedLine[18] + "\n" + "\tDispursement Code: " + parsedLine[19]
-											+ "\n" + "\tTransaction Amount: " + transAmount + "\n" + "\tAccount Code: "
-											+ parsedLine[134] + "\n");
+									+ "\n" + "\tTransaction Amount: " + transAmount + "\n" + "\tAccount Code: "
+									+ parsedLine[134] + "\n");
 							++count;
 						}
 						if (contains_or_equals.equals("doesNotEqual") && !parsedLine[column].equals(str)) {
@@ -987,8 +940,8 @@ class Function_Library {
 									+ getDateFromFilename(file.getName()) + "\n" + "Line: " + fileLine + "\n"
 									+ "\tPerson: " + parsedLine[164] + "\n" + "\tReport Key: " + parsedLine[1] + "\n"
 									+ "\tHold Code: " + parsedLine[18] + "\n" + "\tDispursement Code: " + parsedLine[19]
-											+ "\n" + "\tTransaction Amount: " + transAmount + "\n" + "\tAccount Code: "
-											+ parsedLine[134] + "\n");
+									+ "\n" + "\tTransaction Amount: " + transAmount + "\n" + "\tAccount Code: "
+									+ parsedLine[134] + "\n");
 							++count;
 						}
 						if (contains_or_equals.equals("endsWith") && parsedLine[column].endsWith(str)) {
@@ -996,8 +949,8 @@ class Function_Library {
 									+ getDateFromFilename(file.getName()) + "\n" + "Line: " + fileLine + "\n"
 									+ "\tPerson: " + parsedLine[164] + "\n" + "\tReport Key: " + parsedLine[1] + "\n"
 									+ "\tHold Code: " + parsedLine[18] + "\n" + "\tDispursement Code: " + parsedLine[19]
-											+ "\n" + "\tTransaction Amount: " + transAmount + "\n" + "\tAccount Code: "
-											+ parsedLine[134] + "\n");
+									+ "\n" + "\tTransaction Amount: " + transAmount + "\n" + "\tAccount Code: "
+									+ parsedLine[134] + "\n");
 							++count;
 						}
 						if (contains_or_equals.equals("equals") && parsedLine[column].equals(str)) {
@@ -1005,8 +958,8 @@ class Function_Library {
 									+ getDateFromFilename(file.getName()) + "\n" + "Line: " + fileLine + "\n"
 									+ "\tPerson: " + parsedLine[164] + "\n" + "\tReport Key: " + parsedLine[1] + "\n"
 									+ "\tHold Code: " + parsedLine[18] + "\n" + "\tDispursement Code: " + parsedLine[19]
-											+ "\n" + "\tTransaction Amount: " + transAmount + "\n" + "\tAccount Code: "
-											+ parsedLine[134] + "\n");
+									+ "\n" + "\tTransaction Amount: " + transAmount + "\n" + "\tAccount Code: "
+									+ parsedLine[134] + "\n");
 							++count;
 						}
 					}
@@ -1020,7 +973,7 @@ class Function_Library {
 		System.out.println(column);
 		if (count == 0)
 			return "No results for: \nSearch column " + (column + 1) + " to see if it " + contains_or_equals + " "
-			+ str;
+					+ str;
 		else
 			retStr.append("\n\n\nTOTAL: " + count);
 
@@ -1049,18 +1002,13 @@ class Function_Library {
 	}
 	protected String buildSRE(ArrayList<String> parsedLine, String fileName, int line) {
 		System.out.println("FOUND!!!!!!");
-		String transAmount;
 		if(parsedLine.get(0).equals("REQUEST DETAIL")){ //86 in length
 			return "\nFile: " + fileName + "\n"
 					+ "Batch Date: " + parsedLine.get(2) + "\n"
 					+ "Line: " + line+ "\n"
 					+ "\tPerson: " + parsedLine.get(4) + " - " + parsedLine.get(5) + ", " + parsedLine.get(6) + "\n"
 					+ "\tFOAP: " + parsedLine.get(9) + "  " + parsedLine.get(10) + "  " + parsedLine.get(11) + "  " +  parsedLine.get(12) + "\n"
-			;
-		}
-		else{
-
-
+					;
 		}
 
 
@@ -1104,22 +1052,26 @@ class Function_Library {
 							System.out.println("\t"+file.getName() + "\t" + "Line: "+fileLine);
 							continue;
 						}
+
 						// start the search
-						//						System.out.println(parsedLine.get(column));
 						if (searchMode.equals("contains") && parsedLine.get(column).toLowerCase().contains(str)) {
 							System.out.println("FOUND!");
 							retStr.append(buildSAE(parsedLine, file.getName(), fileLine));
 							++count;
-						} else if (searchMode.equals("startsWith") && parsedLine.get(column).startsWith(str)) {
+						}
+						else if (searchMode.equals("startsWith") && parsedLine.get(column).startsWith(str)) {
 							retStr.append(buildSAE(parsedLine, file.getName(), fileLine));
 							++count;
-						} else if (searchMode.equals("endsWith") && parsedLine.get(column).endsWith(str)) {
+						}
+						else if (searchMode.equals("endsWith") && parsedLine.get(column).endsWith(str)) {
 							retStr.append(buildSAE(parsedLine, file.getName(), fileLine));
 							++count;
-						} else if (searchMode.equals("equals") && parsedLine.get(column).equals(str)) {
+						}
+						else if (searchMode.equals("equals") && parsedLine.get(column).equals(str)) {
 							retStr.append(buildSAE(parsedLine, file.getName(), fileLine));
 							++count;
-						} else if (searchMode.equals("doesNotEqual") && !parsedLine.get(column).equals(str)) {
+						}
+						else if (searchMode.equals("doesNotEqual") && !parsedLine.get(column).equals(str)) {
 							retStr.append(buildSAE(parsedLine, file.getName(), fileLine));
 							++count;
 						}
@@ -1248,25 +1200,36 @@ class Function_Library {
 	protected void validateFupload (String filename){
 		String line = "";
 		File file = new File(System.getProperty("user.home") + "//Concur_Files//misc//"+filename);
+		double running_total = 0.0;
 
 		System.out.println("File: "+file.getAbsolutePath());
 		try {
+			int count = 0;
 			BufferedReader br = new BufferedReader(new FileReader(file));
 			System.out.println("Successfully opened!\n");
-
+			String rec_count ;
+			String trans_tot;
 			while ((line = br.readLine()) != null) {
 				String ruleCode = line.substring(17,21);
 				String recordType = line.substring(16,17);
 				String amount = line.substring(29,41);
 				String d_c_ind = line.substring(76,77);
-				if(recordType.equals("2"))
-					System.out.println("<"+ruleCode+">    <"+d_c_ind+">    <"+recordType+">    <"+amount+">    <"+formatAmount(amount)+">");
-				if(recordType.equals("3")){
-					System.out.println("<"+ruleCode+">    <"+recordType+">    <"+amount+">    <"+formatAmount(amount)+">");
+				if(recordType.equals("2")) {
+					++count;
+					System.out.println("<" + ruleCode + ">    <" + d_c_ind + ">    <" + recordType + ">    <" + amount + ">    <" + formatAmount(amount) + ">");
 				}
+				else if(recordType.equals("3")){
+					rec_count=line.substring(17,25).trim();
+					trans_tot=line.substring(25,37).trim();
+					System.out.println("<"+rec_count+">    <"+formatAmount(trans_tot)+">");
+				}
+				else
+					System.out.println(line);
 
 			}
 			br.close();
+			System.out.println("Double - "+running_total);
+			System.out.println("Count - "+count);
 		} catch (IOException e2) {
 			System.out.println("File not found - "+file.getAbsolutePath());
 		}
@@ -1331,8 +1294,8 @@ line := rpad(v_system_id,8)         || --8 SYSTEM_ID*
 						retStr.append("File: " + file.getName() + "\tLENGTH: " + parsedLine.size() + "\tLINE: "
 								+ lineNumber + "\tName: " + parsedLine.get(2).replaceAll("\"", "") + "\tDisp. Code: "
 								+ parsedLine.get(39) + /*
-								 * "\tEmail: " + parsedLine[52] +
-								 */"\t" + parsedLine.get(15) + "\n");
+						 * "\tEmail: " + parsedLine[52] +
+						 */"\t" + parsedLine.get(15) + "\n");
 						++count;
 					}
 					br.close();
@@ -1400,8 +1363,46 @@ line := rpad(v_system_id,8)         || --8 SYSTEM_ID*
 		}
 		return retStr.toString();
 	}
+	protected String searchPaymentReceipt(String key) {
+		String line = "";
+		int count = 0;
+		File[] files = new File(System.getProperty("user.home") + "//Concur_Files//" + environment + "//PAYMENT_RECEIPT").listFiles();
+		File file = null;
+		String[] parsedLine = null;
+		StringBuilder retStr = new StringBuilder();
+		for (int i2 = 0; i2 < files.length; ++i2) {
+			file = files[i2];
 
-	protected String search710(String chart, String fund, String orgn, String cwid) {
+			if (file.getName().endsWith(".txt") && file.getName().contains("concur_pymt_receipt_")) {
+				try {
+					BufferedReader br = new BufferedReader(new FileReader(file));
+					while ((line = br.readLine()) != null) {
+						parsedLine = line.split(",");
+						if (parsedLine.length < 6)
+							continue;
+						if (parsedLine[6].contains(key)) {
+							retStr.append("File: " + file.getName() +"\n\t" +
+									"Key: "+parsedLine[6]+"\n\t" +
+									"Check Number: "+parsedLine[5]+"\n\t" +
+									"Amount: "+parsedLine[1]+"\n\t" +
+									"\n");
+							++count;
+						}
+					}
+					br.close();
+				} catch (IOException e2) {
+					System.out.println("File not found");
+				}
+			}
+		}
+		System.out.println("Done with Payment Request key search.");
+		if (count == 0) {
+			return "Request key " + key + " not found.";
+		}
+		return retStr.toString();
+	}
+
+	protected String search710(String chart, String fund, String orgn, String cwid,String level) {
 		System.out.println("Initiating 710 search..");
 		String line = "";
 		int count = 0;
@@ -1421,25 +1422,29 @@ line := rpad(v_system_id,8)         || --8 SYSTEM_ID*
 						if (parsedLine.length == 7 || !parsedLine[1].equals("EXP"))
 							continue;
 
-						/*
+
 						if ((chart.equals("") || parsedLine[3].equals(chart))
 								&& (fund.equals("") || parsedLine[4].equals(fund))
 								&& (orgn.equals("") || parsedLine[5].equals(orgn))
 								&& (cwid.equals("") || parsedLine[2].equals(cwid))
-								) {
+								&& (level.equals("") || parsedLine[parsedLine.length - 1].equals(level))
+						) {
 							{
+
 								retStr.append("File: " + file.getName() + "\t\t" + "CWID: " + parsedLine[2] + "\t"
 										+ "COAS: " + parsedLine[3] + "\t" + "Fund: " + parsedLine[4] + "\t" + "ORGN: "
 										+ parsedLine[5] + "\t");
-								if (parsedLine[0].equals("710"))
+								if (parsedLine[0].equals("710")) {
 									retStr.append("\tLEVEL: " + parsedLine[parsedLine.length - 1] + "\n");
+									System.out.println(line);
+								}
 								else
 									retStr.append("\tREMOVED\n");
 								++count;
 
 							}
 						}
-						*/
+					/*
 
 						 if(parsedLine[3].equals("A") && parsedLine[5].equals("217201") ){
 
@@ -1447,6 +1452,8 @@ line := rpad(v_system_id,8)         || --8 SYSTEM_ID*
 									 + "COAS: " + parsedLine[3] + "\t" + "Fund: " + parsedLine[4] + "\t" + "ORGN: "
 									 + parsedLine[5] + "\t");
 						 }
+						 */
+
 					}
 					br.close();
 				} catch (IOException e2) {
@@ -1456,7 +1463,7 @@ line := rpad(v_system_id,8)         || --8 SYSTEM_ID*
 		}
 		System.out.println("Done with 710 search.");
 
-		if (count == 0) 
+		if (count == 0)
 			return "NO RESULTS";
 		return retStr.toString();
 	}
@@ -1495,32 +1502,4 @@ line := rpad(v_system_id,8)         || --8 SYSTEM_ID*
 		return key.toString();
 	}
 
-	protected void rewrite() {
-		System.out.println("Initiating PRAE rewrite...");
-		String line = "";
-		String content = "";
-		File[] files = new File(System.getProperty("user.home") + "//Downloads//ACH_RETURNS").listFiles();
-		File file = null;
-		ArrayList<String> parsedLine = null;
-		String[] parsedIndexes = null;
-		ArrayList<String> arrayOfLines = new ArrayList<String>();
-		for (int i = 0; i < files.length; ++i) {
-			file = files[i];
-				try {
-					BufferedReader br = new BufferedReader(new FileReader(file));
-					while ((line = br.readLine()) != null) {
-
-						arrayOfLines.add(line);
-					}
-					br.close();
-				} catch (IOException e2) {
-					System.out.println("File not found");
-				}
-
-		}
-		String header = "";
-
-		writeListToFile("MASTER.txt", header, arrayOfLines);
-		System.out.println("DONE");
-	}
 }

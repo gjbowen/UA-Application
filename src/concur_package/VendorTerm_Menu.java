@@ -97,7 +97,7 @@ public class VendorTerm_Menu {
 			dlgProgress.setLocationRelativeTo(vendorTermFrame);
 			///////////
 			SwingWorker<Void, Void> sw = new SwingWorker<Void, Void>() {
-				protected Void doInBackground() throws Exception {
+				protected Void doInBackground() {
 					System.out.println("SEARCHING..");
 					message = connection.searchVendorTerm(textField.getText().trim());
 					System.out.println("DONE..");

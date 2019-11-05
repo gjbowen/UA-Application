@@ -11,35 +11,10 @@ class JDBC_Connection extends public_package.JDBC_Connection{
 		super(env, user, pass);
 		connection=conn;
 	}
-	void reintialize(Connection conn) {
-		connection = conn;
-	}
-	public String getOrgn(String cwid) {
-		String orgn = "";
-		Statement stmt = null;
-		try {
-			stmt = connection.createStatement();
-			rs = stmt.executeQuery("select concur_orgn_code from ua_fimsmgr.concur_emp_feed where concur_cwid = '" + cwid + "' ");
-			int count = 0;
-			while (rs.next()) {
-				++count;
-				orgn = rs.getString(1);
-			}
-			if(count==1)
-				return orgn;
-			else 
-				return null;
-		}
-		catch (SQLException e2) {
-			System.out.println("Too many people were returned - " + cwid);
-			e2.printStackTrace();
-		}
-		System.out.println("Error getting CWID.");
-		return null;
-	}
+
 	public String getNameFromTrackingTable(String cwid) {
 		String name = "";
-		Statement stmt = null;
+		Statement stmt;
 		try {
 			stmt = connection.createStatement();
 			rs = stmt.executeQuery("select concur_last_name||', '||concur_first_name||' '||concur_mi from ua_fimsmgr.concur_emp_feed where concur_cwid = '" + cwid + "' ");
@@ -48,7 +23,7 @@ class JDBC_Connection extends public_package.JDBC_Connection{
 				++count;
 				name = rs.getString(1);
 			}
-			if(count==1) 
+			if(count==1)
 				return name;
 		}
 		catch (SQLException e2) {
@@ -58,14 +33,15 @@ class JDBC_Connection extends public_package.JDBC_Connection{
 		System.out.println("Error getting CWID.");
 		return null;
 	}
+
 	public String getInformationTrackingTable(String cwid){
 		cwid=cwid.trim();
 		//STEP 4: Execute a query
 		System.out.println("Creating statement...");
 
-		Statement stmt = null;
-		ResultSetMetaData rsmd = null;
-		String message="",result="",row="";
+		Statement stmt;
+		ResultSetMetaData rsmd;
+		String message="",result,row;
 		System.out.println("Executing query...");
 		try {
 			stmt = connection.createStatement();
@@ -96,7 +72,7 @@ class JDBC_Connection extends public_package.JDBC_Connection{
 					+ "CONCUR_prog_CODE as \"Prog Code\","
 					+ "CONCUR_VERSION as \"Version\","
 					+ "CONCUR_ACTIVITY_DATE as \"Activity Date\""
-					+ "from ua_fimsmgr.concur_emp_feed "	
+					+ "from ua_fimsmgr.concur_emp_feed "
 					+ "where concur_cwid = '"+cwid+"'");
 			rsmd = rs.getMetaData();
 			System.out.println("Extracting data...");
@@ -108,13 +84,13 @@ class JDBC_Connection extends public_package.JDBC_Connection{
 					result=rs.getString(i);
 					if(result==null)
 						result="";
-					if(row=="")
+					if(row.equals(""))
 						row = rsmd.getColumnName(i)+": "+result;
 					else
 						row = row+"\n"+rsmd.getColumnName(i)+": "+result;
 
 				}
-				message=message+row+"\n";				
+				message=message+row+"\n";
 			}
 			if(stmt != null) {stmt.close();	}
 		} catch (SQLException e) {
@@ -126,80 +102,179 @@ class JDBC_Connection extends public_package.JDBC_Connection{
 		return message;
 
 	}
-	public String generatePaid(String check_date) {
-		System.out.println("Creating statement...");
-		Statement stmt = null;
-		String message = "100,LF,KEY";
-		String result = "";
-		System.out.println("Executing query...");
+	public ArrayList<Vendor> getActiveVendors() {
+		ArrayList<Vendor> all = new ArrayList<Vendor>();
+		Statement stmt;
 		try {
 			stmt = connection.createStatement();
-			String query = "select to_number(substr(fabinvh_vend_inv_code,3,11)) as \"Request Key\",spriden_first_name|| ' ' || spriden_last_name as \"Vendor Name\", fabinvh_code as \"Invoice Number\", fabchka_gross_amt as \"Invoice Amount\",fabinvh_open_paid_ind as \"Payment Status\", to_char(fabchka_check_date,'yyyymmdd') as \"Payment Status Date\", fabchka_check_num as \"Check Number\" from fimsmgr.fabinvh, saturn.spriden, fimsmgr.fabchka, fimsmgr.farinvc where fabinvh_vend_pidm = spriden_pidm and fabinvh_code = fabchka_inv_code and fabinvh_code = farinvc_invh_code and spriden_change_ind is null and fabinvh_vend_inv_code like 'CI%' and farinvc_comm_code = 'APCNCR'";
-			if (!check_date.equals(""))
-				query = query + " and to_char(fabchka_check_date,'yyyymmdd') = " + check_date;
-			rs = stmt.executeQuery(query);
-			System.out.println("Extracting data...");
-			String payment_type = "";
+			rs = stmt.executeQuery(
+					"select CONCUR_VENDOR_PIDM,CONCUR_VENDOR_CWID,CONCUR_VENDOR_NAME,CONCUR_VENDOR_TAX_ID, "+
+							"CONCUR_VENDOR_ADDR_CODE,CONCUR_VENDOR_ADDR_LN1,CONCUR_VENDOR_ADDR_LN2,CONCUR_VENDOR_ADDR_LN3, "+
+							"CONCUR_VENDOR_CITY,CONCUR_VENDOR_STATE,CONCUR_VENDOR_ZIP,CONCUR_VENDOR_NATN,CONCUR_VENDOR_PHONE, "+
+							"CONCUR_VENDOR_CONTACT,CONCUR_VENDOR_CUSTOM1,CONCUR_VENDOR_CUSTOM2,CONCUR_VENDOR_CUSTOM3,CONCUR_VENDOR_CUSTOM4, "+
+							"CONCUR_VENDOR_CUSTOM5,CONCUR_VENDOR_CUSTOM6,CONCUR_VENDOR_EMAIL, "+
+							"CONCUR_VENDOR_ACTIVE,CONCUR_VENDOR_ACTIVITY_DATE "+
+							"from ua_fimsmgr.concur_vendor_feed " +
+							"where concur_vendor_active = 'ACTIVE' " +
+							"order by concur_vendor_cwid");
+
 			while (rs.next()) {
-				payment_type = rs.getString(5).equals("P") || rs.getString(5) == "P" ? "Paid" : rs.getString(5);
-				result = rs.getString(1) + "," + rs.getString(2) + "," + rs.getString(3) + "," + rs.getString(4) + "," + payment_type + "," + rs.getString(6) + "," + rs.getString(7) + "," + "," + "," + "," + "," + "," + "," + "," + "," + "," + "," + "," + "," + "," + "," + "," + "," + "," + "," + "," + "," + "," + "," + "," + "," + "," + "," + "," + "," + "," + "," + "," + "," + "," + ",";
-				message = message + "\n" + result;
+				Vendor vendor = new Vendor();
+
+				vendor.CONCUR_VENDOR_PIDM = rs.getString(1);
+				vendor.CONCUR_VENDOR_CWID = rs.getString(2);
+				vendor.CONCUR_VENDOR_NAME = rs.getString(3);
+				vendor.CONCUR_VENDOR_TAX_ID = rs.getString(4);
+				vendor.CONCUR_VENDOR_ADDR_CODE = rs.getString(5);
+				vendor.CONCUR_VENDOR_ADDR_LN1 = rs.getString(6);
+				vendor.CONCUR_VENDOR_ADDR_LN2 = rs.getString(7);
+				vendor.CONCUR_VENDOR_ADDR_LN3 = rs.getString(8);
+				vendor.CONCUR_VENDOR_CITY = rs.getString(9);
+				vendor.CONCUR_VENDOR_STATE = rs.getString(10);
+				vendor.CONCUR_VENDOR_ZIP = rs.getString(11);
+				vendor.CONCUR_VENDOR_NATN = rs.getString(12);
+				vendor.CONCUR_VENDOR_PHONE = rs.getString(13);
+				vendor.CONCUR_VENDOR_CONTACT = rs.getString(14);
+				vendor.CONCUR_VENDOR_CUSTOM1 = rs.getString(15);
+				vendor.CONCUR_VENDOR_CUSTOM2 = rs.getString(16);
+				vendor.CONCUR_VENDOR_CUSTOM3 = rs.getString(17);
+				vendor.CONCUR_VENDOR_CUSTOM4 = rs.getString(18);
+				vendor.CONCUR_VENDOR_CUSTOM5 = rs.getString(19);
+				vendor.CONCUR_VENDOR_CUSTOM6 = rs.getString(20);
+				vendor.CONCUR_VENDOR_EMAIL = rs.getString(21);
+				vendor.CONCUR_VENDOR_ACTIVE = rs.getString(22);
+				vendor.CONCUR_VENDOR_ACTIVITY_DATE = rs.getString(23);
+
+				all.add(vendor);
 			}
-			if (stmt != null)
-				stmt.close();
+			System.out.println("ACTIVE VENDORS IN TRACKING: " + all.size());
+		}
+		catch (SQLException e2) {
+			e2.printStackTrace();
+			return null;
+		}
+		return all;
+	}
+
+	public boolean cwidTracked(String cwid) {
+		Statement stmt;
+		try {
+			stmt = connection.createStatement();
+			rs = stmt.executeQuery("select 'Y' from ua_fimsmgr.concur_emp_feed where concur_cwid='" + cwid + "'");
+			return rs.next();
 		}
 		catch (SQLException e2) {
 			System.out.println("Error Executing Query");
 			e2.printStackTrace();
+			return false;
 		}
-		System.out.println("Finished executing query.");
-		return message;
 	}
 
-	public String generateReceipted(String check_date) {
-		System.out.println("Creating statement...");
-		Statement stmt = null;
-		String message = "100,LF,KEY";
-		String result = "";
-		System.out.println("Executing query...");
-		try {
-			stmt = connection.createStatement();
-			String query = "select to_number(substr(fabinvh_vend_inv_code,3,11)) as \"Request Key\",spriden_first_name|| ' ' || spriden_last_name as \"Vendor Name\", fabinvh_code as \"Invoice Number\", fabchka_gross_amt as \"Invoice Amount\",fabinvh_open_paid_ind as \"Payment Status\", to_char(fabchka_check_date,'yyyymmdd') as \"Payment Status Date\", fabchka_check_num as \"Check Number\" from fimsmgr.fabinvh, saturn.spriden, fimsmgr.fabchka, fimsmgr.farinvc where fabinvh_vend_pidm = spriden_pidm and fabinvh_code = fabchka_inv_code and fabinvh_code = farinvc_invh_code and spriden_change_ind is null and fabinvh_vend_inv_code like 'CE%' and farinvc_comm_code = 'APCNCR'";
-			if (!check_date.equals(""))
-				query = query + " and to_char(fabchka_check_date,'yyyymmdd') = " + check_date;
-			rs = stmt.executeQuery(query);
-			System.out.println("Extracting data...");
-			String payment_type = "";
-			while (rs.next()) {
-				payment_type = rs.getString(7).startsWith("!") ? "E" : "C";
-				result = "600," + rs.getString(4) + "," + rs.getString(6) + "," + "," + payment_type + "," + rs.getString(7) + "," + rs.getString(1) + "," + "," + "," + "," + "," + ",";
-				message = message + "\n" + result;
-			}
-			if (stmt != null)
-				stmt.close();
-		}
-		catch (SQLException e2) {
-			System.out.println("Error Executing Query");
-			e2.printStackTrace();
-		}
-		System.out.println("Finished executing query.");
-		return message;
-	}
-
-	public ArrayList<ArrayList<String>> getFunds() {
-		ArrayList<ArrayList<String>> all = new ArrayList<ArrayList<String>>();
-		ArrayList<String> x = new ArrayList<String>();
-
-		Statement stmt = null;
+	public ArrayList<User> getActiveUsers() {
+		ArrayList<User> all = new ArrayList<User>();
+		Statement stmt;
 		try {
 			stmt = connection.createStatement();
 
 			rs = stmt.executeQuery(
-					"select " + 
-							"ftvfund_coas_code,ftvfund_fund_code,trunc(ftvfund_eff_date),trunc(ftvfund_nchg_date),trunc(ftvfund_term_date) " + 
-							"from fimsmgr.ftvfund " + 
-							"where ftvfund_status_ind = 'A' " + 
-					"and ftvfund_data_entry_ind = 'Y' ");
+					"select CONCUR_PIDM,CONCUR_CWID,CONCUR_FIRST_NAME,CONCUR_MI,CONCUR_LAST_NAME,CONCUR_LOGIN_ID,CONCUR_EMAIL,CONCUR_ACTIVE," +
+							"CONCUR_RT_CODE,CONCUR_EXP_REP_APPR_ID,CONCUR_TRAVEL_APPR_ID,CONCUR_INVOICE_APPR_ID,CONCUR_EXPENSE_USER," +
+							"CONCUR_APPROVER,CONCUR_INVOICE_USER,CONCUR_INVOICE_APPR,CONCUR_TRAVEL_REQUEST_USER,CONCUR_TRAVEL_REQUEST_MGR," +
+							"CONCUR_TRAVEL_WIZARD_USER,CONCUR_TRAVEL_CLASS,CONCUR_APPR_POSN_DESC,CONCUR_coas_CODE,CONCUR_fund_CODE," +
+							"CONCUR_ORGN_CODE,CONCUR_prog_CODE,CONCUR_VERSION,CONCUR_ACTIVITY_DATE " +
+							"from ua_fimsmgr.concur_emp_feed " +
+							"where concur_active = 'Y'");
+
+			while (rs.next()) {
+				User person = new User();
+
+				person.CONCUR_PIDM = rs.getString(1);
+				person.CONCUR_CWID = rs.getString(2);
+				person.CONCUR_FIRST_NAME = rs.getString(3);
+				person.CONCUR_MI = rs.getString(4);
+				person.CONCUR_LAST_NAME = rs.getString(5);
+				person.CONCUR_LOGIN_ID = rs.getString(6);
+				person.CONCUR_EMAIL = rs.getString(7);
+				person.CONCUR_ACTIVE = rs.getString(8);
+				person.CONCUR_RT_CODE = rs.getString(9);
+				person.CONCUR_EXP_REP_APPR_ID = rs.getString(10);
+				person.CONCUR_TRAVEL_APPR_ID = rs.getString(11);
+				person.CONCUR_INVOICE_APPR_ID = rs.getString(12);
+				person.CONCUR_EXPENSE_USER = rs.getString(13);
+				person.CONCUR_APPROVER = rs.getString(14);
+				person.CONCUR_INVOICE_USER = rs.getString(15);
+				person.CONCUR_INVOICE_APPR = rs.getString(16);
+				person.CONCUR_TRAVEL_REQUEST_USER = rs.getString(17);
+				person.CONCUR_TRAVEL_REQUEST_MGR = rs.getString(18);
+				person.CONCUR_TRAVEL_WIZARD_USER = rs.getString(19);
+				person.CONCUR_TRAVEL_CLASS = rs.getString(20);
+				person.CONCUR_APPR_POSN_DESC = rs.getString(21);
+				person.CONCUR_COAS_CODE = rs.getString(22);
+				person.CONCUR_FUND_CODE = rs.getString(23);
+				person.CONCUR_ORGN_CODE = rs.getString(24);
+				person.CONCUR_PROG_CODE = rs.getString(25);
+				person.CONCUR_VERSION = rs.getString(26);
+				person.CONCUR_ACTIVITY_DATE = rs.getString(27);
+
+				all.add(person);
+			}
+			System.out.println("ACTIVE USERS SIZE: " + all.size());
+		}
+
+		catch (SQLException e2) {
+			System.out.println("ERROR - "+e2.getMessage() );
+			e2.printStackTrace();
+			return null;
+		}
+		return all;
+	}
+
+	public String getVendorInfo(String cwid) {
+		System.out.println("here..");
+		Statement stmt;
+		try {
+			stmt = connection.createStatement();
+
+			rs = stmt.executeQuery(
+					"select * from ua_fimsmgr.concur_vendor_feed "
+							+ "where concur_vendor_cwid = '"+cwid.trim()+"' "
+							+ "and concur_vendor_active = 'ACTIVE' ");
+
+			ResultSetMetaData rsmd = rs.getMetaData();
+			//rs.next();
+			ArrayList<String> contents = new ArrayList<String>();
+			StringBuilder str = new StringBuilder();
+			while (rs.next()) {
+				for(int i=1;i<=rsmd.getColumnCount();++i){
+					str.append(rsmd.getColumnName(i).replaceAll("CONCUR_VENDOR_", "")+": "+rs.getString(i)+"\n");
+				}
+				str.append("\n");
+			}
+			System.out.println(contents.toString());
+			return str.toString();
+		}
+
+		catch (SQLException e2) {
+			System.out.println("ERROR - "+e2.getMessage() );
+			e2.printStackTrace();
+		}
+		return null;
+	}
+
+	public ArrayList<ArrayList<String>> getFunds() {
+		ArrayList<ArrayList<String>> all = new ArrayList<ArrayList<String>>();
+		ArrayList<String> x;
+
+		Statement stmt;
+		try {
+			stmt = connection.createStatement();
+
+			rs = stmt.executeQuery(
+					"select " +
+							"ftvfund_coas_code,ftvfund_fund_code,trunc(ftvfund_eff_date),trunc(ftvfund_nchg_date),trunc(ftvfund_term_date) " +
+							"from fimsmgr.ftvfund " +
+							"where ftvfund_status_ind = 'A' " +
+							"and ftvfund_data_entry_ind = 'Y' ");
 
 			while (rs.next()) {
 				//	name = rs.getString(1);
@@ -209,10 +284,10 @@ class JDBC_Connection extends public_package.JDBC_Connection{
 				x.add( rs.getString(2));
 				x.add( rs.getString(3));
 				x.add( rs.getString(4));
-				if (rs.getString(5)==null) 
-					x.add("");	
-				else 
-					x.add(rs.getString(5));	
+				if (rs.getString(5)==null)
+					x.add("");
+				else
+					x.add(rs.getString(5));
 				all.add(x);
 			}
 
@@ -229,123 +304,19 @@ class JDBC_Connection extends public_package.JDBC_Connection{
 		}
 		return all;
 	}
-
-
-	public boolean cwidExistsInTrackingTable(String cwid) {
-		Statement stmt = null;
-		try {
-			stmt = connection.createStatement();
-			rs = stmt.executeQuery("select 'Y' from ua_fimsmgr.concur_emp_feed where concur_cwid='" + cwid + "'");
-            return rs.next();
-        }
-		catch (SQLException e2) {
-			System.out.println("Error Executing Query");
-			e2.printStackTrace();
-			return false;
-		}
-	}
-
-	public ArrayList<String> getActiveUsers() {
-		ArrayList<String> all = new ArrayList<String>();
-
-		Statement stmt = null;
-		try {
-			stmt = connection.createStatement();
-
-			rs = stmt.executeQuery(
-					"select concur_cwid " + 
-							"from ua_fimsmgr.concur_emp_feed " + 
-					"where concur_active = 'Y'");
-
-			while (rs.next()) {
-				all.add( rs.getString(1));
-			}
-			System.out.println("ACTIVE USERS SIZE: " + all.size());
-		}
-
-		catch (SQLException e2) {
-			System.out.println("ERROR - "+e2.getMessage() );
-			e2.printStackTrace();
-			return null;
-		}
-		return all;
-	}
-	public ArrayList<String> getVendors() {
-		ArrayList<String> all = new ArrayList<String>();
-		Statement stmt = null;
-		try {
-			stmt = connection.createStatement();
-
-			rs = stmt.executeQuery(
-					"select concur_vendor_cwid||','||concur_vendor_addr_code " + 
-							"from ua_fimsmgr.concur_vendor_feed " + 
-							"where concur_vendor_active = 'ACTIVE' " + 
-					"order by concur_vendor_cwid");
-
-			while (rs.next())
-				all.add( rs.getString(1));
-
-			System.out.println("ACTIVE VENDORS IN TRACKING: " + all.size());
-		}
-
-		catch (SQLException e2) {
-			System.out.println("Too many were returned" );
-			e2.printStackTrace();
-			return null;
-		}
-		return all;
-	}
-
-	public String getVendorInfo(String cwid) {
-		System.out.println("here..");
-		Statement stmt = null;
-		try {
-			stmt = connection.createStatement();
-
-			rs = stmt.executeQuery(
-					"select * from ua_fimsmgr.concur_vendor_feed "
-							+ "where concur_vendor_cwid = '"+cwid.trim()+"' "
-							+ "and concur_vendor_active = 'ACTIVE' ");
-
-			ResultSetMetaData rsmd = rs.getMetaData();
-			//rs.next();
-			ArrayList<String> contents = new ArrayList<String>();
-			StringBuilder str = new StringBuilder();
-			while (rs.next()) {
-				for(int i=1;i<=rsmd.getColumnCount();++i){	
-					str.append(rsmd.getColumnName(i).replaceAll("CONCUR_VENDOR_", "")+": "+rs.getString(i)+"\n");
-				}
-				str.append("\n");
-				}
-			System.out.println(contents.toString());
-			return str.toString();
-		}
-
-		catch (SQLException e2) {
-			System.out.println("ERROR - "+e2.getMessage() );
-			e2.printStackTrace();
-		}
-		return null;
-	}
-	protected String makeVendorString(ArrayList<String> contents) {
-		StringBuilder retStr = new StringBuilder();
-		retStr.append("?");
-		retStr.append("VendorCode="+contents.get(0));
-		return retStr.toString();
-	}
 	public ArrayList<ArrayList<String>> getOrgns() {
 		ArrayList<ArrayList<String>> all = new ArrayList<ArrayList<String>>();
-		ArrayList<String> x = new ArrayList<String>();
+		ArrayList<String> x;
 
-		Statement stmt = null;
+		Statement stmt;
 		try {
 			stmt = connection.createStatement();
 
 			rs = stmt.executeQuery(
-					"select ftvorgn_coas_code,ftvorgn_orgn_code,trunc(ftvorgn_eff_date),trunc(ftvorgn_nchg_date),trunc(ftvorgn_term_date) " + 
-							"from fimsmgr.ftvorgn " + 
-							"where ftvorgn_status_ind = 'A' " + 
-					"and ftvorgn_data_entry_ind = 'Y' ");
+					"select ftvorgn_coas_code,ftvorgn_orgn_code,trunc(ftvorgn_eff_date),trunc(ftvorgn_nchg_date),trunc(ftvorgn_term_date) " +
+							"from fimsmgr.ftvorgn " +
+							"where ftvorgn_status_ind = 'A' " +
+							"and ftvorgn_data_entry_ind = 'Y' ");
 
 			while (rs.next()) {
 				//	name = rs.getString(1);
@@ -355,10 +326,10 @@ class JDBC_Connection extends public_package.JDBC_Connection{
 				x.add( rs.getString(2));
 				x.add( rs.getString(3));
 				x.add( rs.getString(4));
-				if (rs.getString(5)==null) 
-					x.add("");	
-				else 
-					x.add(rs.getString(5));		
+				if (rs.getString(5)==null)
+					x.add("");
+				else
+					x.add(rs.getString(5));
 				all.add(x);
 			}
 
@@ -377,17 +348,17 @@ class JDBC_Connection extends public_package.JDBC_Connection{
 	}
 	public ArrayList<ArrayList<String>> getProgs() {
 		ArrayList<ArrayList<String>> all = new ArrayList<ArrayList<String>>();
-		ArrayList<String> x = new ArrayList<String>();
+		ArrayList<String> x;
 
-		Statement stmt = null;
+		Statement stmt;
 		try {
 			stmt = connection.createStatement();
 
 			rs = stmt.executeQuery(
-					"select ftvprog_coas_code,ftvprog_prog_code,trunc(ftvprog_eff_date),trunc(ftvprog_nchg_date),trunc(ftvprog_term_date) " + 
-							"from fimsmgr.ftvprog " + 
-							"where ftvprog_status_ind = 'A' " + 
-					"and ftvprog_data_entry_ind = 'Y'");
+					"select ftvprog_coas_code,ftvprog_prog_code,trunc(ftvprog_eff_date),trunc(ftvprog_nchg_date),trunc(ftvprog_term_date) " +
+							"from fimsmgr.ftvprog " +
+							"where ftvprog_status_ind = 'A' " +
+							"and ftvprog_data_entry_ind = 'Y'");
 
 			while (rs.next()) {
 				x = new ArrayList<String>();
@@ -395,10 +366,10 @@ class JDBC_Connection extends public_package.JDBC_Connection{
 				x.add( rs.getString(2));
 				x.add( rs.getString(3));
 				x.add( rs.getString(4));
-				if (rs.getString(5)==null) 
-					x.add("");	
-				else 
-					x.add(rs.getString(5));					
+				if (rs.getString(5)==null)
+					x.add("");
+				else
+					x.add(rs.getString(5));
 
 
 				all.add(x);
@@ -418,16 +389,16 @@ class JDBC_Connection extends public_package.JDBC_Connection{
 	}
 	public ArrayList<ArrayList<String>> getActivity() {
 		ArrayList<ArrayList<String>> all = new ArrayList<ArrayList<String>>();
-		ArrayList<String> x = new ArrayList<String>();
+		ArrayList<String> x;
 
-		Statement stmt = null;
+		Statement stmt;
 		try {
 			stmt = connection.createStatement();
 
 			rs = stmt.executeQuery(
-					"select ftvactv_coas_code,ftvactv_actv_code,trunc(ftvactv_eff_date),trunc(ftvactv_nchg_date),trunc(ftvactv_term_date) " + 
-							"from fimsmgr.ftvactv " + 
-					"where ftvactv_status_ind = 'A' ");
+					"select ftvactv_coas_code,ftvactv_actv_code,trunc(ftvactv_eff_date),trunc(ftvactv_nchg_date),trunc(ftvactv_term_date) " +
+							"from fimsmgr.ftvactv " +
+							"where ftvactv_status_ind = 'A' ");
 
 			while (rs.next()) {
 				x = new ArrayList<String>();
@@ -435,10 +406,10 @@ class JDBC_Connection extends public_package.JDBC_Connection{
 				x.add( rs.getString(2));
 				x.add( rs.getString(3));
 				x.add( rs.getString(4));
-				if (rs.getString(5)==null) 
-					x.add("");	
-				else 
-					x.add(rs.getString(5));	
+				if (rs.getString(5)==null)
+					x.add("");
+				else
+					x.add(rs.getString(5));
 				all.add(x);
 			}
 
@@ -457,17 +428,17 @@ class JDBC_Connection extends public_package.JDBC_Connection{
 	}
 	public ArrayList<ArrayList<String>> getAccounts() {
 		ArrayList<ArrayList<String>> all = new ArrayList<ArrayList<String>>();
-		ArrayList<String> x = new ArrayList<String>();
+		ArrayList<String> x;
 
-		Statement stmt = null;
+		Statement stmt;
 		try {
 			stmt = connection.createStatement();
 
 			rs = stmt.executeQuery(
-					"select ftvacct_coas_code,ftvacct_acct_code,trunc(ftvacct_eff_date),trunc(ftvacct_nchg_date),trunc(ftvacct_term_date) " + 
-							"from fimsmgr.ftvacct " + 
-							"where  ftvacct_data_entry_ind = 'Y' " + 
-					"and ftvacct_status_ind = 'A' ");
+					"select ftvacct_coas_code,ftvacct_acct_code,trunc(ftvacct_eff_date),trunc(ftvacct_nchg_date),trunc(ftvacct_term_date) " +
+							"from fimsmgr.ftvacct " +
+							"where  ftvacct_data_entry_ind = 'Y' " +
+							"and ftvacct_status_ind = 'A' ");
 
 			while (rs.next()) {
 				x = new ArrayList<String>();
@@ -475,10 +446,10 @@ class JDBC_Connection extends public_package.JDBC_Connection{
 				x.add( rs.getString(2));
 				x.add( rs.getString(3));
 				x.add( rs.getString(4));
-				if (rs.getString(5)==null) 
-					x.add("");	
-				else 
-					x.add(rs.getString(5));	
+				if (rs.getString(5)==null)
+					x.add("");
+				else
+					x.add(rs.getString(5));
 				all.add(x);
 			}
 			System.out.println("ACCOUNTs SIZE: " + all.size());
@@ -491,128 +462,5 @@ class JDBC_Connection extends public_package.JDBC_Connection{
 		}
 		return all;
 	}
-
-	public String[] getFOPFromTrackingTable(String cwid) {
-		String[] fop= {null,null,null,null};
-		Statement stmt = null;
-		try {
-			stmt = connection.createStatement();
-			rs =  stmt.executeQuery("select concur_coas_code,concur_fund_code,concur_orgn_code,concur_prog_code "
-					+ "from ua_fimsmgr.concur_emp_feed "
-					+ "where concur_cwid='" + cwid + "' ");
-			int count = 0;
-			while (rs.next()) {
-				++count;
-				fop[0] = rs.getString(1);
-				fop[1] = rs.getString(2);
-				fop[2] = rs.getString(3);
-				fop[3] = rs.getString(4);
-			}
-			if(count==1)
-				return fop;
-		}
-		catch (SQLException e2) {
-			System.out.println("Too many people were returned - " + cwid);
-			e2.printStackTrace();
-		}
-		return null;
-	}
-
-	public String getCWIDFromTrackingTable(String str) {
-		String cwid = null,first = "",last = "",middle = "";
-
-		str = str.trim();
-		if (str.contains(",") && str.split(" ").length == 3) {
-			first = str.substring(str.indexOf(", ") + 2, str.lastIndexOf(" "));
-			middle = str.substring(str.lastIndexOf(" ") + 1);
-			last = str.substring(0, str.indexOf(","));
-		} else if (str.contains(",") && str.split(" ").length == 2) {
-			first = str.substring(str.indexOf(", ") + 2);
-			middle = null;
-			last = str.substring(0, str.indexOf(","));
-		} else if (!str.contains(",") && str.split(" ").length == 3) {
-			first = str.substring(0, str.indexOf(" "));
-			middle = str.substring(str.indexOf(" ") + 1, str.lastIndexOf(" "));
-			last = str.substring(str.lastIndexOf(" ") + 1);
-		} else if (!str.contains(",") && str.split(" ").length == 2) {
-			first = str.substring(0, str.indexOf(" "));
-			middle = null;
-			last = str.substring(str.indexOf(" ") + 1);
-		}
-		first = first.substring(0, 1).toUpperCase() + first.substring(1);
-		last = last.substring(0, 1).toUpperCase() + last.substring(1);
-		if (middle != null) {
-			middle = middle.substring(0, 1).toUpperCase() + middle.substring(1);
-		}
-		Statement stmt = null;
-		try {
-			stmt = connection.createStatement();
-			rs = middle == null ? stmt.executeQuery("select concur_cwid from ua_fimsmgr.concur_emp_feed where concur_last_name = '" + last + "' " + "and concur_first_name like '" + first + "%'") : stmt.executeQuery("select concur_cwid from ua_fimsmgr.concur_emp_feed where concur_last_name='" + last + "' " + "and concur_first_name like '" + first + "%'" + "and concur_mi like '" + middle + "%'");
-			int count = 0;
-			while (rs.next()) {
-				++count;
-				cwid = rs.getString(1);
-			}
-			if(count==1)
-				return cwid;
-		}
-		catch (SQLException e2) {
-			e2.printStackTrace();
-		}
-		return null;
-	}
-	public String cwidIsActiveMessage(String cwid) {
-		Statement stmt = null;
-		String message = "";
-		try {
-			stmt = connection.createStatement();
-			rs = stmt.executeQuery("select 'Y' from ua_fimsmgr.concur_emp_feed where concur_cwid='" + cwid + "' and concur_active='Y'");
-			if (rs.next())
-				if (onPayroll(cwid)) 
-					message = "CWID " + cwid + " is in the tracking table as active and is in ua_payroll.actdemo.";
-				else
-					message = "CWID " + cwid + " is in the tracking table as active BUT NOT in the ua_payroll.actdemo table.";
-			else
-				if (onPayroll(cwid))
-					message = "CWID " + cwid + " is not the tracking table BUT is as active is ua_payroll.actdemo.";
-				else
-					message = "CWID " + cwid + " is not in the tracking table as active OR in the ua_payroll.actdemo table.";
-		}
-		catch (SQLException e2) {
-			System.out.println("Error Executing Query");
-			e2.printStackTrace();
-		}
-		System.out.println("Finished executing query.");
-		return message;
-	}
-
-	public boolean onPayroll(String cwid) {
-		Statement stmt = null;
-		try {
-			stmt = connection.createStatement();
-			rs = stmt.executeQuery("select 'Y' from ua_payroll.actdemo where actdemo_id = '" + cwid + "'");
-            return rs.next();
-        }
-		catch (SQLException e2) {
-			System.out.println("Error Executing Query");
-			e2.printStackTrace();
-			return false;
-		}
-	}
-
-	public boolean cwidIsActive(String cwid) {
-		Statement stmt = null;
-		try {
-			stmt = connection.createStatement();
-			rs = stmt.executeQuery("select 'Y' from ua_fimsmgr.concur_emp_feed where concur_cwid='" + cwid + "' " + "and concur_active='Y'");
-            return rs.next();
-        }
-		catch (SQLException e2) {
-			System.out.println("Error Executing Query");
-			e2.printStackTrace();
-			return false;
-		}
-	}
-
 
 }

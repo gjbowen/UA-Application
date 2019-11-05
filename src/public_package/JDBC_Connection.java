@@ -92,7 +92,7 @@ public class JDBC_Connection {
 
 			ArrayList<ArrayList<String>> 	table = new ArrayList<ArrayList<String>>();
 			ArrayList<String> 				header = getColumnNames(rsmd);
-			ArrayList<String> 				tempRow = new ArrayList<String>();
+			ArrayList<String> 				tempRow;
 
 			while (rs.next()) {
 				tempRow = new ArrayList<String>();
@@ -192,8 +192,8 @@ public class JDBC_Connection {
 			last = name.substring(name.indexOf(" ") + 1);
 		}
 
-		Statement stmt = null;
-		String query="";
+		Statement stmt;
+		String query;
 		String cwid = "";
 		try {
 			stmt = connection.createStatement();
@@ -238,7 +238,7 @@ public class JDBC_Connection {
 			return cwid;
 
 		String pidm = null;
-		Statement stmt = null;
+		Statement stmt;
 		try {
 			stmt = connection.createStatement();
 
@@ -272,7 +272,7 @@ public class JDBC_Connection {
 			return myBama;
 
 		String pidm = null;
-		Statement stmt = null;
+		Statement stmt;
 		try {
 			stmt = connection.createStatement();
 
@@ -304,7 +304,7 @@ public class JDBC_Connection {
 			return email;
 
 		String pidm = null;
-		Statement stmt = null;
+		Statement stmt;
 		try {
 			stmt = connection.createStatement();
 
@@ -338,7 +338,7 @@ public class JDBC_Connection {
 			return pidm;
 
 		String cwid = null;
-		Statement stmt = null;
+		Statement stmt;
 		try {
 			stmt = connection.createStatement();
 
@@ -372,7 +372,7 @@ public class JDBC_Connection {
 			return pidm;
 
 		String name = null;
-		Statement stmt = null;
+		Statement stmt;
 		try {
 			stmt = connection.createStatement();
 
@@ -401,46 +401,13 @@ public class JDBC_Connection {
 		}
 		return null;
 	}
-	protected String getNameFromCWID(String cwid) {
-		if (cwid==null || cwid.equals("NONE_RETURNED") || cwid.equals("TOO_MANY_RETURNED"))
-			return null;
 
-		String name = null;
-		Statement stmt = null;
-		try {
-			stmt = connection.createStatement();
-
-			rs = stmt.executeQuery(
-					"select spriden_first_name || ' ' || spriden_last_name "
-							+ "from saturn.spriden "
-							+ "where spriden_id = '" + cwid + "' "
-							+ "and spriden_change_ind is null");
-
-
-			int count = 0;
-			while (rs.next()) {
-				++count;
-				name = rs.getString(1);
-			}
-			if(count==0)
-				return "NONE_RETURNED";
-			else if(count==1)
-				return name;
-			else
-				return "TOO_MANY_RETURNED";
-		}
-		catch (SQLException e2) {
-			System.out.println("SQL error in getNameFromPIDM - " + e2.getMessage());
-			e2.printStackTrace();
-		}
-		return null;
-	}
 	private String getEmailFromPIDM(String pidm) {
 		if(pidm==null || pidm.equals("TOO_MANY_RETURNED")|| pidm.equals("NONE_RETURNED"))
 			return pidm;
 
 		String email = null;
-		Statement stmt = null;
+		Statement stmt;
 		try {
 			stmt = connection.createStatement();
 
@@ -473,7 +440,7 @@ public class JDBC_Connection {
 			return pidm;
 
 		String email = null;
-		Statement stmt = null;
+		Statement stmt;
 		try {
 			stmt = connection.createStatement();
 
@@ -499,17 +466,14 @@ public class JDBC_Connection {
 		}
 		return null;
 	}
-	public String getPIDMFromName(String name) {
-		return getPIDMFromCWID(getCWIDFromName(name));
-	}
-	
+
 	public String getUserFirstName(String username) {
 		System.out.println("User: "+username);
 		String name = null;
-		Statement stmt = null;
+		Statement stmt;
 		try {
 			stmt = connection.createStatement();
-			String firstName = null;
+			String firstName;
 			ResultSet rs = stmt.executeQuery(
 					"select spriden_first_name "
 							+ "from saturn.spriden,general.gobtpac "
@@ -615,7 +579,7 @@ public class JDBC_Connection {
 	private void setUsersFirstName() {
 
 		String name = null;
-		Statement stmt = null;
+		Statement stmt;
 		try {
 			stmt = connection.createStatement();
 
@@ -644,30 +608,9 @@ public class JDBC_Connection {
 			e2.printStackTrace();
 		}
 	}
-	public boolean hasAccess(String schema,String obj) {
-		String query ="select count(*) from dba_tab_privs " + 
-				"where owner = '"+schema.toUpperCase()+"' " + 
-				"and table_name = '"+obj.toUpperCase()+"' " +
-				"and grantee like '%"+username.toUpperCase()+"' ";
-		Statement stmt = null;
-		System.out.println(query);
-		try {
-			stmt = connection.createStatement();
-			rs = stmt.executeQuery(query);
-			rs.next();
-			if(rs.getString(1).equals("0"))
-				return false;
-			else {
-				return true;
-			}
-		}
-		catch (SQLException e2) {
-			e2.printStackTrace();
-			return false;
-		}
-	}
+
 	private String getDBHost(String mode) {
-		String DB_URL = "";
+		String DB_URL;
 		if(mode == "SEVL") {
 			DB_URL = "jdbc:oracle:thin:@//bnrtdb-1.ua.edu:1521/SEVL.ua.edu";
 		}

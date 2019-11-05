@@ -55,8 +55,8 @@ public class PaidReceipted_Menu {
         btnReceipted.setBounds(317, 81, 107, 20);
         frame_Paid_Receipted.getContentPane().add(btnReceipted);
         btnReceipted.addActionListener(e2 -> {
-            String message = "";
-            message = connection.searchPaymentRequest(textField.getText().trim());
+            String message;
+            message = connection.searchPaymentReceipt(textField.getText().trim());
             JTextArea textArea = new JTextArea(message);
             JScrollPane scrollPane = new JScrollPane(textArea);
             textArea.setLineWrap(true);
@@ -65,10 +65,10 @@ public class PaidReceipted_Menu {
             JOptionPane.showMessageDialog(null, scrollPane, "Receipted Search", -1);
         });
         JButton btnPaid = new JButton("Paid/Request");
-        btnPaid.setBounds(317, 120, 107, 20);
+        btnPaid.setBounds(307, 120, 127, 20);
         frame_Paid_Receipted.getContentPane().add(btnPaid);
         btnPaid.addActionListener(e2 -> {
-            String message = "";
+            String message;
             message = connection.searchPaymentRequest(textField.getText().trim());
             JTextArea textArea = new JTextArea(message);
             JScrollPane scrollPane = new JScrollPane(textArea);

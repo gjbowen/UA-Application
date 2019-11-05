@@ -35,11 +35,11 @@ class API_Package {
 	static String tokenParameters;
 	static List<Vendor> vendors = new ArrayList<Vendor>();
 	static List<User> people = new ArrayList<User>();
-	static User person;
-	static Vendor vendor;
 	String url;
 	Function_Library functions;
 	String serverResponse;
+	int vendorCount = 0;
+	int userCount = 0;
 
 	API_Package(Function_Library conn){
 		functions = conn;
@@ -49,65 +49,153 @@ class API_Package {
 			url="https://implementation.concursolutions.com";
 
 		setCredentials();
-
 		setAccessToken();
-
 	}
 
-	protected void prep() {
-		System.out.println("API has been prepped..");
+	void reinit() {
+		System.out.println("API has been reinitialized..");
 		vendors = new ArrayList<Vendor>();
 		people = new ArrayList<User>();
 	}
 
-	protected String compareVendorsNotInBanner(ArrayList<String> bannerVendors) {
-		int count = 0;
-		List<String> concur = new ArrayList<String>();
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	boolean vendorInBanner(ArrayList<Vendor> banner,Vendor vendor){
+		for(int i=0;i<banner.size();++i)
+			if(banner.get(i).CONCUR_VENDOR_CWID.equals(vendor.VendorCode))
+				if(banner.get(i).CONCUR_VENDOR_ADDR_CODE.equals(vendor.AddressCode))
+					return true;
+		return false;
+	}
+	String compareVendorsNotInBanner(ArrayList<Vendor> bannerVendors) {
+		List<String> differences = new ArrayList<String>();
 		System.out.println("Initiating comparison..");
-		for(int i=0;i<vendors.size();++i) {
-			if(!bannerVendors.contains(vendors.get(i).VendorCode+","+vendors.get(i).AddressCode) ) {
-				++count;
-				concur.add(vendors.get(i).VendorCode+","+vendors.get(i).AddressCode);
-			}
-		}
-		System.out.println("Done Comparing!");
-		System.out.println(count + " vendors not active in Banner that are in Concur.");
-
-		return functions.writeListToFile("vendors_in_concur_not in_banner.csv", "CWID,RT", concur);
+		for(int i=0;i<vendors.size();++i)
+			if(!vendorInBanner(bannerVendors,vendors.get(i)))
+				differences.add(vendors.get(i).toStringCSV_API());
+		System.out.println(differences.size() + " vendors not active in Banner that are in Concur.");
+		return functions.writeListToFile("vendors_remove_from_concur.csv", Vendor.getHeader(), differences);
 	}
-
-	protected String writeApiVendors() {
-		return functions.writeListToFile("vendors_in_api.csv", "CWID,RT", vendorList2RegList());
+	///////////////////////////////////////////////////////////////////////////
+	boolean vendorInConcur(Vendor v){
+		for(int i=0;i<vendors.size();++i)
+			if(vendors.get(i).VendorCode.equals(v.CONCUR_VENDOR_CWID))
+				if(vendors.get(i).AddressCode.equals(v.CONCUR_VENDOR_ADDR_CODE))
+					return true;
+		return false;
 	}
-	protected ArrayList<String> vendorList2RegList() {
+	String compareVendorsNotInConcur(ArrayList<Vendor> bannerVendors) {
+		List<String> differences = new ArrayList<String>();
+		System.out.println("Initiating comparison..");
+		for(int i=0;i<bannerVendors.size();++i)
+			if(!vendorInConcur(bannerVendors.get(i)))
+				differences.add(bannerVendors.get(i).toStringCSV_API());
+		System.out.println(differences.size() + " vendors active in Banner that are not in Concur.");
+		return functions.writeListToFile("vendors_add_to_concur.csv", Vendor.getVendorHeader(), differences);
+	}
+	///////////////////////////////////////////////////////////////////////////
+	String writeApiVendors() {
+		return functions.writeListToFile("vendors_in_api.csv", Vendor.getHeader(), vendorList2RegList(vendors));
+	}
+	String writeTrackingTableVendors(ArrayList<Vendor> ttVendors) {
+		return functions.writeListToFile("vendors_in_tracking_table.csv", Vendor.getVendorHeader(), vendorList2RegList(ttVendors));
+	}
+	ArrayList<String> vendorList2RegList(ArrayList<Vendor> p) { //tt
 		ArrayList<String> newList = new ArrayList<String>();
-		for(int i=0;i<vendors.size();++i) {
-			newList.add(vendors.get(i).getCwidRt());
+		for(int i=0;i<p.size();++i) {
+			newList.add(p.get(i).toStringCSV_TrackingTable());
 		}
 		return newList;
 	}
-	public void openLink(String link) {
+	ArrayList<String> vendorList2RegList(List<Vendor> p) { //API
+		ArrayList<String> newList = new ArrayList<String>();
+		for(int i=0;i<p.size();++i) {
+			newList.add(p.get(i).toStringCSV_API());
+		}
+		return newList;
+	}
+
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	boolean userInBanner(ArrayList<User> banner,User person){
+		for(int i=0;i<banner.size();++i)
+			if(banner.get(i).CONCUR_CWID.equals(person.EmployeeID)) {
+				return true;
+			}
+		return false;
+	}
+	String compareUsersNotInBanner(ArrayList<User> bannerUsers) {
+		List<String> differences = new ArrayList<String>();
+		System.out.println("Initiating comparison..");
+		for(int i=0;i<people.size();++i) {
+			if(!userInBanner(bannerUsers,people.get(i))) {
+				differences.add(people.get(i).toStringCSV_API());
+			}
+		}
+		System.out.println(differences.size() + " users not active in Banner that are in Concur.");
+		return functions.writeListToFile("users_remove_from_concur.csv", User.getHeader(), differences);
+	}
+	/////////////////////////////////////////////////////////////////////
+	boolean userInConcur(User p){
+		for(int i=0;i<people.size();++i)
+			if(people.get(i).EmployeeID.equals(p.CONCUR_CWID))
+				return true;
+		return false;
+	}
+	String compareUsersNotInConcur(ArrayList<User> bannerUsers) {
+		List<String> differences = new ArrayList<String>();
+		System.out.println("Initiating comparison..");
+		for(int i=0;i<bannerUsers.size();++i) {
+			if(!userInConcur(bannerUsers.get(i))) {
+				differences.add(bannerUsers.get(i).toStringCSV_Table());
+			}
+		}
+		System.out.println(differences.size() + " users active in Banner that are not in Concur.");
+		return functions.writeListToFile("users_add_to_concur.csv",User.getEmpHeader(), differences);
+	}
+
+	String writeApiUsers() {
+		return functions.writeListToFile("users_in_api.csv", User.getHeader(), userList2RegList(people));
+	}
+	String writeTrackingTableUsers(ArrayList<User> ttPeople) {
+		return functions.writeListToFile("users_in_tracking_table.csv", User.getEmpHeader(), userList2RegList(ttPeople));
+	}
+	ArrayList<String> userList2RegList(ArrayList<User> p) { //tt
+		ArrayList<String> newList = new ArrayList<String>();
+		for(int i=0;i<p.size();++i) {
+			newList.add(p.get(i).toStringCSV_Table());
+		}
+		return newList;
+	}
+	ArrayList<String> userList2RegList(List<User> p) { //API
+		ArrayList<String> newList = new ArrayList<String>();
+		for(int i=0;i<p.size();++i) {
+			newList.add(p.get(i).toStringCSV_API());
+		}
+		return newList;
+	}
+
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	void openLink(String link) {
 		try {
 			Desktop.getDesktop().browse(new URI(link));
 		} catch (IOException | URISyntaxException   e) {
 			e.printStackTrace();
 		}
 	}
-	protected String usersToString(){
+	String usersToString(){
 		StringBuilder retStr = new StringBuilder();
 		for(int i=0;i<people.size();++i) {
 			retStr.append(people.get(i).toString()+"\n");
 		}
 		return retStr.toString();
 	}
-	protected String vendorsToString() {
+	String vendorsToString() {
 		StringBuilder retStr = new StringBuilder();
 		for(int i=0;i<vendors.size();++i) {
 			retStr.append(vendors.get(i).toString()+"\n");
 		}
 		return retStr.toString();
 	}
-	private void setCredentials() {
+	void setCredentials() {
 		if(functions.environment.equals("PROD"))
 			tokenParameters =
 					functions.getContents("S:\\EDAS\\Aux Serv\\Banner Finance\\Concur Project\\" +
@@ -117,7 +205,7 @@ class API_Package {
 					functions.getContents("S:\\EDAS\\Aux Serv\\Banner Finance\\Concur Project\\" +
 							"CONCUR PROD\\Concur API\\documentation\\test.dat");
 	}
-	private String jsonRead(String jsonString){
+	String jsonRead(String jsonString){
 		try {
 			JSONObject jsonObject = new JSONObject(jsonString);
 			return jsonObject.getString("access_token");
@@ -126,10 +214,9 @@ class API_Package {
 			return null;
 		}
 	}
-	protected  void sendGetRequest(String urlSuffix){
+	void sendGetRequest(String urlSuffix){
 		URL obj;
 		try {
-
 			obj = new URL(url+urlSuffix);
 			HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 			con.setRequestProperty("Authorization", "Bearer "+access_token);
@@ -149,15 +236,20 @@ class API_Package {
 					response.append(inputLine);
 				}
 				in.close();
-				//System.out.println("RESPONSE: "+response);
 				//print result
-				if(urlSuffix.contains("/api/v3.0/invoice/vendors"))
+				if(urlSuffix.contains("invoice/vendors"))
 					xmlParse(response.toString(),"vendor");
 				else
 					xmlParse(response.toString(),"user");
-			}else {
+			}else if(responseCode==500) {
+				System.out.println("RESPONSE CODE 500 - TRYING AGAIN..");
+				sendGetRequest(urlSuffix);
+			}
+			else{
+				System.out.println("Response Code - "+responseCode);
+				JOptionPane.showMessageDialog(null,"Response Code - "+responseCode);
 				System.out.println("Exiting program..");
-				System.exit(0);
+				System.exit(1);
 			}
 		} catch (MalformedURLException | ProtocolException e) {
 			e.printStackTrace();
@@ -165,14 +257,13 @@ class API_Package {
 			e.printStackTrace();
 		}
 	}
-	private String clearPrefix(String site) {
-		if(site.startsWith("https://implementation.concursolutions.com")) {
+	String clearPrefix(String site) {
+		if(site.startsWith("https://implementation.concursolutions.com"))
 			return site.replaceAll("https://implementation.concursolutions.com","");
-		}
 		else
 			return site.replace("https://www.concursolutions.com", "");
 	}
-	protected void sendDeleteRequest(String urlSuffix){
+	void sendDeleteRequest(String urlSuffix){
 		if(functions.environment.equals("PROD")) {
 			JOptionPane.showMessageDialog(null,"OVERRIDING TO TEST.");
 		}
@@ -222,7 +313,7 @@ class API_Package {
 			e.printStackTrace();
 		}
 	}
-	private void responseCode(int code) {
+	void responseCode(int code) {
 		if(code==200)
 			System.out.println("200 - GOOD!!");
 		else if(code==503)
@@ -230,7 +321,7 @@ class API_Package {
 		else if(code==400)
 			System.out.println("400 - Bad Request");
 	}
-	private void setAccessToken() {
+	void setAccessToken() {
 		try {
 			String url ;
 			if(functions.environment.equals("PROD"))
@@ -278,7 +369,7 @@ class API_Package {
 		}
 
 	}
-	private Document loadXMLFromString(String xml){
+	Document loadXMLFromString(String xml){
 		try {
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder builder;
@@ -291,7 +382,7 @@ class API_Package {
 		return null;
 
 	}
-	private  void xmlParse(String	 xml,String module) {
+	void xmlParse(String xml,String module) {
 		try {
 			Document doc =  loadXMLFromString(xml);
 			if (doc.hasChildNodes()) {
@@ -306,23 +397,24 @@ class API_Package {
 		}
 
 	}
-	private void printNodeVendors(NodeList nodeList) {
+	void printNodeVendors(NodeList nodeList) {
 		Node headNode = nodeList.item(0);
 		for (int i = 0; i < headNode.getChildNodes().getLength(); i++) {
 			Node tempNode = headNode.getChildNodes().item(i);
+
 			if(tempNode.getNodeName().equals("NextPage")) {
+				++vendorCount;
+				System.out.println(vendorCount+")\t"+tempNode.getTextContent());
 				if(!tempNode.getTextContent().equals(""))
 					sendGetRequest(clearPrefix(tempNode.getTextContent()));
 			}
 			else if(tempNode.getNodeName().equals("TotalCount")) {
-
 			}
 			else if(tempNode.getNodeName().equals("RequestRunSummary")) {
 				serverResponse=tempNode.getTextContent();
 			}
-
 			else if(tempNode.getNodeName().equals("Vendor")) {
-				vendor = new Vendor();
+				Vendor vendor = new Vendor();
 				for(int j=0;j<tempNode.getChildNodes().getLength();j++) {
 					Node attribute = tempNode.getChildNodes().item(j);
 
@@ -391,17 +483,21 @@ class API_Package {
 			}
 		}
 	}
-	private void printNodeUsers(NodeList nodeList) {
+	void printNodeUsers(NodeList nodeList) {
 		Node headNode = nodeList.item(0);
 		for (int i = 0; i < headNode.getChildNodes().getLength(); ++i) {
 			Node tempNode = headNode.getChildNodes().item(i);
-			if(tempNode.getNodeName().equals("NextPage"))
-				if(!tempNode.getTextContent().equals(""))
-					sendGetRequest(tempNode.getTextContent());
+			if(tempNode.getNodeName().equals("NextPage")) {
+				++userCount;
+				System.out.println(userCount+")\t"+tempNode.getTextContent());
+				if (!tempNode.getTextContent().equals(""))
+					sendGetRequest(clearPrefix(tempNode.getTextContent()));
+
+			}
 			if(tempNode.getNodeName().equals("Items"))
 				for(int j=0;j<tempNode.getChildNodes().getLength();++j) {
 					Node userNode = tempNode.getChildNodes().item(j);
-					person = new User();
+					User person = new User();
 					for(int k=0;k<userNode.getChildNodes().getLength();++k) {
 						Node attributeNode = userNode.getChildNodes().item(k);
 						if(attributeNode.getNodeName().equals("ID"))

@@ -32,7 +32,6 @@ public class Main_Menu
 	private JTextField textField_email;
 	private JTextField textField_myBama;
 	protected Function_Library fun;
-	protected Object frame;
 	String environment;
 
 	public Main_Menu(Connection conn_jdbc, SftpClient conn_sftp, String user, String pass, String mode){
@@ -90,7 +89,7 @@ public class Main_Menu
 		JButton convertButton = new JButton("CONVERT");
 		convertButton.addActionListener(e -> {
 			//do stuff
-			ArrayList<String> values = new ArrayList<String>();
+			ArrayList<String> values;
 			values = fun.jdbc.convert(
 					textField_pidm.getText().trim(),
 					textField_cwid.getText().trim(),
