@@ -63,9 +63,8 @@ public class Main_Menu
 		frameMainMenu.getContentPane().add(lbl_branch);
 
 		JButton btnDeletePreferences = new JButton("Reset GIT");
-		btnDeletePreferences.setBounds(300, 225, 89, 23);
+		btnDeletePreferences.setBounds(300, 225, 89, 25);
 		btnDeletePreferences.addActionListener(e -> {
-
 			int selection;
 			selection=f.okCancel("Are you sure? This will delete the .gitPreference file.");
 			if(selection==0) {
@@ -80,7 +79,6 @@ public class Main_Menu
 					}
 				});
 			}
-
 		});
 		frameMainMenu.getContentPane().add(btnDeletePreferences);
 
@@ -112,11 +110,8 @@ public class Main_Menu
 
 		////////////////////////////////////////////////////////////////////////////
 		////////////////////////////////////////////////////////////////////////////
-		////////////////////////////////////////////////////////////////////////////
 		getRecentBranches();
 		initDropdown();
-
-		////////////////////////////////////////////////////////////////////////////
 		////////////////////////////////////////////////////////////////////////////
 		////////////////////////////////////////////////////////////////////////////
 
@@ -192,7 +187,11 @@ public class Main_Menu
 		btnSubmit_commit.addActionListener(e -> {
 			input = f.validateInput(textField_commit.getText().trim());
 			f.commitAndPush(input);
-			refreshInfo();
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e2) {
+				System.out.println(e2.getMessage());
+			}
 		});
 		btnSubmit_switch.addActionListener(arg0 -> {
 			input = f.validateInput(textField_switch.getText().trim());
@@ -226,10 +225,10 @@ public class Main_Menu
 
 		JButton btnRefresh = new JButton("Refresh");
 		btnRefresh.addActionListener(arg0 -> refreshInfo());
-		btnRefresh.setBounds(300, 191, 89, 23);
+		btnRefresh.setBounds(300, 191, 89, 25);
 		frameMainMenu.getContentPane().add(btnRefresh);
 
-		JButton btnOpen = new JButton("OPEN");
+		JButton btnOpen = new JButton("Open uabanner");
 		btnOpen.addActionListener(e -> {
 			try{
 				System.out.println(f.gitFolder);
@@ -239,10 +238,18 @@ public class Main_Menu
 				e1.printStackTrace();
 			}
 		});
-		btnOpen.setBounds(200, 191, 89, 57);
+		btnOpen.setBounds(150, 191, 140, 25);
 		frameMainMenu.getContentPane().add(btnOpen);
 
+		JButton btnOpenBan = new JButton("Open SCM");
+		btnOpenBan.addActionListener(e -> {
+			System.out.println("f.gitFolder: "+f.gitFolder);
+			if(lbl_branch.getText().startsWith("BAN-"))
+				f.openLink("https://scm.oit.ua.edu/jira/browse/"+lbl_branch.getText());
+		});
+		btnOpenBan.setBounds(150, 225, 140, 25);
 
+		frameMainMenu.getContentPane().add(btnOpenBan);
 		//final frame
 		frameMainMenu.setVisible(true);
 	}

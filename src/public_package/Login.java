@@ -59,15 +59,12 @@ public class Login
 						jdbc.password,
 						sftp.connection,mode);
 			}
-			else if(application.equals("concur")) {
+			else if(application.equals("concur"))
 				new concur_package.Main_Menu(jdbc.connection,sftp.connection,userField.getText(),jdbc.password,mode);
-			}
-			else if(application.equals("ar")) {
+			else if(application.equals("ar"))
 				new ar_package.Main_Menu(jdbc.connection,sftp.connection,userField.getText(),jdbc.password,mode);
-			}
-			else if(application.equals("git")) {
+			else if(application.equals("git"))
 				new Main_Menu(new Function_Library());
-			}
 			if(chckbxSaveLogin.isSelected())
 				save();
 		}
@@ -127,9 +124,8 @@ public class Login
 				status.setForeground(Color.RED);
 				status.setText("ENTER USERNAME AND PASSWORD");
 			}
-			else{
+			else
 				connect();
-			}
 		});
 		button_Submit.setBounds(10, 207, 91, 55);
 		frameLogin.getContentPane().add(button_Submit);

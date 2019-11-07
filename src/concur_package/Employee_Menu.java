@@ -1,18 +1,15 @@
 package concur_package;
 
 import java.awt.*;
+import java.util.ArrayList;
 import javax.swing.*;
 
 public class Employee_Menu {
 	protected JFrame frameEmployeeMenu;
 	protected Function_Library connection;
 	private API_Package api;
-
 	private JTextField cwidField_emp;
 
-	private JTextField textField_name;
-	private JTextField textField_cwid;
-	private JTextField textField_pidm;
 	private JTextField textField_column;
 
 	public Employee_Menu(Function_Library conn) {
@@ -67,11 +64,11 @@ public class Employee_Menu {
 		textField_column.setColumns(10);
 		textField_column.setBounds(220, 35, 46, 26);
 		subPanel_1.add(textField_column);
-		
+
 		JButton btnSubmit_findEmp = new JButton("Find Employee sent");
 		btnSubmit_findEmp.setBounds(5, 35, 210, 29);
 		subPanel_1.add(btnSubmit_findEmp);
-		
+
 		btnSubmit_findEmp.addActionListener(e2 -> {
 			lblStatus.setText("Status: Finding CWID info..");
 			String message;
@@ -143,7 +140,7 @@ public class Employee_Menu {
 
 				JTextArea textArea = new JTextArea(message);
 				JScrollPane scrollPane = new JScrollPane(textArea);
-                textArea.setFont(new Font("monospaced", Font.BOLD, 16));
+				textArea.setFont(new Font("monospaced", Font.BOLD, 16));
 				scrollPane.setPreferredSize(new Dimension(700, 500));
 				scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 				scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -215,23 +212,28 @@ public class Employee_Menu {
 			lblStatus.setText("");
 		});
 
-
+		//////////////////////////////////////////////////////
+		Panel subPanel_3 = new Panel();
+		subPanel_3.setBackground(Color.LIGHT_GRAY);
+		subPanel_3.setBounds(315, 10, 110, 280);
+		panel.add(subPanel_3);
+		subPanel_3.setLayout(null);
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		JLabel lblBatchSearch = new JLabel("Batch job");
 		lblBatchSearch.setFont(new Font("Tahoma", 1, 13));
-		lblBatchSearch.setBounds(556, 8, 88, 23);
-		panel.add(lblBatchSearch);
+		lblBatchSearch.setBounds(5, 1, 88, 23);
+		subPanel_3.add(lblBatchSearch);
 
 		final JEditorPane editorPane = new JEditorPane();
 
 		JScrollPane scrollPane2 = new JScrollPane(editorPane,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPane2.setForeground(Color.BLACK);
-		scrollPane2.setBounds(556, 30, 100, 211);
-		panel.add(scrollPane2);
+		scrollPane2.setBounds(5, 20, 100, 190);
+		subPanel_3.add(scrollPane2);
 
 		JButton button305 = new JButton("Create 305");
-		button305.setBounds(556, 245, 100, 29);
-		panel.add(button305);
+		button305.setBounds(5, 213, 100, 29);
+		subPanel_3.add(button305);
 
 		button305.addActionListener(arg0 -> {
 			lblStatus.setText("Status: Creating 305 file..");
@@ -250,10 +252,9 @@ public class Employee_Menu {
 			}
 		});
 
-
 		JButton button350 = new JButton("Create 350");
-		button350.setBounds(556, 275, 100, 29);
-		panel.add(button350);
+		button350.setBounds(5, 245, 100, 29);
+		subPanel_3.add(button350);
 
 		button350.addActionListener(arg0 -> {
 			lblStatus.setText("Status: Creating 350 file..");
@@ -275,78 +276,78 @@ public class Employee_Menu {
 
 		////////////////////////////////////////////////////////////////////////////////////
 		////////////////////////////////////////////////////////////////////////////////////
-		Panel subPanel_3 = new Panel();
-		subPanel_3.setBackground(Color.LIGHT_GRAY);
-		subPanel_3.setBounds(5, 280, 500, 80);
-		panel.add(subPanel_3);
-		subPanel_3.setLayout(null);
+		Panel subPanel_4 = new Panel();
+		subPanel_4.setBackground(Color.LIGHT_GRAY);
+		subPanel_4.setBounds(5, 300, 670, 80);
+		panel.add(subPanel_4);
+		subPanel_4.setLayout(null);
+		//////////////////////////////////////
+		JTextField textField_cwid = new JTextField();
+		JTextField textField_pidm = new JTextField();
+		JTextField textField_name = new JTextField();
+		JTextField textField_myBama = new JTextField();
+		JTextField textField_email = new JTextField();
 
-		//////////////////////////////////////////////////////////////////
+		JLabel lblCwid = new JLabel("CWID");
+		JLabel lblPidm = new JLabel("PIDM");
+		JLabel lblFullName = new JLabel("Full Name");
+		JLabel lblMyBama = new JLabel("MyBama");
+		JLabel lblEmail = new JLabel("Email");
+
+		textField_cwid.setBounds(5, 20, 75, 26);
+		textField_pidm.setBounds(85, 20, 75, 26);
+		textField_name.setBounds(165, 20, 175, 26);
+		textField_myBama.setBounds(345, 20, 120, 26);
+		textField_email.setBounds(470, 20, 190, 26);
+
+		lblCwid.setBounds(5, 5, 46, 14);
+		lblPidm.setBounds(85, 5, 46, 14);
+		lblFullName.setBounds(165, 5, 80, 14);
+		lblMyBama.setBounds(345, 5, 80, 14);
+		lblEmail.setBounds(470, 5, 80, 14);
+
+		subPanel_4.add(textField_cwid);
+		subPanel_4.add(textField_pidm);
+		subPanel_4.add(textField_name);
+		subPanel_4.add(textField_myBama);
+		subPanel_4.add(textField_email);
+
+		subPanel_4.add(lblCwid);
+		subPanel_4.add(lblPidm);
+		subPanel_4.add(lblFullName);
+		subPanel_4.add(lblMyBama);
+		subPanel_4.add(lblEmail);
+
 		JButton convertButton = new JButton("CONVERT");
 		convertButton.setBounds(100, 50, 100, 23);
-		subPanel_3.add(convertButton);
+		subPanel_4.add(convertButton);
+
+		convertButton.addActionListener(e2 -> {
+			ArrayList<String> content = connection.jdbc.convert(
+					textField_pidm.getText().trim(),
+					textField_cwid.getText().trim(),
+					textField_name.getText().trim(),
+					textField_email.getText().trim(),
+					textField_myBama.getText().trim());
+			
+			textField_pidm.setText(content.get(0));
+			textField_cwid.setText(content.get(1));
+			textField_name.setText(content.get(2));
+			textField_email.setText(content.get(3));
+			textField_myBama.setText(content.get(4));
+
+			cwidField_emp.setText(content.get(1));
+		});
 
 		JButton resetButton = new JButton("RESET");
 		resetButton.setBounds(260, 50, 100, 23);
-		subPanel_3.add(resetButton);
-		//////////////////////////////////////////////////////////////////
-
-		textField_cwid = new JTextField();
-		textField_cwid.setBounds(5, 20, 146, 26);
-		subPanel_3.add(textField_cwid);
-		textField_cwid.setColumns(10);
-		textField_cwid.setText("");
-
-		textField_pidm = new JTextField();
-		textField_pidm.setBounds(155, 20, 146, 26);
-		subPanel_3.add(textField_pidm);
-		textField_pidm.setColumns(10);
-		textField_pidm.setText("");
-
-		textField_name = new JTextField();
-		textField_name.setBounds(305, 20, 146, 26);
-		subPanel_3.add(textField_name);
-		textField_name.setColumns(10);
-		textField_name.setText("");
-
-		JLabel lblCwid = new JLabel("CWID");
-		lblCwid.setBounds(5, 5, 46, 14);
-		subPanel_3.add(lblCwid);
-
-		JLabel lblPidm = new JLabel("PIDM");
-		lblPidm.setBounds(155, 5, 46, 14);
-		subPanel_3.add(lblPidm);
-
-		JLabel lblFullName = new JLabel("Full Name");
-		lblFullName.setBounds(305, 5, 80, 14);
-		subPanel_3.add(lblFullName);
-
-		convertButton.addActionListener(e2 -> {
-			//do stuff
-			String cwid = textField_cwid.getText().trim();
-			String pidm = textField_pidm.getText().trim();
-			String name = textField_name.getText().trim();
-			if(pidm.equals("") && cwid.equals("") && name.equals("")) { //use pidm
-				//nothing given!
-			}
-			else if(cwid.equals("") && name.equals("")) { //use pidm
-				textField_cwid.setText(connection.jdbc.getCWIDFromPIDM(pidm));
-				textField_name.setText(connection.jdbc.getNameFromPIDM(pidm));
-			}
-			else if (pidm.equals("") && name.equals("")){ //use cwid
-				textField_pidm.setText(connection.jdbc.getPIDMFromCWID(cwid));
-				textField_name.setText(connection.jdbc.getNameFromPIDM(cwid));
-			}
-			else if (pidm.equals("") && cwid.equals("")){//use name
-				textField_cwid.setText(connection.jdbc.getCWIDFromName(name));
-				textField_pidm.setText(connection.jdbc.getPIDMFromCWID(textField_cwid.getText()));
-			}
-			cwidField_emp.setText(textField_cwid.getText());
-		});
+		subPanel_4.add(resetButton);
 
 		resetButton.addActionListener(e2 -> {
 			textField_name.setText("");
 			textField_cwid.setText("");
+			textField_email.setText("");
+			textField_myBama.setText("");
 			textField_pidm.setText("");
 		});
 
@@ -367,6 +368,7 @@ public class Employee_Menu {
 		});
 		btnExit.setBounds(6, 395, 122, 57);
 		panel.add(btnExit);
+		/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	}
 }
 

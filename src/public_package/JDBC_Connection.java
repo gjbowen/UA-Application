@@ -149,10 +149,10 @@ public class JDBC_Connection {
 	}
 
 	@SuppressWarnings("unused")
-	protected boolean isPIDM(String s) {
+	public boolean isPIDM(String s) {
         return Integer.parseInt(s) > 0;
 	}
-	protected boolean isCWID(String cwid) {
+	public boolean isCWID(String cwid) {
 		if (cwid.length() != 8)
 			return false;
 		try {
@@ -164,7 +164,7 @@ public class JDBC_Connection {
 		}
 	}
 
-	public String getCWIDFromName(String name) {
+	public String getPIDMFromName(String name) {
 		if(name==null || name.equals("TOO_MANY_RETURNED")|| name.equals("NONE_RETURNED"))
 			return name;
 
@@ -192,13 +192,18 @@ public class JDBC_Connection {
 			last = name.substring(name.indexOf(" ") + 1);
 		}
 
+		first = first.toUpperCase();
+		if (middle!=null)
+			middle = middle.toUpperCase();
+		last = last.toUpperCase();
+
 		Statement stmt;
 		String query;
-		String cwid = "";
+		String pidm = "";
 		try {
 			stmt = connection.createStatement();
 			if(middle == null) {
-				query =   "select spriden_id "
+				query =   "select spriden_pidm "
 						+ "from saturn.spriden "
 						+ "where upper(spriden_last_name) = upper('" + last + "') "
 						+ "and upper(spriden_first_name) like upper('" + first + "%') "
@@ -206,24 +211,24 @@ public class JDBC_Connection {
 
 			}
 			else {
-				query =  "select spriden_id "
+				query =  "select spriden_pidm "
 						+ "from saturn.spriden "
-						+ "where upper(spriden_last_name) = upper('" + last + "') "
-						+ "and upper(spriden_first_name) like upper('" + first + "%') "
-						+ "and upper(spriden_mi) like upper('" + middle + "%') "
-						+ "and spriden_change_ind is null";
+						+ "where spriden_change_ind is null "
+						+ "and upper(spriden_first_name) like '" + first + "%' "
+						+ "and upper(spriden_mi) like '" + middle + "%' "
+						+ "and upper(spriden_last_name) = '" + last + "'";
 			}
 			ResultSet rs = stmt.executeQuery(query);
 
 			int count = 0;
 			while (rs.next()) {
 				++count;
-				cwid = rs.getString(1);
+				pidm = rs.getString(1);
 			}
 			if(count==0)
 				return "NONE_RETURNED";
 			else if(count==1)
-				return cwid;
+				return pidm;
 			else
 				return "TOO_MANY_RETURNED";
 		}
@@ -267,7 +272,7 @@ public class JDBC_Connection {
 		}
 		return null;
 	}
-	private String getPIDMFromMyBama(String myBama) {
+	public String getPIDMFromMyBama(String myBama) {
 		if(myBama==null || myBama.equals("TOO_MANY_RETURNED")|| myBama.equals("NONE_RETURNED"))
 			return myBama;
 
@@ -299,7 +304,7 @@ public class JDBC_Connection {
 		}
 		return null;
 	}
-	private String getPIDMFromEmail(String email) {
+	public String getPIDMFromEmail(String email) {
 		if (email==null || email.equals("NONE_RETURNED") || email.equals("TOO_MANY_RETURNED"))
 			return email;
 
@@ -401,8 +406,7 @@ public class JDBC_Connection {
 		}
 		return null;
 	}
-
-	private String getEmailFromPIDM(String pidm) {
+	public String getEmailFromPIDM(String pidm) {
 		if(pidm==null || pidm.equals("TOO_MANY_RETURNED")|| pidm.equals("NONE_RETURNED"))
 			return pidm;
 
@@ -435,7 +439,7 @@ public class JDBC_Connection {
 		}
 		return null;
 	}
-	private String getMyBamaFromPIDM(String pidm) {
+	public String getMyBamaFromPIDM(String pidm) {
 		if(pidm==null || pidm.equals("TOO_MANY_RETURNED")|| pidm.equals("NONE_RETURNED"))
 			return pidm;
 
@@ -501,33 +505,33 @@ public class JDBC_Connection {
 	}
 
 	public ArrayList<String> convert(String pidm,String cwid,String name,String email,String myBama) {
-		if (!pidm.equals("")) {
+		if (!pidm.equals("")&&cwid.equals("")&&name.equals("")&&email.equals("")&&myBama.equals("")) {
 			cwid = getCWIDFromPIDM(pidm);
 			name = getNameFromPIDM(pidm);
 			email = getEmailFromPIDM(pidm);
 			myBama = getMyBamaFromPIDM(pidm);
 		}
-		else if(!cwid.equals("")) {
+		else if(pidm.equals("")&&!cwid.equals("")&&name.equals("")&&email.equals("")&&myBama.equals("")) {
 			pidm = getPIDMFromCWID(cwid);
 			name = getNameFromPIDM(pidm);
 			email = getEmailFromPIDM(pidm);
 			myBama = getMyBamaFromPIDM(pidm);
 		}
-		else if(!email.equals("")) {
+		else if(pidm.equals("")&&cwid.equals("")&&name.equals("")&&!email.equals("")&&myBama.equals("")) {
 			pidm = getPIDMFromEmail(email);
 			cwid = getCWIDFromPIDM(pidm);
 			name = getNameFromPIDM(pidm);
 			myBama = getMyBamaFromPIDM(pidm);
 		}
-		else if(!myBama.equals("")) {
+		else if(pidm.equals("")&&cwid.equals("")&&name.equals("")&&email.equals("")&&!myBama.equals("")) {
 			pidm = getPIDMFromMyBama(myBama);
 			cwid = getCWIDFromPIDM(pidm);
 			name = getNameFromPIDM(pidm);
 			email = getEmailFromPIDM(pidm);
 		}
-		else if(!name.equals("")) {
-			cwid = getCWIDFromName(name);
-			pidm = getPIDMFromCWID(cwid);
+		else if(pidm.equals("")&&cwid.equals("")&&!name.equals("")&&email.equals("")&&myBama.equals("")) {
+			pidm = getPIDMFromName(name);
+			cwid = getCWIDFromPIDM(pidm);
 			email = getEmailFromPIDM(pidm);
 			myBama = getMyBamaFromPIDM(pidm);
 		}
@@ -538,7 +542,6 @@ public class JDBC_Connection {
 			email = "";
 			myBama = "";
 		}
-
 
 		ArrayList<String> values = new ArrayList<String>();
 		values.add(pidm);
@@ -589,18 +592,15 @@ public class JDBC_Connection {
 							+ "where spriden_pidm=gobtpac_pidm "
 							+ "and gobtpac_external_user = '" + username + "' " 
 							+ "and spriden_change_ind is null");
-
 			int count = 0;
 			while (rs.next()) {
 				++count;
 				name = rs.getString(1);
 			}
-			if (count==1) {
+			if (count==1)
 				userFirstName=name;
-			}
-			else{
+			else
 				userFirstName="";
-            }
 			System.out.println("Welcome, "+userFirstName);
 		}
 		catch (SQLException e2) {
@@ -610,17 +610,12 @@ public class JDBC_Connection {
 	}
 
 	private String getDBHost(String mode) {
-		String DB_URL;
-		if(mode == "SEVL") {
-			DB_URL = "jdbc:oracle:thin:@//bnrtdb-1.ua.edu:1521/SEVL.ua.edu";
-		}
-		else if (mode == "TEST") {
-			DB_URL =  "jdbc:oracle:thin:@//bnrtdb-1.ua.edu:1521/TEST.ua.edu";
-		}
-		else{
-			DB_URL = "jdbc:oracle:thin:@//bnrpdb-1.ua.edu:1521/PROD.ua.edu";
-		}
-		return DB_URL;
+		if(mode.equals("SEVL"))
+			return "jdbc:oracle:thin:@//bnrtdb-1.ua.edu:1521/SEVL.ua.edu";
+		else if (mode.equals("TEST"))
+			return "jdbc:oracle:thin:@//bnrtdb-1.ua.edu:1521/TEST.ua.edu";
+		else
+			return "jdbc:oracle:thin:@//bnrpdb-1.ua.edu:1521/PROD.ua.edu";
 	}
 
 }

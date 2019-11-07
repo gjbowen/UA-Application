@@ -100,11 +100,12 @@ public class SFTP_Connection {
 		}
 	}
 	public String getInstance(String environment) {
-		if (environment == "SEVL")
+		if (environment.equals("SEVL"))
 			return "js-dev.ua.edu";
-		if (environment == "TEST")
+		else if (environment.equals("TEST"))
 			return "js-test.ua.edu";
-		return "js-prod.ua.edu";
+		else
+			return "js-prod.ua.edu";
 	}
 	protected void gunzipIt(String fileName, String path) {
 		String outFile = fileName.substring(0, fileName.length() - 3);

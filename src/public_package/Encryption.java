@@ -77,7 +77,7 @@ class Encryption {
 		} catch (IOException e) {
 			System.out.println("Error in writeFile!");
 			e.printStackTrace();
-		}		
+		}
 	}
 	protected static String shuffleString(){
 		String x = "wEVY!3MUxutQiS*TOkF-9WB8qf@5LbcljAD61#zrKm2vdg7NX$%nshyCJ<GoPR>apHeI04Z";
@@ -88,19 +88,18 @@ class Encryption {
 			shuffled += letter;
 		return shuffled;
 	}
-	protected static  String encrypt(String cipherText, int shiftKey,String c){    	
+	protected static  String encrypt(String cipherText, int shiftKey,String c){
 		String plainText = "";
 		for (int i = 0; i < cipherText.length(); i++)
 			if(c.indexOf(cipherText.charAt(i))<0)
-				System.out.println("INVALID CHARACTER: "+cipherText.charAt(i));           	
-			else {
-				if ((c.indexOf(cipherText.charAt(i)) + shiftKey) % c.length() < 0)
-					plainText += c.charAt(c.length() + (c.indexOf(cipherText.charAt(i)) + shiftKey) % c.length());
-				else
-					plainText += c.charAt((c.indexOf(cipherText.charAt(i)) + shiftKey) % c.length());}
+				System.out.println("INVALID CHARACTER: "+cipherText.charAt(i));
+			else if ((c.indexOf(cipherText.charAt(i)) + shiftKey) % c.length() < 0)
+				plainText += c.charAt(c.length() + (c.indexOf(cipherText.charAt(i)) + shiftKey) % c.length());
+			else
+				plainText += c.charAt((c.indexOf(cipherText.charAt(i)) + shiftKey) % c.length());
 		return plainText;
-	}	
-	protected static String decrypt(String cipherText, int shiftKey,String alpha){    	
+	}
+	protected static String decrypt(String cipherText, int shiftKey,String alpha){
 		String plainText = "";
 		int inverse = (alpha.length()-shiftKey %alpha.length())%alpha.length();
 		// System.out.println(inverse);

@@ -7,7 +7,7 @@ public class Driver {
 		else
 			mode = null;
 
-		new public_package.Login("concur");
+		new public_package.Login(mode);
 		//test ();
 	}
 
