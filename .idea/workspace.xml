@@ -8,13 +8,7 @@
   <component name="ChangeListManager">
     <list default="true" id="a9a87d5d-51ac-4abc-a9bd-83782288ae98" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Driver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Driver.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/concur_package/Employee_Menu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/concur_package/Employee_Menu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/git_package/Main_Menu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/git_package/Main_Menu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/public_package/Encryption.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/public_package/Encryption.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/public_package/JDBC_Connection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/public_package/JDBC_Connection.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/public_package/Login.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/public_package/Login.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/public_package/SFTP_Connection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/public_package/SFTP_Connection.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/public_package/Master_Menu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/public_package/Master_Menu.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -182,7 +176,7 @@
       <workItem from="1572899740883" duration="12728000" />
       <workItem from="1572982225519" duration="8461000" />
       <workItem from="1573056486831" duration="14162000" />
-      <workItem from="1573138500592" duration="601000" />
+      <workItem from="1573138500592" duration="1127000" />
     </task>
     <task id="LOCAL-00001" summary="added registry entry for tortoise ssh support">
       <created>1560346206312</created>
@@ -261,7 +255,14 @@
       <option name="project" value="LOCAL" />
       <updated>1572991389925</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="fix to conversion program">
+      <created>1573140976039</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1573140976039</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -300,7 +301,8 @@
     <MESSAGE value="fixed file fetch&#10;cleaned ar menus closing in sequence&#10;football reasons updated&#10;added support for AR to access main menu without SFTP access" />
     <MESSAGE value="cleaned." />
     <MESSAGE value="update to API for User and Vendors" />
-    <option name="LAST_COMMIT_MESSAGE" value="update to API for User and Vendors" />
+    <MESSAGE value="fix to conversion program" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix to conversion program" />
   </component>
   <component name="antWorkspaceConfiguration">
     <option name="IS_AUTOSCROLL_TO_SOURCE" value="false" />

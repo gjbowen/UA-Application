@@ -28,9 +28,7 @@ public class Master_Menu
 	private String password;
 	String environment;
 	private String firstName;
-    JMenuBar mb;
 	JMenu option_button,help_button,environment_button;
-	JMenuItem m1,m2,m4,env_SEVL,env_TEST,env_PROD;
     JButton arProgram,btnConcur,btnGitProgram,btnFileFetchProgram;
 
 	public Master_Menu(Connection conn_jdbc, String first, String user, String pass, SftpClient conn_sftp, String env){
@@ -44,9 +42,10 @@ public class Master_Menu
 		setButtons();
 	}
 	
-	@SuppressWarnings("unused")
 	private void addMenuBar() {
 		// menu bar
+		JMenuItem m1,m2,m4,env_SEVL,env_TEST,env_PROD;
+		JMenuBar mb;
 		mb = new JMenuBar();
 		frameMenu.setJMenuBar(mb);
 
@@ -124,7 +123,6 @@ public class Master_Menu
 		frameMenu.dispose();
 		Preferences.addPreference("environment", environment);
 		initialize();
-		
 	}
 	private void setButtons(){
 		//fix to those that don't have OIT access for SFTP.
