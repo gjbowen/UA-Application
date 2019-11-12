@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AnalysisUIOptions">
+    <option name="SCOPE_TYPE" value="3" />
+  </component>
   <component name="ArtifactsWorkspaceSettings">
     <artifacts-to-build>
       <artifact name="Application:jar" />
@@ -8,7 +11,11 @@
   <component name="ChangeListManager">
     <list default="true" id="a9a87d5d-51ac-4abc-a9bd-83782288ae98" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/public_package/Master_Menu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/public_package/Master_Menu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/concur_package/Employee_Menu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/concur_package/Employee_Menu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/concur_package/Function_Library.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/concur_package/Function_Library.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/concur_package/SAE_Menu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/concur_package/SAE_Menu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/git_package/Main_Menu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/git_package/Main_Menu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/public_package/JDBC_Connection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/public_package/JDBC_Connection.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -33,7 +40,12 @@
     <option name="HIDDEN_KINDS">
       <set />
     </option>
-    <expand />
+    <expand>
+      <path>
+        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
+        <item name="PROD" type="feb32156:DbDataSourceImpl" />
+      </path>
+    </expand>
     <select />
   </component>
   <component name="DefaultGradleProjectSettings">
@@ -120,7 +132,17 @@
     <option name="allServicesViewState">
       <serviceView>
         <treeState>
-          <expand />
+          <expand>
+            <path>
+              <item name="services root" type="e789fda9:ObjectUtils$Sentinel" />
+              <item name="com.intellij.execution.services.ServiceModel$ServiceGroupNode@e6fc18fb" type="7427dc5b:ServiceModel$ServiceGroupNode" />
+            </path>
+            <path>
+              <item name="services root" type="e789fda9:ObjectUtils$Sentinel" />
+              <item name="com.intellij.execution.services.ServiceModel$ServiceGroupNode@e6fc18fb" type="7427dc5b:ServiceModel$ServiceGroupNode" />
+              <item name="com.intellij.execution.services.ServiceModel$ServiceNode@30c22154" type="9fbbdea:ServiceModel$ServiceNode" />
+            </path>
+          </expand>
           <select />
         </treeState>
       </serviceView>
@@ -176,7 +198,12 @@
       <workItem from="1572899740883" duration="12728000" />
       <workItem from="1572982225519" duration="8461000" />
       <workItem from="1573056486831" duration="14162000" />
-      <workItem from="1573138500592" duration="1127000" />
+      <workItem from="1573138500592" duration="1320000" />
+      <workItem from="1573157701237" duration="5034000" />
+      <workItem from="1573226876066" duration="1452000" />
+      <workItem from="1573234143117" duration="5161000" />
+      <workItem from="1573243292647" duration="8983000" />
+      <workItem from="1573573167509" duration="3467000" />
     </task>
     <task id="LOCAL-00001" summary="added registry entry for tortoise ssh support">
       <created>1560346206312</created>
@@ -262,7 +289,14 @@
       <option name="project" value="LOCAL" />
       <updated>1573140976039</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="fix to conversion program">
+      <created>1573141423261</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1573141423261</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

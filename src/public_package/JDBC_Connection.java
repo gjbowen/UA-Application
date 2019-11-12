@@ -86,7 +86,6 @@ public class JDBC_Connection {
 	}
 	public String prettyPrint(ResultSet rs) { 
 		StringBuilder retVal = new StringBuilder();
-
 		try {
 			ResultSetMetaData rsmd = rs.getMetaData();
 
@@ -117,11 +116,9 @@ public class JDBC_Connection {
 			}
 			retVal.append("\n");
 
-
 			//print SPACING
 			for(int i=0; i< sumColumns(columnSizes);++i)
 				retVal.append("-");
-
 
 			//print data
 			retVal.append("\n");
@@ -132,19 +129,13 @@ public class JDBC_Connection {
 							retVal.append(table.get(i).get(j).charAt(character));
 						else
 							retVal.append(" ");
-
 					retVal.append("  |  ");
 				}
 				retVal.append("\n");
 			}
-
-
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-
-		//print(retVal.toString());
-
 		return retVal.toString();
 	}
 

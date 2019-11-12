@@ -192,6 +192,7 @@ public class Main_Menu
 			} catch (InterruptedException e2) {
 				System.out.println(e2.getMessage());
 			}
+			textField_commit.setText("");
 		});
 		btnSubmit_switch.addActionListener(arg0 -> {
 			input = f.validateInput(textField_switch.getText().trim());

@@ -1,20 +1,33 @@
 package concur_package;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Panel;
+import java.awt.Toolkit;
+import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.*;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
 
 public class Employee_Menu {
 	protected JFrame frameEmployeeMenu;
-	protected Function_Library connection;
-	private API_Package api;
+	private final Function_Library connection;
+	private final API_Package api;
 	private JTextField cwidField_emp;
 
 	private JTextField textField_column;
 
+	JTextField textField_cwid;
+	JTextField textField_pidm;
+	JTextField textField_name;
+	JTextField textField_myBama;
+	JTextField textField_email;
+
 	public Employee_Menu(Function_Library conn) {
 		connection = conn;
-		initialize();
+		this.initialize();
 		api = new API_Package(connection);
 
 	}
@@ -35,7 +48,7 @@ public class Employee_Menu {
 		panel.setLayout(null);
 
 		final JLabel lblStatus = new JLabel("Status: WAIT!");
-		lblStatus.setFont(new Font("AppleGothic", 0, 16));
+		lblStatus.setFont(new Font("AppleGothic", Font.PLAIN, 16));
 		lblStatus.setBounds(138, 404, 328, 35);
 		panel.add(lblStatus);
 		lblStatus.setText("");
@@ -48,18 +61,26 @@ public class Employee_Menu {
 
 		//////////////////////////////////////////////////////////////////////////////////
 		JLabel lbl_person = new JLabel("CWID/PIDM");
-		lbl_person.setFont(new Font("Tahoma", 1, 13));
+		lbl_person.setFont(new Font("Tahoma", Font.BOLD, 13));
 		lbl_person.setBounds(5, 8, 80, 23);
 		subPanel_1.add(lbl_person);
 
 		cwidField_emp = new JTextField();
 		cwidField_emp.setBounds(150, 6, 130, 26);
+		cwidField_emp.setText("11256098");
+
 		subPanel_1.add(cwidField_emp);
 		cwidField_emp.setColumns(10);
 
 		//////////////////////////////////////////////////////////////////////
+		textField_cwid = new JTextField();
+		textField_pidm = new JTextField();
+		textField_name = new JTextField();
+		textField_myBama = new JTextField();
+		textField_email = new JTextField();
 
 		textField_column = new JTextField();
+
 		textField_column.setText("5");
 		textField_column.setColumns(10);
 		textField_column.setBounds(220, 35, 46, 26);
@@ -76,17 +97,41 @@ public class Employee_Menu {
 			if (!person.equals("")) {
 				if(textField_column.getText().trim().equals("5") && !connection.isCWID(person))
 					person = connection.jdbc.getCWIDFromPIDM(person);
+
 				message = connection.findEmployee(person,Integer.parseInt(textField_column.getText().trim()));
-				JTextArea textArea = new JTextArea(message);
-				JScrollPane scrollPane = new JScrollPane(textArea);
-				textArea.setLineWrap(true);
-				textArea.setWrapStyleWord(true);
-				scrollPane.setPreferredSize(new Dimension(1000, 600));
-				JOptionPane.showMessageDialog(null, scrollPane, "CWID " + person, -1);
+
+				//make the pane
+				final JEditorPane myPane = new JEditorPane();
+				myPane.setEditorKit(JEditorPane.createEditorKitForContentType("text/html"));
+				myPane.setEditable(false);
+				myPane.setAutoscrolls(true);
+				myPane.addHyperlinkListener(new HyperlinkListener() {
+					public void hyperlinkUpdate(HyperlinkEvent e) {
+						if(e.getEventType() == HyperlinkEvent.EventType.ACTIVATED)
+							try {
+								Runtime.getRuntime().exec("explorer.exe /select," + e.getDescription());
+							} catch (IOException ex) {ex.printStackTrace();}
+					}
+				});
+				myPane.setText(message);
+
+				//set the frame
+				JFrame myFrame = new JFrame("Search results");
+				//myFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				myFrame.setSize(1500, 600);
+				myFrame.setResizable(true);
+
+				//add the pane to the frame
+				myFrame.setContentPane(myPane);
+
+				//finally, show it!
+				myFrame.setVisible(true);
+
 				lblStatus.setText("");
 			}
 			else {
 				lblStatus.setText("Status: CWID not given.");
+				//connection.findEmployeeCustom();
 			}
 		});
 
@@ -109,7 +154,7 @@ public class Employee_Menu {
 					textArea.setLineWrap(true);
 					textArea.setWrapStyleWord(true);
 					scrollPane.setPreferredSize(new Dimension(500, 500));
-					JOptionPane.showMessageDialog(null, scrollPane, "Tracking Table Contents for " + person, -1);
+					JOptionPane.showMessageDialog(null, scrollPane, "Tracking Table Contents for " + person, JOptionPane.PLAIN_MESSAGE);
 				} else {
 					JOptionPane.showMessageDialog(null, "CWID - " + person + " is not in tracking table");
 				}
@@ -144,7 +189,7 @@ public class Employee_Menu {
 				scrollPane.setPreferredSize(new Dimension(700, 500));
 				scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 				scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-				JOptionPane.showMessageDialog(null, scrollPane, "API Search Results - "+person, -1);
+				JOptionPane.showMessageDialog(null, scrollPane, "API Search Results - "+person, JOptionPane.PLAIN_MESSAGE);
 
 			} else {
 				lblStatus.setText("Status: CWID not given.");
@@ -171,7 +216,7 @@ public class Employee_Menu {
 			textArea.setLineWrap(true);
 			textArea.setWrapStyleWord(true);
 			scrollPane.setPreferredSize(new Dimension(500, 500));
-			JOptionPane.showMessageDialog(null, scrollPane, "All Reactivated Employees", -1);
+			JOptionPane.showMessageDialog(null, scrollPane, "All Reactivated Employees", JOptionPane.PLAIN_MESSAGE);
 			lblStatus.setText("");
 		});
 		subPanel_2.add(button_Reactivated);
@@ -190,7 +235,7 @@ public class Employee_Menu {
 			textArea.setLineWrap(true);
 			textArea.setWrapStyleWord(true);
 			scrollPane.setPreferredSize(new Dimension(800, 500));
-			JOptionPane.showMessageDialog(null, scrollPane, "Changed Login IDs", -1);
+			JOptionPane.showMessageDialog(null, scrollPane, "Changed Login IDs", JOptionPane.PLAIN_MESSAGE);
 			lblStatus.setText("");
 		});
 
@@ -208,7 +253,7 @@ public class Employee_Menu {
 			textArea.setLineWrap(true);
 			textArea.setWrapStyleWord(true);
 			scrollPane.setPreferredSize(new Dimension(500, 500));
-			JOptionPane.showMessageDialog(null, scrollPane, "All Deactivated Employees", -1);
+			JOptionPane.showMessageDialog(null, scrollPane, "All Deactivated Employees", JOptionPane.PLAIN_MESSAGE);
 			lblStatus.setText("");
 		});
 
@@ -220,7 +265,7 @@ public class Employee_Menu {
 		subPanel_3.setLayout(null);
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		JLabel lblBatchSearch = new JLabel("Batch job");
-		lblBatchSearch.setFont(new Font("Tahoma", 1, 13));
+		lblBatchSearch.setFont(new Font("Tahoma", Font.BOLD, 13));
 		lblBatchSearch.setBounds(5, 1, 88, 23);
 		subPanel_3.add(lblBatchSearch);
 
@@ -245,7 +290,7 @@ public class Employee_Menu {
 				textArea.setLineWrap(true);
 				textArea.setWrapStyleWord(true);
 				scrollPane.setPreferredSize(new Dimension(1200, 500));
-				JOptionPane.showMessageDialog(null, scrollPane, "305 Batch Search", -1);
+				JOptionPane.showMessageDialog(null, scrollPane, "305 Batch Search", JOptionPane.PLAIN_MESSAGE);
 				lblStatus.setText("");
 			} else {
 				lblStatus.setText("Status: CWIDs not given");
@@ -266,7 +311,7 @@ public class Employee_Menu {
 				textArea.setLineWrap(true);
 				textArea.setWrapStyleWord(true);
 				scrollPane.setPreferredSize(new Dimension(600, 500));
-				JOptionPane.showMessageDialog(null, scrollPane, "350 Batch Search", -1);
+				JOptionPane.showMessageDialog(null, scrollPane, "350 Batch Search", JOptionPane.PLAIN_MESSAGE);
 				lblStatus.setText("");
 
 			} else {
@@ -329,7 +374,7 @@ public class Employee_Menu {
 					textField_name.getText().trim(),
 					textField_email.getText().trim(),
 					textField_myBama.getText().trim());
-			
+
 			textField_pidm.setText(content.get(0));
 			textField_cwid.setText(content.get(1));
 			textField_name.setText(content.get(2));
@@ -353,14 +398,14 @@ public class Employee_Menu {
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		JButton btnClose = new JButton("Close");
-		btnClose.setFont(new Font("Lucida Grande", 0, 15));
+		btnClose.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
 		btnClose.addActionListener(e2 -> frameEmployeeMenu.dispose());
 		btnClose.setBounds(554, 395, 122, 54);
 		panel.add(btnClose);
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		JButton btnExit = new JButton("Exit");
-		btnExit.setFont(new Font("Lucida Grande", 0, 15));
+		btnExit.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
 		btnExit.addActionListener(e2 -> {
 			public_package.Exit_Confirmation window = new public_package.Exit_Confirmation(connection.firstName);
 			window.frameExitConfirmation.setVisible(true);

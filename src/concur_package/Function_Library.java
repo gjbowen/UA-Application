@@ -40,6 +40,13 @@ class Function_Library {
 		password = pass;
 	}
 
+	String startFontSize(int size){
+		return "<font size=\""+size+"\">";
+	}
+	String endFontSize(){
+		return "</font>";
+	}
+
 	protected String findAllDeleted() {
 		System.out.println("Initiating Find All Deleted search...");
 		// people.add("123");
@@ -161,6 +168,41 @@ class Function_Library {
 		return retStr.toString();
 	}
 
+	protected void findEmployeeCustom() { //never used
+		String line = "";
+		int count = 0;
+		File[] files = new File(System.getProperty("user.home") + "//Concur_Files//" + environment + "//Employee_Files").listFiles();
+		File file = null;
+		String[] parsedLine = null;
+		for (int i = 0; i < files.length; ++i) {
+			file = files[i];
+			//if(!file.getName().contains("2019"))
+			//	continue;
+			try {
+				BufferedReader br = new BufferedReader(new FileReader(file));
+				while ((line = br.readLine()) != null) {
+					parsedLine = line.split(",");
+					if (parsedLine.length < 10)
+						continue;
+
+					String orgn305 = parsedLine[17];
+					String orgn350 = get305ORGN(parsedLine[4], file.getName().replace("305", "350"));
+
+					if(!orgn305.trim().equals(orgn350.split(" ")[0].trim())) {
+						if(orgn305.equals(""))
+							orgn305="<null>";
+						else
+							orgn305="\""+orgn305 +"\"";
+						System.out.println(file.getName() + "  "+parsedLine[4]+"  -   305: " +  orgn305 + "    350: " + "\"" + orgn350.split(" ")[0] + "\"");
+					}
+
+				}
+				br.close();
+			} catch (IOException e2){}
+		}
+		System.out.println("Done with Employee search" );
+	}
+
 	protected String findEmployee(String cwid,int col) {
 		String line = "";
 		int count = 0;
@@ -181,11 +223,27 @@ class Function_Library {
 					else if (!parsedLine[col].contains(cwid))
 						continue;
 					++count;
-					retStr.append(getDateFromFilename(file.getName()) + " - " + parsedLine[3] + ", "
-							+ parsedLine[1] + " " + parsedLine[2] + "  -  Email: " + parsedLine[5] + "  -  Active: "
-							+ parsedLine[14] + "  -  Orgn: "
-							+ get305ORGN(parsedLine[4], file.getName().replace("305", "350")) + "  -  Approver: "
-							+ parsedLine[63] + "  -  Approver's CWID: " + parsedLine[58] + "\n");
+
+					String orgn305 = parsedLine[17];
+					String orgn350 = get305ORGN(parsedLine[4], file.getName().replace("305", "350"));
+					//System.out.println("Org is: "+orgn350+"\twith "+file.getName().replace("305", "350"));
+					String foap = parsedLine[15]+"-"+parsedLine[16]+"-"+parsedLine[17]+"-"+parsedLine[18];
+					foap=foap.replace("---","N/A");
+					retStr.append(startFontSize(5)+createLink( getDateFromFilename(file.getName()),file.getPath()) + " - " + parsedLine[3] + ", "
+							+ parsedLine[1] + " " + parsedLine[2] +
+							"  - Email: " + parsedLine[5] +
+							"  - Active: " + parsedLine[14] +
+							"  - Orgn: "+ orgn350 +
+							"  - FOAP: "+foap +
+							"  - Approver: " + parsedLine[63] +
+							"  - Approver's CWID: " + parsedLine[58] +endTab()+ endFontSize()+"<br>");
+					if(!orgn305.trim().equals(orgn350.split(" ")[0].trim())) {
+						if(orgn305.equals(""))
+							orgn305="NULL";
+						else
+							orgn305="\""+orgn305 +"\"";
+						retStr.append(startFontSize(3)+"ORGN MISMATCH FOUND   -   305: " +  orgn305 + "    350: " + "\"" + orgn350.split(" ")[0] + "\""+ endFontSize()+"<br>");
+					}
 				}
 				br.close();
 			} catch (IOException e2) {
@@ -196,6 +254,15 @@ class Function_Library {
 		if (count == 0)
 			return "CWID " + cwid + " not found.";
 		return retStr.toString();
+	}
+	String createLink(String tag,String dest){
+		return "<a href=\""+dest+"\">"+tag+"</a>";
+	}
+	String startTab(){
+		return "<span style=\"margin-left:4em\">";
+	}
+	String endTab(){
+		return "</span>";
 	}
 
 	protected String findBatch305(String cwid) {
@@ -335,7 +402,8 @@ class Function_Library {
 				try {
 					BufferedReader br = new BufferedReader(new FileReader(file));
 					while ((line = br.readLine()) != null) {
-						if (line.equals("100,0,SSO,UPDATE,EN,N,N") || !(parsedLine = line.split(","))[1].equals(cwid))
+						parsedLine = line.split(",");
+						if (line.equals("100,0,SSO,UPDATE,EN,N,N") || !parsedLine[1].equals(cwid))
 							continue;
 						++count;
 						retStr.append(parsedLine[19]);
@@ -991,12 +1059,20 @@ class Function_Library {
 					parsedLine.get(17).indexOf(".") + 3);
 			transAmount = front + "." + back;
 		}
-		message = "\nFile: " + fileName + "\n" + "Date: " + getDateFromFilename(fileName) + "\n" + "Line: " + line
-				+ "\n" + "\tPerson: " + parsedLine.get(4) + " - " + parsedLine.get(5) + ", " + parsedLine.get(6) + "\n"
-				+ "\tReport Key: " + parsedLine.get(19) + "\n" + "\tDescription: " + parsedLine.get(26) + "\n\t\t"
-				+ parsedLine.get(41) + "\n\t\t" + parsedLine.get(42) + "\n\t\t" + parsedLine.get(62) + "\n\t\t"
-				+ parsedLine.get(68) + "\n\t\t" + parsedLine.get(70) + "\n\t\t" + parsedLine.get(145) + "\n"
-				+ "\tTransaction Amount: " + transAmount + "\n" + "\tAccount Code: " + parsedLine.get(62) + "\n";
+		message = "<br>File: " + fileName + "<br>"
+				+ "Date: " + getDateFromFilename(fileName) + "<br>"
+				+ "Line: " + line + "<br>"
+				+ "Person: " + parsedLine.get(4) + " - " + parsedLine.get(5) + ", " + parsedLine.get(6) + "<br>"
+				+ "Report Key: " + parsedLine.get(19) + "<br>"
+				+ "Description: " + parsedLine.get(26) + "<br>"
+				+ parsedLine.get(41) + "<br>"
+				+ parsedLine.get(42) + "<br>"
+				+ parsedLine.get(62) + "<br>"
+				+ parsedLine.get(68) + "<br>"
+				+ parsedLine.get(70) + "<br>"
+				+ parsedLine.get(145) + "<br>"
+				+ "Transaction Amount: " + transAmount + "<br>"
+				+ "Account Code: " + parsedLine.get(62) + "<br>";
 
 		return message;
 	}

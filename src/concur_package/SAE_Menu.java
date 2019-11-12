@@ -5,22 +5,12 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Toolkit;
+import java.io.IOException;
 
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import javax.swing.JRadioButton;
-import javax.swing.JScrollPane;
-import javax.swing.JSeparator;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.SwingWorker;
+import javax.swing.*;
 import javax.swing.border.EtchedBorder;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
 
 public class SAE_Menu {
 	protected Function_Library connection;
@@ -281,13 +271,34 @@ public class SAE_Menu {
 							JOptionPane.showMessageDialog(null, message);
 						}else {
 
+							//make the pane
+							final JEditorPane myPane = new JEditorPane();
+							myPane.setEditorKit(JEditorPane.createEditorKitForContentType("text/html"));
+							myPane.setEditable(false);
+							myPane.setAutoscrolls(true);
+							myPane.addHyperlinkListener(new HyperlinkListener() {
+								public void hyperlinkUpdate(HyperlinkEvent e) {
+									if(e.getEventType() == HyperlinkEvent.EventType.ACTIVATED)
+										try {
+											Runtime.getRuntime().exec("explorer.exe /select," + e.getDescription());
+										} catch (IOException ex) {ex.printStackTrace();}
+								}
+							});
+							myPane.setText(message);
 
-							JTextArea textArea = new JTextArea(message);
-							JScrollPane scrollPane = new JScrollPane(textArea);
-							textArea.setLineWrap(true);
-							textArea.setWrapStyleWord(true);
-							scrollPane.setPreferredSize(new Dimension(800, 800));// x WIDTH x HEIGHT
-							JOptionPane.showMessageDialog(null, scrollPane, "SAE", -1);
+							//set the frame
+							JFrame myFrame = new JFrame("Search results");
+							//myFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+							myFrame.setSize(1500, 600);
+							myFrame.setResizable(true);
+
+							//add the pane to the frame
+							myFrame.setContentPane(myPane);
+
+							//finally, show it!
+							myFrame.setVisible(true);
+
+
 						}
 
 						return null;
