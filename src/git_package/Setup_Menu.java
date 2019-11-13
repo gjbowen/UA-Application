@@ -61,26 +61,30 @@ public class Setup_Menu
 
 		JRadioButton rbNew = new JRadioButton("Clone and create");
 		panel.add(rbNew);
+		rbNew.setSelected(true);
 
 		JRadioButton rbExists = new JRadioButton("GIT Folder Exists");
 		panel.add(rbExists);
-		rbExists.setSelected(true);
 
 		textField = new JTextField();
 		textField.setBounds(10, 126, 231, 31);
 		frameMainMenu.getContentPane().add(textField);
 		textField.setColumns(10);
-		textField.setText(f.getUserHome()+"\\Desktop\\uabanner");
+		textField.setText(f.getUserHome()+"\\Desktop");
+
+		lblMode = new JLabel("Enter location to clone GIT folder");
+		lblMode.setBounds(10, 109, 231, 14);
+		frameMainMenu.getContentPane().add(lblMode);
 
 		rbExists.addActionListener(e -> {
-			lblMode.setText("Enter current GIT folder");
+			lblMode.setText("Enter current GIT folder containing .git");
 			rbNew.setSelected(false);
 			rbExists.setSelected(true);
 			reset();
 		});
 
 		rbNew.addActionListener(e -> {
-			lblMode.setText("Enter new GIT folder location");
+			lblMode.setText("Enter location to clone GIT folder");
 			rbExists.setSelected(false);
 			rbNew.setSelected(true);
 			reset();
@@ -101,14 +105,12 @@ public class Setup_Menu
 		buttonSubmit.setBounds(251, 170, 148, 31);
 		frameMainMenu.getContentPane().add(buttonSubmit);
 
-		lblMode = new JLabel("Enter current GIT folder");
-		lblMode.setBounds(10, 109, 231, 14);
-		frameMainMenu.getContentPane().add(lblMode);
+
 
 		JButton btnViewRepos = new JButton("View All Repos Available");
 		btnViewRepos.addActionListener(arg0 -> f.openLink("http://fisheye01.ua.edu:7990/stash/projects/"));
-		btnViewRepos.setBounds(230, 28, 189, 23);
-		frameMainMenu.getContentPane().add(btnViewRepos);
+		btnViewRepos.setBounds(251, 28, 189, 23);
+		//frameMainMenu.getContentPane().add(btnViewRepos); //hold off on supporting multiple repos
 
 		btnExplore = new JButton("Browse");
 		btnExplore.addActionListener(e -> {
@@ -126,7 +128,7 @@ public class Setup_Menu
 		
 		
 		
-		btnExplore.setBounds(230, 75, 89, 23);
+		btnExplore.setBounds(251, 75, 89, 23);
 		frameMainMenu.getContentPane().add(btnExplore);
 		lblVerified.setVisible(false);
 		buttonSubmit.setVisible(false);

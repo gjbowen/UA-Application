@@ -151,9 +151,9 @@ public class Master_Menu
 		frameMenu.getContentPane().add(button_exit);
 
 		JPanel panel = new JPanel();
-		panel.setBounds(6, 11, 413, 186);
+		panel.setBounds(15, 11, 393, 186);
 		frameMenu.getContentPane().add(panel);
-		panel.setLayout(new GridLayout(0, 2, 0, 0));
+		panel.setLayout(new GridLayout(0, 2, 5, 5));
 
 		btnConcur = new JButton("Concur Application");
 		btnConcur.setFont(new Font("Tahoma", Font.PLAIN, 16));

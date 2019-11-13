@@ -1,9 +1,5 @@
 package concur_package;
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
-import java.awt.Font;
-import java.awt.GridLayout;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.io.IOException;
 import java.sql.Connection;
 
@@ -79,17 +75,15 @@ public class Main_Menu
 		frameMenu.setDefaultCloseOperation(3);
 		frameMenu.getContentPane().setLayout(null);
 
-		JButton button_exit = new JButton("Exit");
-		button_exit.setFont(new Font("Lucida Grande", 0, 15));
-		button_exit.setBounds(6, 221, 122, 57);
-		frameMenu.getContentPane().add(button_exit);
-
 		JPanel panel = new JPanel();
 		panel.setBorder(null);
-		panel.setBounds(6, 6, 418, 198);
+		panel.setBounds(15, 6, 400, 198);
 		frameMenu.getContentPane().add(panel);
-		panel.setLayout(new GridLayout(0, 2, 0, 0));
+		panel.setLayout(new GridLayout(0, 2, 5, 5));
 
+		////////////////
+		// START GRID
+		////////////////
 		JButton btnEmp = new JButton("Employee Feed");
 		panel.add(btnEmp);
 
@@ -98,15 +92,6 @@ public class Main_Menu
 
 		JButton btnPRAE = new JButton("PRAE");
 		panel.add(btnPRAE);
-		btnPRAE.addActionListener(e -> EventQueue.invokeLater(() -> {
-			try {
-				PRAE_Menu window = new PRAE_Menu(fun);
-				window.praeFrame.setVisible(true);
-				//frameMenu.dispose();
-			} catch (Exception e17) {
-				e17.printStackTrace();
-			}
-		}));
 
 		JButton btnSAE = new JButton("SAE");
 		panel.add(btnSAE);
@@ -120,8 +105,31 @@ public class Main_Menu
 		JButton btnVendorTermFeed = new JButton("Vendor Term Feed");
 		panel.add(btnVendorTermFeed);
 
-
 		JButton btnFeed = new JButton("710 Feed");
+		panel.add(btnFeed);
+
+		JButton btnApi = new JButton("API");
+		panel.add(btnApi);
+
+		JButton btnFupload = new JButton("FUPLOAD");
+		panel.add(btnFupload);
+
+		JButton btnSHOW = new JButton("Show in Windows Explorer");
+		panel.add(btnSHOW);
+
+		JButton btnMoveToProd = new JButton("Move to SEVL/TEST");
+		panel.add(btnMoveToProd);
+
+		JButton btnClose = new JButton("Close");
+		btnClose.setFont(new Font("Dialog", Font.PLAIN, 15));
+		btnClose.setBounds(297, 221, 122, 57);
+		frameMenu.getContentPane().add(btnClose);
+
+		JButton button_exit = new JButton("Exit");
+		button_exit.setFont(new Font("Lucida Grande", 0, 15));
+		button_exit.setBounds(6, 221, 122, 57);
+		frameMenu.getContentPane().add(button_exit);
+
 		btnFeed.addActionListener(arg0 -> EventQueue.invokeLater(() -> {
 			try {
 				emp710_Menu window = new emp710_Menu(fun);
@@ -131,9 +139,6 @@ public class Main_Menu
 				e.printStackTrace();
 			}
 		}));
-		panel.add(btnFeed);
-
-		JButton btnApi = new JButton("API");
 		btnApi.addActionListener(arg0 -> EventQueue.invokeLater(() -> {
 			try {
 				API_Menu window = new API_Menu(fun);
@@ -143,10 +148,6 @@ public class Main_Menu
 				e.printStackTrace();
 			}
 		}));
-		panel.add(btnApi);
-
-
-		JButton btnFupload = new JButton("FUPLOAD");
 		btnFupload.addActionListener(arg0 -> EventQueue.invokeLater(() -> {
 			try {
 				Fupload_Menu window = new Fupload_Menu(fun);
@@ -156,9 +157,6 @@ public class Main_Menu
 				e.printStackTrace();
 			}
 		}));
-		panel.add(btnFupload);
-
-		JButton btnSHOW = new JButton("Show in Windows Explorer");
 		btnSHOW.addActionListener(e -> {
 			try{
 				if(System.getProperty("os.name").toLowerCase().contains("windows")) { //for Windows..
@@ -171,9 +169,6 @@ public class Main_Menu
 				e1.printStackTrace();
 			}
 		});
-		panel.add(btnSHOW);
-
-		JButton btnMoveToProd = new JButton("Move to SEVL/TEST");
 		btnMoveToProd.addActionListener(arg0 -> {
 			JDialog dlgProgress;
 			dlgProgress = new JDialog((java.awt.Frame)null, "Please wait.", true);//true means that the dialog created is modal
@@ -208,9 +203,6 @@ public class Main_Menu
 			dlgProgress.setVisible(true); //this will block user input as long as the processing task is working
 
 		});
-		panel.add(btnMoveToProd);
-
-		JButton btnClose = new JButton("Close");
 		btnClose.addActionListener(arg0 -> {
 			EventQueue.invokeLater(() -> {
 				new public_package.Master_Menu(
@@ -223,12 +215,6 @@ public class Main_Menu
 			});
 			frameMenu.dispose();
 		});
-		btnClose.setFont(new Font("Dialog", Font.PLAIN, 15));
-		btnClose.setBounds(297, 221, 122, 57);
-		frameMenu.getContentPane().add(btnClose);
-
-
-
 		btnEmp.addActionListener(e -> EventQueue.invokeLater(() -> {
 			try {
 				Employee_Menu window = new Employee_Menu(fun);
@@ -254,6 +240,15 @@ public class Main_Menu
 				//frameMenu.dispose();
 			} catch (Exception e14) {
 				e14.printStackTrace();
+			}
+		}));
+		btnPRAE.addActionListener(e -> EventQueue.invokeLater(() -> {
+			try {
+				PRAE_Menu window = new PRAE_Menu(fun);
+				window.praeFrame.setVisible(true);
+				//frameMenu.dispose();
+			} catch (Exception e17) {
+				e17.printStackTrace();
 			}
 		}));
 		btnSRE.addActionListener(e -> EventQueue.invokeLater(() -> {

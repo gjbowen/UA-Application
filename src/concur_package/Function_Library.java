@@ -422,23 +422,26 @@ class Function_Library {
 		int x;
 		try {
 			x = Integer.parseInt(str);
-		} catch (NumberFormatException e2) {
-			return false;
-		}
-		return x >= 1980 && x <= 2099;
+			if(x >= 1980 && x <= 2099) {
+				return true;
+			}
+		} catch (NumberFormatException e2) {}
+		return false;
 	}
 
 	protected String getDateFromFilename(String str) {
 		String year = null;
 		String month = null;
 		String day = null;
-		for (int i = 0; i < str.length() - 4; ++i)
+		for (int i = 0; i < str.length() - 4; ++i) {
 			if (validYear(str.substring(i, i + 4))) {
 				year = str.substring(i, i + 4);
 				month = str.substring(i + 4, i + 6);
 				day = str.substring(i + 6, i + 8);
+				return month + "/" + day + "/" + year;
 			}
-		return month + "/" + day + "/" + year;
+		}
+		return "";
 	}
 
 	protected String getLatestPRAE() {
@@ -525,7 +528,6 @@ class Function_Library {
 			return !parsedLine.get(17).equals("") && Float.valueOf(parsedLine.get(17)) != 0;
 		return false;
 	}
-
 
 	protected ArrayList<String> findLatestVendorInfo(String cwid,String rt) {
 		System.out.println("Searching for Vendor: "+cwid+"("+rt+")...");
@@ -1048,9 +1050,10 @@ class Function_Library {
 		return retStr.toString();
 	}
 
-	protected String buildSAE(ArrayList<String> parsedLine, String fileName, int line) {
+	protected String buildSAE(ArrayList<String> parsedLine, String filePath, int line) {
 		String transAmount;
 		String message;
+
 		if (parsedLine.get(17).length() < 6 || parsedLine.get(17).equals("")) {
 			transAmount = "0.00";
 		} else {
@@ -1059,8 +1062,9 @@ class Function_Library {
 					parsedLine.get(17).indexOf(".") + 3);
 			transAmount = front + "." + back;
 		}
-		message = "<br>File: " + fileName + "<br>"
-				+ "Date: " + getDateFromFilename(fileName) + "<br>"
+		String file = filePath.split("\\\\")[filePath.split("\\\\").length-1];
+		message = "<br>File: " + createLink(file,filePath) + "<br>"
+				+ "Date: " + getDateFromFilename(file) + "<br>"
 				+ "Line: " + line + "<br>"
 				+ "Person: " + parsedLine.get(4) + " - " + parsedLine.get(5) + ", " + parsedLine.get(6) + "<br>"
 				+ "Report Key: " + parsedLine.get(19) + "<br>"
@@ -1131,8 +1135,7 @@ class Function_Library {
 
 						// start the search
 						if (searchMode.equals("contains") && parsedLine.get(column).toLowerCase().contains(str)) {
-							System.out.println("FOUND!");
-							retStr.append(buildSAE(parsedLine, file.getName(), fileLine));
+							retStr.append(buildSAE(parsedLine, file.getPath(), fileLine));
 							++count;
 						}
 						else if (searchMode.equals("startsWith") && parsedLine.get(column).startsWith(str)) {

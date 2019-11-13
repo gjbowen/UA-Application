@@ -1,29 +1,40 @@
 package concur_package;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.io.IOException;
 
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JDialog;
+import javax.swing.JEditorPane;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.JRadioButton;
+import javax.swing.JSeparator;
+import javax.swing.JTextField;
+import javax.swing.SwingWorker;
 import javax.swing.border.EtchedBorder;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
-public class SAE_Menu {
-	protected Function_Library connection;
+class SAE_Menu {
+	protected final Function_Library connection;
 	protected JFrame saeFrame;
-	private JTextField searchString;
-	private JTextField searchColumn;
+
 	private String mode;
-	private String module="both";
-	private JTextField textField;
+	private String module;
 
 	public SAE_Menu(Function_Library conn) {
 		connection = conn;
 		initialize();
+		module = "both";
 	}
 
 	private void setMode(String str) {
@@ -41,49 +52,63 @@ public class SAE_Menu {
 		saeFrame.setBounds(100, 100, 592, 502);
 		saeFrame.setDefaultCloseOperation(3);
 		saeFrame.getContentPane().setLayout(null);
+
 		JButton btnExit = new JButton("Exit");
 		btnExit.setBounds(10, 395, 122, 57);
 		btnExit.setFont(new Font("Dialog", 0, 15));
 		saeFrame.getContentPane().add(btnExit);
+
 		JButton btnClose = new JButton("Close");
 		btnClose.setBounds(444, 395, 122, 57);
 		btnClose.setFont(new Font("Dialog", 0, 15));
 		saeFrame.getContentPane().add(btnClose);
+
 		JPanel panel = new JPanel();
 		panel.setBounds(10, 11, 305, 63);
 		FlowLayout flowLayout = (FlowLayout)panel.getLayout();
 		flowLayout.setAlignment(0);
 		saeFrame.getContentPane().add(panel);
+
 		JLabel lblReportKey = new JLabel("String to Search ");
 		panel.add(lblReportKey);
 		lblReportKey.setFont(new Font("Tahoma", 0, 18));
-		searchString = new JTextField();
+
+		JTextField searchString = new JTextField();
 		panel.add(searchString);
 		searchString.setColumns(10);
 		searchString.setText("");
+
 		JLabel Column_label = new JLabel("Column to Search");
 		Column_label.setFont(new Font("Tahoma", 0, 18));
 		panel.add(Column_label);
-		searchColumn = new JTextField();
-		searchColumn.setText("");
-		searchColumn.setColumns(10);
+
+		JTextField searchColumn = new JTextField();
+		searchColumn.setText("5");
+		searchColumn.setColumns(1);
 		panel.add(searchColumn);
+
 		setMode("equals");
+
 		JPanel panel_1 = new JPanel();
 		panel_1.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		panel_1.setBounds(359, 11, 108, 125);
 		FlowLayout flowLayout_1 = (FlowLayout)panel_1.getLayout();
 		flowLayout_1.setAlignment(0);
 		saeFrame.getContentPane().add(panel_1);
+
 		final JRadioButton rdbtnEquals = new JRadioButton("Equals");
 		panel_1.add(rdbtnEquals);
 		rdbtnEquals.setSelected(true);
+
 		final JRadioButton startsWith = new JRadioButton("Starts with");
 		panel_1.add(startsWith);
+
 		final JRadioButton rdbtnEndsWith = new JRadioButton("Ends with");
 		panel_1.add(rdbtnEndsWith);
+
 		final JRadioButton rdbtnContains = new JRadioButton("Contains");
 		panel_1.add(rdbtnContains);
+
 		rdbtnContains.addActionListener(e2 -> {
 			setMode("contains");
 			startsWith.setSelected(false);
@@ -108,75 +133,82 @@ public class SAE_Menu {
 			rdbtnEndsWith.setSelected(false);
 			rdbtnContains.setSelected(false);
 		});
+
+		//START SEARCH
 		JButton btnSubmit = new JButton("Search");
 		btnSubmit.setBounds(397, 162, 122, 57);
 		saeFrame.getContentPane().add(btnSubmit);
 		btnSubmit.setFont(new Font("Tahoma", 0, 15));
-		JPanel panel_2 = new JPanel();
-		panel_2.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		panel_2.setBounds(10, 85, 337, 134);
-		saeFrame.getContentPane().add(panel_2);
-		panel_2.setLayout(null);
-		JLabel lblKey = new JLabel("Column Cheat Sheet");
-		lblKey.setFont(new Font("Tahoma", 0, 15));
-		lblKey.setBounds(10, 11, 179, 16);
-		panel_2.add(lblKey);
+
+
+		// START CHEAT SHEET
+		JPanel gpanel = new JPanel();
+		gpanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		gpanel.setBorder(null);
+		gpanel.setBounds(10, 85, 337, 134);
+		saeFrame.getContentPane().add(gpanel);
+		panel.setLayout(new GridLayout(0, 2, 5, 5));
+
 		JButton reportKey = new JButton("Report Key - 20");
-		reportKey.setBounds(10, 38, 169, 20);
-		panel_2.add(reportKey);
+		gpanel.add(reportKey);
 		reportKey.addActionListener(e2 -> searchColumn.setText("20"));
+
 		JButton person = new JButton("Person(CWID) - 5");
-		person.setBounds(10, 53, 169, 20);
-		panel_2.add(person);
+		gpanel.add(person);
 		person.addActionListener(e2 -> searchColumn.setText("5"));
+
 		JButton transAmt = new JButton("Trans Amnt - 11");
-		transAmt.setBounds(10, 69, 169, 20);
-		panel_2.add(transAmt);
+		gpanel.add(transAmt);
 		transAmt.addActionListener(e2 -> searchColumn.setText("11"));
+
 		JButton fundCode = new JButton("Fund - 192");
+		gpanel.add(fundCode);
 		fundCode.addActionListener(e2 -> searchColumn.setText("192"));
-		fundCode.setBounds(186, 69, 138, 20);
-		panel_2.add(fundCode);
-		fundCode.addActionListener(e2 -> searchColumn.setText("192"));
+
 		JButton orgnCode = new JButton("ORGN - 193");
-		orgnCode.setBounds(186, 53, 138, 20);
-		panel_2.add(orgnCode);
-		orgnCode.addActionListener(e2 -> searchColumn.setText("192"));
+		gpanel.add(orgnCode);
+		orgnCode.addActionListener(e2 -> searchColumn.setText("193"));
 
 		JButton acctCode = new JButton("Account Code - 63");
-		acctCode.setBounds(10, 86, 169, 20);
-		panel_2.add(acctCode);
+		gpanel.add(acctCode);
+		acctCode.addActionListener(e2 -> searchColumn.setText("63"));
+
 		JButton date = new JButton("Date (YYYY-MM-DD) - 2");
-		date.setBounds(10, 105, 169, 20);
-		panel_2.add(date);
+		gpanel.add(date);
+		date.addActionListener(e2 -> searchColumn.setText("2"));
 
 		JButton descrpt = new JButton("Description - 69");
+		gpanel.add(descrpt);
 		descrpt.addActionListener(arg0 -> searchColumn.setText("69"));
-		descrpt.setBounds(186, 38, 138, 20);
-		panel_2.add(descrpt);
-		date.addActionListener(e2 -> searchColumn.setText("2"));
+
 		JPanel panel_3 = new JPanel();
 		panel_3.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+
 		FlowLayout flowLayout_2 = (FlowLayout)panel_3.getLayout();
 		flowLayout_2.setAlignment(0);
 		panel_3.setBounds(477, 11, 89, 125);
 		saeFrame.getContentPane().add(panel_3);
+
 		JLabel lblModule = new JLabel("Module");
 		lblModule.setFont(new Font("Tahoma", 0, 18));
 		panel_3.add(lblModule);
+
 		final JRadioButton bothButton = new JRadioButton("Both");
 		bothButton.setSelected(true);
 		panel_3.add(bothButton);
+
 		final JRadioButton expenseButton = new JRadioButton("Expense");
 		panel_3.add(expenseButton);
+
 		final JRadioButton pCardButton = new JRadioButton("P Card");
 		panel_3.add(pCardButton);
+
+		// Seperator
 		JSeparator separator = new JSeparator();
 		separator.setBounds(10, 233, 556, 16);
 		saeFrame.getContentPane().add(separator);
-		textField = new JTextField();
+		JTextField textField = new JTextField();
 		textField.setText("5,18,20,63,71,191,192,193,194,195,6,7,8,27,33,41,42,43,324,325,31,63,71,250,314,334");
-		//textField.setText("20,31,63,70,250,313,334");//
 		textField.setColumns(10);
 		textField.setBounds(10, 260, 461, 35);
 		saeFrame.getContentPane().add(textField);
@@ -186,9 +218,11 @@ public class SAE_Menu {
 		saeFrame.getContentPane().add(chckbxValidateItems);
 
 		JButton button = new JButton("Create SAE");
-		
+
+		// TRANSFER OPTIONS
 		JPanel panel_trasfer = new JPanel();
 		panel_trasfer.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+
 		FlowLayout fl_panel_trasfer = (FlowLayout) panel_trasfer.getLayout();
 		fl_panel_trasfer.setAlignment(FlowLayout.LEFT);
 		panel_trasfer.setBounds(477, 244, 89, 125);
@@ -228,8 +262,7 @@ public class SAE_Menu {
 		lblCreateMaster.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		lblCreateMaster.setBounds(10, 244, 509, 16);
 		saeFrame.getContentPane().add(lblCreateMaster);
-		
-	
+
 
 		bothButton.addActionListener(e2 -> {
 			setModule("both");
@@ -247,9 +280,7 @@ public class SAE_Menu {
 			expenseButton.setSelected(false);
 		});
 		btnSubmit.addActionListener(e2 -> {
-			if (searchString.getText().trim().equals("") || searchColumn.getText().trim().equals("")) {
-			}
-			else {
+			if (!searchString.getText().trim().equals("") && !searchColumn.getText().trim().equals("")) {
 
 				JDialog dlgProgress;
 				dlgProgress = new JDialog((java.awt.Frame)null, "Please wait.", true);//true means that the dialog created is modal
@@ -289,7 +320,7 @@ public class SAE_Menu {
 							//set the frame
 							JFrame myFrame = new JFrame("Search results");
 							//myFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-							myFrame.setSize(1500, 600);
+							myFrame.setSize(550, 600);
 							myFrame.setResizable(true);
 
 							//add the pane to the frame
