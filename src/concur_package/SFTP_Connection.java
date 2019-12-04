@@ -27,10 +27,6 @@ class SFTP_Connection extends public_package.SFTP_Connection{
 			rootF.mkdir();
 
 
-		File rootMisc = new File(System.getProperty("user.home")+dirDelim+"Concur_Files//misc");
-		if(!rootMisc.isDirectory())
-			rootMisc.mkdir();
-
 		File environmentF = new File(rootPath+dirDelim+environment);
 		if(!environmentF.isDirectory())
 			environmentF.mkdir();	

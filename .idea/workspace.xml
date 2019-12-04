@@ -11,11 +11,13 @@
   <component name="ChangeListManager">
     <list default="true" id="a9a87d5d-51ac-4abc-a9bd-83782288ae98" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ar_package/JDBC_Connection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ar_package/JDBC_Connection.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/concur_package/Function_Library.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/concur_package/Function_Library.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/concur_package/Main_Menu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/concur_package/Main_Menu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/concur_package/SAE_Menu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/concur_package/SAE_Menu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/git_package/Setup_Menu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/git_package/Setup_Menu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/public_package/Master_Menu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/public_package/Master_Menu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/concur_package/SFTP_Connection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/concur_package/SFTP_Connection.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/file_fetch_package/FileFetcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/file_fetch_package/FileFetcher.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/file_fetch_package/SFTP_Connection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/file_fetch_package/SFTP_Connection.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/public_package/JDBC_Connection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/public_package/JDBC_Connection.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/public_package/Login.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/public_package/Login.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -204,7 +206,13 @@
       <workItem from="1573234143117" duration="5161000" />
       <workItem from="1573243292647" duration="8983000" />
       <workItem from="1573573167509" duration="11942000" />
-      <workItem from="1573625598725" duration="839000" />
+      <workItem from="1573625598725" duration="913000" />
+      <workItem from="1573695703483" duration="9245000" />
+      <workItem from="1573841419977" duration="599000" />
+      <workItem from="1574285835370" duration="1967000" />
+      <workItem from="1574347869656" duration="1403000" />
+      <workItem from="1574867983346" duration="1379000" />
+      <workItem from="1575498322333" duration="42000" />
     </task>
     <task id="LOCAL-00001" summary="added registry entry for tortoise ssh support">
       <created>1560346206312</created>
@@ -304,7 +312,14 @@
       <option name="project" value="LOCAL" />
       <updated>1573596377516</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="fix git for all. date issue in SAE. reformatted buttons">
+      <created>1573626504510</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1573626504510</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -345,7 +360,8 @@
     <MESSAGE value="update to API for User and Vendors" />
     <MESSAGE value="fix to conversion program" />
     <MESSAGE value="begin switching to HTML based windows." />
-    <option name="LAST_COMMIT_MESSAGE" value="begin switching to HTML based windows." />
+    <MESSAGE value="fix git for all. date issue in SAE. reformatted buttons" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix git for all. date issue in SAE. reformatted buttons" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

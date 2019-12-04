@@ -15,6 +15,9 @@ public class FileFetcher
 	private String location;
 	private JTextField textField_count;
 	private int count;
+
+	JRadioButton rdbtnLatest,rdbtnAll,radio_specified; // Amount
+	JRadioButton rdbtnContains,rdbtnEquals,rdbtnStartsWith,rdbtnEndsWith;// Mode
 	//sftp,firstName,userName,password,environment
 	public FileFetcher(SftpClient conn_sftp,String first,String user,String pass,String env){
 		connection=new SFTP_Connection(conn_sftp,user,pass,env);
@@ -45,52 +48,22 @@ public class FileFetcher
 		panel.setBounds(264, 11, 133, 137);
 		frameMenu.getContentPane().add(panel);
 
-		JRadioButton rdbtnContains = new JRadioButton("Contains");
+		rdbtnContains = new JRadioButton("Contains");
 		panel.add(rdbtnContains);
 		rdbtnContains.setSelected(true);
 		mode = "CONTAINS";
 
-		JRadioButton rdbtnEquals = new JRadioButton("Equals");
+		rdbtnEquals = new JRadioButton("Equals");
 		panel.add(rdbtnEquals);
 
 
-		JRadioButton rdbtnStartsWith = new JRadioButton("Starts With");
+		rdbtnStartsWith = new JRadioButton("Starts With");
 		panel.add(rdbtnStartsWith);
 
-		JRadioButton rdbtnEndsWith = new JRadioButton("Ends With");
+		rdbtnEndsWith = new JRadioButton("Ends With");
 		panel.add(rdbtnEndsWith);
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
-
-		rdbtnEquals.addActionListener(e -> {
-			rdbtnEquals.setSelected(true);
-			rdbtnContains.setSelected(false);
-			rdbtnStartsWith.setSelected(false);
-			rdbtnEndsWith.setSelected(false);
-			mode="EQUALS";
-		});
-		rdbtnContains.addActionListener(e -> {
-			rdbtnEquals.setSelected(false);
-			rdbtnContains.setSelected(true);
-			rdbtnStartsWith.setSelected(false);
-			rdbtnEndsWith.setSelected(false);
-			mode="CONTAINS";
-		});
-		rdbtnStartsWith.addActionListener(e -> {
-			rdbtnEquals.setSelected(false);
-			rdbtnContains.setSelected(false);
-			rdbtnStartsWith.setSelected(true);
-			rdbtnEndsWith.setSelected(false);
-			mode="STARTSWITH";
-		});
-		rdbtnEndsWith.addActionListener(e -> {
-			rdbtnEquals.setSelected(false);
-			rdbtnContains.setSelected(false);
-			rdbtnStartsWith.setSelected(false);
-			rdbtnEndsWith.setSelected(true);
-			mode="ENDSWITH";
-		});
-		//////////////////////////////////////////////////////////////////////////////////////////////////
 
 		textField = new JTextField();
 		textField.setBounds(10, 11, 146, 32);
@@ -109,7 +82,6 @@ public class FileFetcher
 		frameMenu.getContentPane().add(button);
 
 		JButton btnGet = new JButton("Get");
-
 		btnGet.setBounds(166, 16, 89, 23);
 		frameMenu.getContentPane().add(btnGet);
 
@@ -140,45 +112,57 @@ public class FileFetcher
 		frameMenu.getContentPane().add(panel_2);
 		panel_2.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
 
-		JRadioButton rdbtnLatest = 		new JRadioButton("Latest          ");
+		rdbtnLatest = new JRadioButton("Latest          ");
 		panel_2.add(rdbtnLatest);
 
-		JRadioButton rdbtnAll = 		new JRadioButton("All             ");
+		rdbtnAll = new JRadioButton("All             ");
 		rdbtnAll.setSelected(true);
 		panel_2.add(rdbtnAll);
 
-		JRadioButton radio_specified = 	new JRadioButton("#               ");
+		radio_specified = new JRadioButton("#               ");
 		panel_2.add(radio_specified);
 
 		textField_count = new JTextField();
 		panel_2.add(textField_count);
 		textField_count.setColumns(10);
 		textField_count.setEnabled(false);
-		
 
+		// MODE
+		rdbtnEquals.addActionListener(e -> {
+			rdbtnEquals.setSelected(true);
+			rdbtnContains.setSelected(false);
+			rdbtnStartsWith.setSelected(false);
+			rdbtnEndsWith.setSelected(false);
+			mode="EQUALS";
 
-		rdbtnLatest.addActionListener(e -> {
-			rdbtnLatest.setSelected(true);
-			rdbtnAll.setSelected(false);
-			radio_specified.setSelected(false);
-			textField_count.setEnabled(false);
-			count=1;
+			lockRetrieve();
 		});
-		rdbtnAll.addActionListener(e -> {
-			rdbtnLatest.setSelected(false);
-			rdbtnAll.setSelected(true);
-			radio_specified.setSelected(false);
-			textField_count.setEnabled(false);
-			count=99999999;
+		rdbtnContains.addActionListener(e -> {
+			rdbtnEquals.setSelected(false);
+			rdbtnContains.setSelected(true);
+			rdbtnStartsWith.setSelected(false);
+			rdbtnEndsWith.setSelected(false);
+			mode="CONTAINS";
+			unlockRetrieve();
 		});
-		radio_specified.addActionListener(e -> {
-			rdbtnLatest.setSelected(false);
-			rdbtnAll.setSelected(false);
-			radio_specified.setSelected(true);
-			textField_count.setEnabled(true);
+		rdbtnStartsWith.addActionListener(e -> {
+			rdbtnEquals.setSelected(false);
+			rdbtnContains.setSelected(false);
+			rdbtnStartsWith.setSelected(true);
+			rdbtnEndsWith.setSelected(false);
+			mode="STARTSWITH";
+			unlockRetrieve();
+		});
+		rdbtnEndsWith.addActionListener(e -> {
+			rdbtnEquals.setSelected(false);
+			rdbtnContains.setSelected(false);
+			rdbtnStartsWith.setSelected(false);
+			rdbtnEndsWith.setSelected(true);
+			mode="ENDSWITH";
+			unlockRetrieve();
 		});
 
-
+		// LOCATIONS
 		rdbtnExport.addActionListener(e -> {
 			rdbtnExport.setSelected(true);
 			rdbtnImport.setSelected(false);
@@ -208,11 +192,37 @@ public class FileFetcher
 			location="GURJOBS";
 		});
 
+		///////////////////////////////////////
+		// AMOUNT TO RETRIEVE
+		//////////////////////////////////////
+		rdbtnLatest.addActionListener(e -> {
+			rdbtnLatest.setSelected(true);
+			rdbtnAll.setSelected(false);
+			radio_specified.setSelected(false);
+			textField_count.setEnabled(false);
+			count=1;
+			textField_count.setEnabled(false);
+
+		});
+		rdbtnAll.addActionListener(e -> {
+			rdbtnLatest.setSelected(false);
+			rdbtnAll.setSelected(true);
+			radio_specified.setSelected(false);
+			textField_count.setEnabled(false);
+			count=99999999;
+			textField_count.setEnabled(false);
+		});
+		radio_specified.addActionListener(e -> {
+			rdbtnLatest.setSelected(false);
+			rdbtnAll.setSelected(false);
+			radio_specified.setSelected(true);
+			textField_count.setEnabled(true);
+		});
+		//
 		btnGet.addActionListener(e -> {
 			if(radio_specified.isSelected()) {
 				count=Integer.parseInt(textField_count.getText());
 			}
-
 
 			JDialog dlgProgress;
 			dlgProgress = new JDialog((java.awt.Frame)null, "Please wait.", true);//true means that the dialog created is modal
@@ -244,4 +254,24 @@ public class FileFetcher
 
 		frameMenu.setVisible(true);
 	}
+	void lockRetrieve(){
+		rdbtnLatest.setEnabled(false);
+		rdbtnAll.setEnabled(false);
+		radio_specified.setEnabled(false);
+
+		rdbtnLatest.setSelected(false);
+		rdbtnAll.setSelected(false);
+		radio_specified.setSelected(true);
+		count=1;
+		textField_count.setEnabled(false);
+		textField_count.setText("1");
+	}
+	void unlockRetrieve(){
+		rdbtnLatest.setEnabled(true);
+		if(radio_specified.isSelected())
+			textField_count.setEnabled(true);
+		rdbtnAll.setEnabled(true);
+		radio_specified.setEnabled(true);
+	}
+
 }

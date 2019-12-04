@@ -22,9 +22,50 @@ class JDBC_Connection extends public_package.JDBC_Connection{
 				"PIDM: "+ pidm+"\n"+
 				"Account Balanace: "+getBalance(pidm)+"\n"+
 				"Account Transactions: "+getBalance(pidm)+"\n"+
+				"Holds: "+getHolds(pidm)+"\n"+
 				"Active Attributes: "+getAttributes(pidm);
 
 		return message;
+	}
+	private String getHolds(String pidm) { //NEEDS FIXED
+		if (pidm==null)
+			return null;
+		else if(pidm.equals("NONE_RETURNED"))
+			return "NONE_RETURNED";
+		else if(pidm.equals("TOO_MANY_RETURNED"))
+			return "TOO_MANY_RETURNED";
+
+		String attributes = "";
+		Statement stmt;
+		try {
+			stmt = connection.createStatement();
+
+			ResultSet rs = stmt.executeQuery(
+					"select a.sgrsatt_atts_code "
+							+ "from saturn.sgrsatt a "
+							+ "where  a.sgrsatt_pidm = " + pidm + " "
+							+ "and a.sgrsatt_term_code_eff = (select max(b.sgrsatt_term_code_eff) "
+							+ "from saturn.sgrsatt b "
+							+ "where a.sgrsatt_pidm = b.sgrsatt_pidm) ");
+
+
+			int count = 0;
+			while (rs.next()) {
+				++count;
+				attributes = attributes+rs.getString(1)+" ";
+			}
+			switch (count) {
+				case 0:
+					return "NONE_RETURNED";
+				default:
+					return attributes.trim();
+			}
+		}
+		catch (SQLException e2) {
+			System.out.println("Too many people were returned - " + pidm);
+			e2.printStackTrace();
+		}
+		return null;
 	}
 	private String getAttributes(String pidm) {
 		if (pidm==null)
@@ -42,7 +83,7 @@ class JDBC_Connection extends public_package.JDBC_Connection{
 			ResultSet rs = stmt.executeQuery(
 					"select a.sgrsatt_atts_code "
 							+ "from saturn.sgrsatt a "
-							+ "where  a.sgrsatt_pidm = " + pidm + " " 
+							+ "where  a.sgrsatt_pidm = " + pidm + " "
 							+ "and a.sgrsatt_term_code_eff = (select max(b.sgrsatt_term_code_eff) "
 							+ "from saturn.sgrsatt b "
 							+ "where a.sgrsatt_pidm = b.sgrsatt_pidm) ");
@@ -54,10 +95,10 @@ class JDBC_Connection extends public_package.JDBC_Connection{
 				attributes = attributes+rs.getString(1)+" ";
 			}
 			switch (count) {
-			case 0:
-				return "NONE_RETURNED";
-			default: 
-				return attributes.trim();
+				case 0:
+					return "NONE_RETURNED";
+				default:
+					return attributes.trim();
 			}
 		}
 		catch (SQLException e2) {

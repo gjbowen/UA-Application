@@ -1451,14 +1451,15 @@ line := rpad(v_system_id,8)         || --8 SYSTEM_ID*
 		StringBuilder retStr = new StringBuilder();
 		for (int i2 = 0; i2 < files.length; ++i2) {
 			file = files[i2];
-
+			if(!file.getName().contains("201911"))
+				continue;
 			if (file.getName().endsWith(".txt") && file.getName().contains("concur_pymt_receipt_")) {
 				try {
 					BufferedReader br = new BufferedReader(new FileReader(file));
 					while ((line = br.readLine()) != null) {
-						parsedLine = line.split(",");
-						if (parsedLine.length < 6)
+						if(line.startsWith("100"))
 							continue;
+						parsedLine = line.split(",");
 						if (parsedLine[6].contains(key)) {
 							retStr.append("File: " + file.getName() +"\n\t" +
 									"Key: "+parsedLine[6]+"\n\t" +

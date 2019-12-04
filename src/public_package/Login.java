@@ -65,6 +65,7 @@ public class Login
 				new ar_package.Main_Menu(jdbc.connection,sftp.connection,userField.getText(),jdbc.password,mode);
 			else if(application.equals("git"))
 				new Main_Menu(new Function_Library());
+
 			if(chckbxSaveLogin.isSelected())
 				save();
 		}

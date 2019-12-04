@@ -350,6 +350,8 @@ public class JDBC_Connection {
 				++count;
 				cwid = rs.getString(1);
 			}
+			if(!rs.isClosed())
+				rs.close();
 			if(count==0)
 				return "NONE_RETURNED";
 			else if(count==1)
