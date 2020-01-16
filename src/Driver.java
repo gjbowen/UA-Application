@@ -8,7 +8,5 @@ public class Driver {
 			mode = null;
 
 		new public_package.Login(mode);
-		//test ();
 	}
-
 }

@@ -93,7 +93,7 @@ class SFTP_Connection extends public_package.SFTP_Connection{
 			e.printStackTrace();
 		}
 		System.out.println("Done getting "+fileName+" in " + pwd);
-		sftpDisconnect();
+		//sftpDisconnect();
 	}
 
 	ArrayList<String> getLatest(){

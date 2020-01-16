@@ -166,6 +166,7 @@ class SFTP_Connection extends public_package.SFTP_Connection{
 	public void moveSRE(String dest,String fileName){
 		moveFile(dest,"SRE_Files",fileName,"sre.txt");
 	}
+	public void moveActiveDept(String dest,String fileName){ moveFile(dest,"Active_Departments",fileName,"activeDepartments.csv"); }
 
 	public void syncFiles() {
 		try {

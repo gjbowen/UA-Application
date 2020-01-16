@@ -265,6 +265,19 @@ class Function_Library {
 		return "</span>";
 	}
 
+
+	String toApproverRecord(String[] pLine){
+		pLine[58]="";
+		pLine[60]="";
+		pLine[61]="";
+		StringBuilder str = new StringBuilder();
+		for(int i=0;i<pLine.length;++i) {
+			str.append(pLine[i]);
+			str.append(",");
+		}
+		str.deleteCharAt(str.length()-1);
+		return str.toString();
+	}
 	protected String findBatch305(String cwid) {
 		String line = "";
 		int count = 0;
@@ -290,10 +303,11 @@ class Function_Library {
 					++count;
 
 					if(parsedLine[63].equals("Y")){
-						if(approvers.containsKey(parsedLine[4]))
-							approvers.replace(parsedLine[4],line);
+						String apprRec = toApproverRecord(parsedLine);
+						if(approvers.containsKey(parsedLine[4])) // they exist in the dictionary
+							approvers.replace(parsedLine[4],apprRec); // update them
 						else
-							approvers.put(parsedLine[4],line);
+							approvers.put(parsedLine[4],apprRec); // add them
 					}
 
 					if (nonApprovers.containsKey(parsedLine[4]))
@@ -487,6 +501,26 @@ class Function_Library {
 
 	protected String getLatestSRE() {
 		String path = System.getProperty("user.home") + "//Concur_Files//" + environment + "//SRE_Files";
+		Integer max = 0;
+		String maxFile = "";
+		String fileName;
+		File[] files = new File(path).listFiles();
+
+		for (int i = 0; i < files.length; ++i) {
+			fileName = files[i].getName();
+			try {
+				if (Integer.parseInt(fileName.substring(4, 14)) > max) {
+					max = Integer.parseInt(fileName.substring(4, 14));
+					maxFile = fileName;
+				}
+			} catch (NumberFormatException e) {
+			}
+
+		}
+		return maxFile;
+	}
+	protected String getLatestActiveDept() {
+		String path = System.getProperty("user.home") + "//Concur_Files//" + environment + "//Active_Departments";
 		Integer max = 0;
 		String maxFile = "";
 		String fileName;

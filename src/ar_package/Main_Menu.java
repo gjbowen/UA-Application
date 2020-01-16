@@ -38,6 +38,7 @@ public class Main_Menu
 		environment=mode;
 		fun = new Function_Library(conn_jdbc,conn_sftp,user,pass,environment);
 		initialize();
+	//	new public_package.SSH().start(user,pass,"js-dev.ua.edu");
 //		openFootball();
 	}
 	void openFootball() {

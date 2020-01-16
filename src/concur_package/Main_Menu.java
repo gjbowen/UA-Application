@@ -187,9 +187,11 @@ public class Main_Menu
 					fun.sftp.moveSAE("SEVL", fun.getLatestSAE());
 					fun.sftp.moveSRE("SEVL", fun.getLatestSRE());
 					fun.sftp.movePRAE("SEVL", fun.getLatestPRAE());
+					fun.sftp.moveActiveDept("SEVL", fun.getLatestActiveDept());
 					fun.sftp.moveSAE("TEST", fun.getLatestSAE());
 					fun.sftp.moveSRE("TEST", fun.getLatestSRE());
 					fun.sftp.movePRAE("TEST", fun.getLatestPRAE());
+					fun.sftp.moveActiveDept("TEST", fun.getLatestActiveDept());
 
 					return null;
 				}
