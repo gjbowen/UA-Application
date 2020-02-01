@@ -562,11 +562,11 @@ public class JDBC_Connection {
 		catch (ClassNotFoundException e2) {
 			System.out.println("Failed to register ODBC Driver");
 		}
-		System.out.println("Connecting to database...");
+		System.out.println("Connecting JDBC to "+getDBHost(environment));
 		try {
 			connection = DriverManager.getConnection(getDBHost(environment), username, password);
 			setUsersFirstName();
-			System.out.println("Successfully connected to " + getDBHost(environment));
+			System.out.println("JDBC Successful: " + getDBHost(environment));
 		}
 		catch (SQLException e3) {
 			System.err.println("Failed connection to DB - "+e3.getMessage());

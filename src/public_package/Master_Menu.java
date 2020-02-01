@@ -13,6 +13,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 
+import com.jcraft.jsch.Session;
 import com.sshtools.sftp.SftpClient;
 
 import git_package.Function_Library;
@@ -24,6 +25,7 @@ public class Master_Menu
 	JFrame frameMenu;
 	Connection jdbc;
 	SftpClient sftp;
+	Session ssh;
 	String userName;
 	private String password;
 	String environment;
@@ -31,11 +33,12 @@ public class Master_Menu
 	JMenu option_button,help_button,environment_button;
     JButton arProgram,btnConcur,btnGitProgram,btnFileFetchProgram;
 
-	public Master_Menu(Connection conn_jdbc, String first, String user, String pass, SftpClient conn_sftp, String env){
+	public Master_Menu(Connection conn_jdbc, String first, String user, String pass, SftpClient conn_sftp, Session conn_ssh, String env){
 		jdbc=conn_jdbc;
 		userName=user;
 		password=pass;
 		sftp=conn_sftp;
+		ssh=conn_ssh;
 		environment=env;
 		firstName=first;
 		initialize();
@@ -159,7 +162,7 @@ public class Master_Menu
 		btnConcur.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		btnConcur.addActionListener(arg0 -> EventQueue.invokeLater(() -> {
 			try {
-				concur_package.Main_Menu window = new concur_package.Main_Menu(jdbc, sftp, userName, password, environment);
+				concur_package.Main_Menu window = new concur_package.Main_Menu(jdbc, sftp,ssh, userName, password, environment);
 				window.frameMenu.setVisible(true);
 				frameMenu.setVisible(false);
 			} catch (Exception e) {
@@ -174,7 +177,7 @@ public class Master_Menu
 			frameMenu.setVisible(false);
 			EventQueue.invokeLater(() -> {
 				try {
-					ar_package.Main_Menu window = new ar_package.Main_Menu(jdbc, sftp, userName, password, environment);
+					ar_package.Main_Menu window = new ar_package.Main_Menu(jdbc, sftp, ssh, userName, password, environment);
 					window.frameMenu.setVisible(true);
 					frameMenu.setVisible(false);
 				} catch (Exception e) {
@@ -205,7 +208,7 @@ public class Master_Menu
 		btnFileFetchProgram.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		btnFileFetchProgram.addActionListener(arg0 -> EventQueue.invokeLater(() -> {
 			try {
-				file_fetch_package.FileFetcher window = new file_fetch_package.FileFetcher(sftp, firstName, userName, password, environment);
+				file_fetch_package.FileFetcher window = new file_fetch_package.FileFetcher(sftp,ssh, firstName, userName, password, environment);
 				window.frameMenu.setVisible(true);
 				frameMenu.dispose();
 				frameMenu.setVisible(false);

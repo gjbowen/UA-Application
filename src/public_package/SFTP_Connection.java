@@ -24,7 +24,7 @@ public class SFTP_Connection {
 	public String environment;
 	protected String username;
 	protected String password;
-	protected SftpClient connection;
+	public SftpClient connection;
 	protected String dirDelim;
 
 	public SftpClient getConnection(){
@@ -52,7 +52,7 @@ public class SFTP_Connection {
 			if (username == null || username.trim().equals("")){
 				username = System.getProperty("user.name");
 			}
-			System.out.println("Connecting to " +username+"@"+ hostname+"...");
+			System.out.println("Connecting SFTP to " +username+"@"+ hostname+"...");
 
 			/**
 			 * Create an SshConnector instance
@@ -84,7 +84,7 @@ public class SFTP_Connection {
 			 */
 			if (ssh.isAuthenticated()) {
 				connection = new SftpClient(ssh2);
-				System.out.println("Successfully connected to "+username+"@"+ hostname);
+				System.out.println("SFTP Successful: "+username+"@"+ hostname);
 			}
 		} catch (Throwable th) {
 			connection = null;
@@ -168,6 +168,8 @@ public class SFTP_Connection {
 			 */
 			String localPath = System.getProperty("user.home")+ "\\Concur_Files\\" + environment + "\\"+localFolder+"\\";
 			if (ssh.isAuthenticated()) {
+				System.out.println("Local path: "+localPath);
+				System.out.println("Moving to: "+"/u03/import/" + dest+"/"+localFileName);
 				destConnection = new SftpClient(ssh2);
 				destConnection.cd("/u03/import/" + dest);
 				destConnection.lcd(localPath);

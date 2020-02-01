@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+import com.jcraft.jsch.Session;
 import com.sshtools.sftp.SftpClient;
 
 import java.text.ParseException;
@@ -20,6 +21,7 @@ import java.text.ParseException;
 class Function_Library {
 	protected JDBC_Connection jdbc;
 	protected SFTP_Connection sftp;
+	protected SSH_Connection ssh;
 	protected String environment;
 	protected String userName;
 	protected String firstName;
@@ -28,11 +30,13 @@ class Function_Library {
 	Function_Library(
 			Connection conn_jdbc,
 			SftpClient conn_sftp,
+			Session conn_ssh,
 			String user,
 			String pass,
 			String mode) {
-		sftp = new SFTP_Connection(conn_sftp, user, pass, mode);
-		jdbc=new JDBC_Connection(conn_jdbc,mode,user,pass);
+		sftp= new SFTP_Connection(conn_sftp, user, pass, mode);
+		ssh = new SSH_Connection(conn_ssh,mode, user, pass);
+		jdbc= new JDBC_Connection(conn_jdbc,mode,user,pass);
 
 		firstName = jdbc.getUserFirstName(user);
 		environment = mode;

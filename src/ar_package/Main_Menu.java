@@ -14,7 +14,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 
+import com.jcraft.jsch.Session;
 import com.sshtools.sftp.SftpClient;
+import public_package.SSH_Connection;
 
 import javax.swing.JSeparator;
 import javax.swing.JTextArea;
@@ -34,12 +36,12 @@ public class Main_Menu
 	protected Function_Library fun;
 	String environment;
 
-	public Main_Menu(Connection conn_jdbc, SftpClient conn_sftp, String user, String pass, String mode){
+	public Main_Menu(Connection conn_jdbc, SftpClient conn_sftp, Session conn_ssh, String user, String pass, String mode){
 		environment=mode;
-		fun = new Function_Library(conn_jdbc,conn_sftp,user,pass,environment);
+		fun = new Function_Library(conn_jdbc,conn_sftp,conn_ssh,user,pass,environment);
 		initialize();
-	//	new public_package.SSH().start(user,pass,"js-dev.ua.edu");
-//		openFootball();
+
+
 	}
 	void openFootball() {
 		EventQueue.invokeLater(() -> {
@@ -274,6 +276,7 @@ public class Main_Menu
 						fun.userName,
 						fun.password,
 						fun.sftp.getConnection(),
+						fun.ssh.session,
 						fun.environment);
 			});
 		});

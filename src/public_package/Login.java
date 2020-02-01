@@ -37,6 +37,10 @@ public class Login
 		//Connection_SFTP_JDBC connection = new Connection_SFTP_JDBC(mode, userField.getText(), passwordField.getText());		
 		JDBC_Connection jdbc = new JDBC_Connection(mode, userField.getText(), passwordField.getText());
 		SFTP_Connection sftp = new SFTP_Connection(mode, userField.getText(), passwordField.getText());
+		SSH_Connection ssh = new SSH_Connection(mode, userField.getText(), passwordField.getText());
+
+		Thread t3 = new Thread(() -> ssh.sshConnect());
+		t3.start();
 
 		Thread t2 = new Thread(() -> sftp.sftpConnect());
 		t2.start();
@@ -44,7 +48,7 @@ public class Login
 		Thread t1 = new Thread(() -> jdbc.jdbcConnect());
 		t1.start();
 
-		while (t1.isAlive() ||t2.isAlive()  ) {
+		while (t1.isAlive() ||t2.isAlive() ||t3.isAlive()  ) {
 			//holds off until both are done...
 		}
 
@@ -57,12 +61,14 @@ public class Login
 						jdbc.userFirstName,
 						userField.getText(),
 						jdbc.password,
-						sftp.connection,mode);
+						sftp.connection,
+						ssh.session,
+						mode);
 			}
 			else if(application.equals("concur"))
-				new concur_package.Main_Menu(jdbc.connection,sftp.connection,userField.getText(),jdbc.password,mode);
+				new concur_package.Main_Menu(jdbc.connection,sftp.connection,ssh.session,userField.getText(),jdbc.password,mode);
 			else if(application.equals("ar"))
-				new ar_package.Main_Menu(jdbc.connection,sftp.connection,userField.getText(),jdbc.password,mode);
+				new ar_package.Main_Menu(jdbc.connection,sftp.connection,ssh.session,userField.getText(),jdbc.password,mode);
 			else if(application.equals("git"))
 				new Main_Menu(new Function_Library());
 

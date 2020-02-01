@@ -3,14 +3,9 @@ import java.awt.*;
 import java.io.IOException;
 import java.sql.Connection;
 
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import javax.swing.SwingWorker;
+import javax.swing.*;
 
+import com.jcraft.jsch.Session;
 import com.sshtools.sftp.SftpClient;
 
 
@@ -21,8 +16,10 @@ public class Main_Menu
 	protected Function_Library fun;
 
 
-	public Main_Menu(Connection connection, SftpClient conn_sftp, String user, String pass, String mode){
-		fun = new concur_package.Function_Library(connection,conn_sftp,user,pass,mode);
+	public Main_Menu(Connection connection, SftpClient conn_sftp, Session conn_ssh,String user, String pass, String mode){
+		fun = new Function_Library(connection,conn_sftp,conn_ssh,user,pass,mode);
+
+
 
 		getFiles();
 		initialize();
@@ -213,6 +210,7 @@ public class Main_Menu
 						fun.userName,
 						fun.password,
 						fun.sftp.getConnection(),
+						fun.ssh.session,
 						fun.environment);
 			});
 			frameMenu.dispose();
