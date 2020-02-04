@@ -22,16 +22,21 @@ import git_package.Main_Menu;
 
 public class Master_Menu
 {
-	JFrame frameMenu;
-	Connection jdbc;
-	SftpClient sftp;
-	Session ssh;
-	String userName;
+	private JFrame frameMenu;
+	private Connection jdbc;
+	private SftpClient sftp;
+	private Session ssh;
+	private String userName;
 	private String password;
-	String environment;
+	private String environment;
 	private String firstName;
-	JMenu option_button,help_button,environment_button;
-    JButton arProgram,btnConcur,btnGitProgram,btnFileFetchProgram;
+	private JMenu option_button;
+    private JMenu help_button;
+    private JMenu environment_button;
+    private JButton arProgram;
+    private JButton btnConcur;
+    private JButton btnGitProgram;
+    private JButton btnFileFetchProgram;
 
 	public Master_Menu(Connection conn_jdbc, String first, String user, String pass, SftpClient conn_sftp, Session conn_ssh, String env){
 		jdbc=conn_jdbc;
@@ -116,15 +121,17 @@ public class Master_Menu
 		Preferences.addPreference("environment", environment);
 		
 		System.out.println("Switching to "+environment+"..");
-		JDBC_Connection jdbc_connection =  new JDBC_Connection(environment, userName,password);
+		JDBC_Connection jdbc_connection =  new JDBC_Connection(userName,password,environment);
 		jdbc_connection.jdbcConnect();
 		jdbc=jdbc_connection.connection;
 		
-		SFTP_Connection sftp_connection = new SFTP_Connection(environment, userName,password);		
+		SFTP_Connection sftp_connection = new SFTP_Connection(userName,password,environment);
 		sftp_connection.sftpConnect();
 		sftp=sftp_connection.connection;
+
 		frameMenu.dispose();
 		Preferences.addPreference("environment", environment);
+
 		initialize();
 	}
 	private void setButtons(){

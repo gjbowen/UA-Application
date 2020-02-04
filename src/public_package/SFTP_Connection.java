@@ -27,25 +27,24 @@ public class SFTP_Connection {
 	public SftpClient connection;
 	protected String dirDelim;
 
-	public SftpClient getConnection(){
-		return connection;
-	}
-	protected SFTP_Connection(String env, String user, String pass) {
+	protected SFTP_Connection(String user, String pass, String env) {
 		environment = env;
 		username = user;
 		password = pass;
 		connection = null;
 		setDirDelim();
 	}
+	public SftpClient getConnection(){
+		return connection;
+	}
 	private void setDirDelim() {
 		if(public_package.Preferences.isWindows())
 			dirDelim="\\";
 		else
 			dirDelim = "/";
-
 	}
 
-    protected void sftpConnect(){
+    void sftpConnect(){
 		try {
 			String hostname = getInstance(environment);
 
@@ -128,10 +127,35 @@ public class SFTP_Connection {
 			System.out.println("Shit - "+e2.getMessage()+"\n\t"+fileName);
 		}
 	}
-	public void moveFile(String dest,String localFolder,String localFileName,String remoteName){
+
+	public void putFile(String localFolder,String localFileName,String remoteFolder,String remoteName){
+		try {
+			connection.put(localFolder+"\\"+localFileName,remoteFolder+"/"+remoteName);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (SftpStatusException e) {
+			e.printStackTrace();
+		} catch (SshException e) {
+			e.printStackTrace();
+		} catch (TransferCancelledException e) {
+			e.printStackTrace();
+		}
+
+	}
+	public void getFile(String localFolder,String localFileName,String remoteFolder,String remoteName){
+		try {
+			connection.getFiles(remoteFolder+"/"+remoteName,localFolder+"\\"+localFileName);
+		}
+		catch (FileNotFoundException e) {e.printStackTrace();}
+		catch (SftpStatusException e) {e.printStackTrace();}
+		catch (SshException e) {e.printStackTrace();}
+		catch (TransferCancelledException e) {e.printStackTrace();}
+	}
+
+	public void moveFile(String env,String localFolder,String localFileName,String remoteFolder,String remoteName){
 		SftpClient destConnection=null;
 		try {
-			String hostname = getInstance(dest);
+			String hostname = getInstance(env);
 
 			if (username == null || username.trim().equals("")){
 				username = System.getProperty("user.name");
@@ -160,36 +184,36 @@ public class SFTP_Connection {
 
 			do {
 				pwd.setPassword(password);
-			} 
+			}
 			while (ssh2.authenticate(pwd) != SshAuthentication.COMPLETE
 					&& ssh.isConnected());
 			/**
 			 * Start a session and do basic IO
 			 */
-			String localPath = System.getProperty("user.home")+ "\\Concur_Files\\" + environment + "\\"+localFolder+"\\";
+			String localPath = localFolder;//System.getProperty("user.home")+ "\\Concur_Files\\" + environment + "\\"+localFolder+"\\";
 			if (ssh.isAuthenticated()) {
 				System.out.println("Local path: "+localPath);
-				System.out.println("Moving to: "+"/u03/import/" + dest+"/"+localFileName);
+				System.out.println("Moving to: "+remoteFolder+"/"+remoteName);
 				destConnection = new SftpClient(ssh2);
-				destConnection.cd("/u03/import/" + dest);
+				destConnection.cd(remoteFolder);
 				destConnection.lcd(localPath);
 				destConnection.put(localFileName, remoteName);
-				destConnection.chmod(0777, "/u03/import/" + dest+"/"+remoteName);
+				destConnection.chmod(0777, remoteFolder+"/"+remoteName);
 				destConnection.exit();
 				System.out.println("  "+remoteName + " has been transfered");
 			}
-		} 
+		}
 		catch (Throwable th) {
 			if(th.getLocalizedMessage().trim().equals("Permission denied.: Permission denied")) {
 				try {
 					destConnection.rm(remoteName);
 					destConnection.put(localFileName, remoteName);
-					destConnection.chmod(0777, "/u03/import/" + dest+"/"+remoteName);
+					destConnection.chmod(0777, remoteFolder+"/"+remoteName);
 					destConnection.exit();
 					System.out.println("  "+remoteName + " has been transfered");
-				} catch (SftpStatusException | 
-						SshException | 
-						FileNotFoundException | 
+				} catch (SftpStatusException |
+						SshException |
+						FileNotFoundException |
 						TransferCancelledException e) {
 					e.printStackTrace();
 					System.err.println("File failed to transfer");
@@ -198,19 +222,6 @@ public class SFTP_Connection {
 				System.err.println(th.getMessage());
 			}
 		}
-	}
-	@SuppressWarnings("unused")
-	private String getFilePath(String location){
-		String path="";
-		switch (location.toUpperCase()){
-		case "ARCHIVE":
-			path = "/u03/archive/" + environment;
-		case "EXPORT":
-			path = "/u03/export/" + environment;
-		case "IMPORT":
-			path = "/u03/import/" + environment;
-		}		
-		return path;
 	}
 
 }

@@ -10,10 +10,10 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-public class PaidReceipted_Menu {
-    protected JFrame frame_Paid_Receipted;
+class PaidReceipted_Menu {
+    JFrame frame_Paid_Receipted;
     private JTextField textField;
-    protected Function_Library connection;
+    private Function_Library connection;
 
     public PaidReceipted_Menu(Function_Library conn) {
         connection = conn;

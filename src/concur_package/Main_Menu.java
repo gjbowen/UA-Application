@@ -13,13 +13,11 @@ public class Main_Menu
 {
 	public JFrame frameMenu;
 
-	protected Function_Library fun;
+	private Function_Library fun;
 
 
-	public Main_Menu(Connection connection, SftpClient conn_sftp, Session conn_ssh,String user, String pass, String mode){
-		fun = new Function_Library(connection,conn_sftp,conn_ssh,user,pass,mode);
-
-
+	public Main_Menu(Connection connection, SftpClient conn_sftp, Session conn_ssh,String user, String pass, String env){
+		fun = new Function_Library(connection,conn_sftp,conn_ssh,user,pass,env);
 
 		getFiles();
 		initialize();
@@ -158,9 +156,8 @@ public class Main_Menu
 			try{
 				if(System.getProperty("os.name").toLowerCase().contains("windows")) { //for Windows..
 					Runtime.getRuntime().exec("explorer.exe /select,"+System.getProperty("user.home")+"\\Concur_Files\\"+fun.environment);
-				}else { //for other..
+				} //for other..
 
-				}
 			}
 			catch (IOException e1){
 				e1.printStackTrace();

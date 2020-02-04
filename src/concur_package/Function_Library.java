@@ -3,7 +3,6 @@ package concur_package;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -19,13 +18,13 @@ import com.sshtools.sftp.SftpClient;
 import java.text.ParseException;
 
 class Function_Library {
-	protected JDBC_Connection jdbc;
-	protected SFTP_Connection sftp;
-	protected SSH_Connection ssh;
-	protected String environment;
-	protected String userName;
-	protected String firstName;
-	protected String password;
+	JDBC jdbc;
+	SFTP sftp;
+	SSH ssh;
+	String environment;
+	String userName;
+	String firstName;
+	String password;
 
 	Function_Library(
 			Connection conn_jdbc,
@@ -34,9 +33,9 @@ class Function_Library {
 			String user,
 			String pass,
 			String mode) {
-		sftp= new SFTP_Connection(conn_sftp, user, pass, mode);
-		ssh = new SSH_Connection(conn_ssh,mode, user, pass);
-		jdbc= new JDBC_Connection(conn_jdbc,mode,user,pass);
+		sftp= new SFTP(conn_sftp, user, pass, mode);
+		ssh = new SSH(conn_ssh,mode, user, pass);
+		jdbc= new JDBC(conn_jdbc,mode,user,pass);
 
 		firstName = jdbc.getUserFirstName(user);
 		environment = mode;
@@ -44,14 +43,14 @@ class Function_Library {
 		password = pass;
 	}
 
-	String startFontSize(int size){
+	private String startFontSize(int size){
 		return "<font size=\""+size+"\">";
 	}
-	String endFontSize(){
+	private String endFontSize(){
 		return "</font>";
 	}
 
-	protected String findAllDeleted() {
+	String findAllDeleted() {
 		System.out.println("Initiating Find All Deleted search...");
 		// people.add("123");
 		List<String> people = new ArrayList<String>();
@@ -105,7 +104,7 @@ class Function_Library {
 		return retStr.toString();
 	}
 
-	protected Set<String> parsePeople(String people) {
+	private Set<String> parsePeople(String people) {
 		people = people.trim();
 		String[] parsedPeople = null;
 		HashMap<String, Object> map = new HashMap<String, Object>();
@@ -128,7 +127,7 @@ class Function_Library {
 		return set;
 	}
 
-	protected String findChangedLogin() {
+	String findChangedLogin() {
 		System.out.println("Initiating Changed Login search...");
 		Map<String, String> map = new HashMap<String, String>();
 
@@ -207,7 +206,7 @@ class Function_Library {
 		System.out.println("Done with Employee search" );
 	}
 
-	protected String findEmployee(String cwid,int col) {
+	String findEmployee(String cwid, int col) {
 		String line = "";
 		int count = 0;
 		File[] files = new File(System.getProperty("user.home") + "//Concur_Files//" + environment + "//Employee_Files").listFiles();
@@ -259,18 +258,18 @@ class Function_Library {
 			return "CWID " + cwid + " not found.";
 		return retStr.toString();
 	}
-	String createLink(String tag,String dest){
+	private String createLink(String tag, String dest){
 		return "<a href=\""+dest+"\">"+tag+"</a>";
 	}
 	String startTab(){
 		return "<span style=\"margin-left:4em\">";
 	}
-	String endTab(){
+	private String endTab(){
 		return "</span>";
 	}
 
 
-	String toApproverRecord(String[] pLine){
+	private String toApproverRecord(String[] pLine){
 		pLine[58]="";
 		pLine[60]="";
 		pLine[61]="";
@@ -282,7 +281,7 @@ class Function_Library {
 		str.deleteCharAt(str.length()-1);
 		return str.toString();
 	}
-	protected String findBatch305(String cwid) {
+	String findBatch305(String cwid) {
 		String line = "";
 		int count = 0;
 		Set<String> people = parsePeople(cwid);
@@ -349,7 +348,7 @@ class Function_Library {
 		return retStr.toString();
 	}
 
-	protected String findBatch350(String cwid) {
+	String findBatch350(String cwid) {
 		String line = "";
 		int count = 0;
 		Set<String> people = parsePeople(cwid);
@@ -407,7 +406,7 @@ class Function_Library {
 		return retStr.toString();
 	}
 
-	protected String get305ORGN(String cwid, String fileName) {
+	private String get305ORGN(String cwid, String fileName) {
 		String line = "";
 		File[] files = new File(System.getProperty("user.home") + "//Concur_Files//" + environment + "//350_Files").listFiles();
 		File file = null;
@@ -436,7 +435,7 @@ class Function_Library {
 		return retStr.toString();
 	}
 
-	protected boolean validYear(String str) {
+	private boolean validYear(String str) {
 		int x;
 		try {
 			x = Integer.parseInt(str);
@@ -447,7 +446,7 @@ class Function_Library {
 		return false;
 	}
 
-	protected String getDateFromFilename(String str) {
+	private String getDateFromFilename(String str) {
 		String year = null;
 		String month = null;
 		String day = null;
@@ -462,7 +461,7 @@ class Function_Library {
 		return "";
 	}
 
-	protected String getLatestPRAE() {
+	String getLatestPRAE() {
 		String path = System.getProperty("user.home") + "//Concur_Files//" + environment + "//PRAE_Files";
 		Integer max = 0;
 		String maxFile = "";
@@ -482,7 +481,7 @@ class Function_Library {
 		return maxFile;
 	}
 
-	protected String getLatestSAE() {
+	String getLatestSAE() {
 		String path = System.getProperty("user.home") + "//Concur_Files//" + environment + "//SAE_Files";
 		Integer max = 0;
 		String maxFile = "";
@@ -503,7 +502,7 @@ class Function_Library {
 		return maxFile;
 	}
 
-	protected String getLatestSRE() {
+	String getLatestSRE() {
 		String path = System.getProperty("user.home") + "//Concur_Files//" + environment + "//SRE_Files";
 		Integer max = 0;
 		String maxFile = "";
@@ -523,7 +522,7 @@ class Function_Library {
 		}
 		return maxFile;
 	}
-	protected String getLatestActiveDept() {
+	String getLatestActiveDept() {
 		String path = System.getProperty("user.home") + "//Concur_Files//" + environment + "//Active_Departments";
 		Integer max = 0;
 		String maxFile = "";
@@ -544,7 +543,7 @@ class Function_Library {
 		return maxFile;
 	}
 
-	protected boolean isCWID(String cwid) {
+	boolean isCWID(String cwid) {
 		if ((cwid = cwid.trim()).length() != 8)
 			return false;
 		try {
@@ -554,20 +553,20 @@ class Function_Library {
 		}
 	}
 
-	protected boolean isPcard(ArrayList<String> parsedLine) {
+	private boolean isPcard(ArrayList<String> parsedLine) {
 		if (parsedLine.get(125).toUpperCase().equals("CBCP"))
 			return !parsedLine.get(17).equals("") && Float.valueOf(parsedLine.get(17)) != 0;
 		return false;
 	}
 
-	protected boolean isExpense(ArrayList<String> parsedLine) {
+	private boolean isExpense(ArrayList<String> parsedLine) {
 		if (parsedLine.get(125).toUpperCase().equals("CASH"))
 			//if (!parsedLine.get(184).equals(""))
 			return !parsedLine.get(17).equals("") && Float.valueOf(parsedLine.get(17)) != 0;
 		return false;
 	}
 
-	protected ArrayList<String> findLatestVendorInfo(String cwid,String rt) {
+	private ArrayList<String> findLatestVendorInfo(String cwid, String rt) {
 		System.out.println("Searching for Vendor: "+cwid+"("+rt+")...");
 		String line = "";
 		File[] files = new File(System.getProperty("user.home") + "//Concur_Files//" + environment + "//VENDOR_FEED_Files").listFiles();
@@ -606,7 +605,7 @@ class Function_Library {
 	 * given a file with cwid and rt address, find all instances of them in sent
 	 * files and output the file.
 	 */
-	protected String retireVendorTerms(String fileName) {
+    String retireVendorTerms(String fileName) {
 		System.out.println("Initiating vendor termination..");
 		File file = new File(fileName);
 		String[] parsedLine = null;
@@ -645,14 +644,14 @@ class Function_Library {
 		return System.getProperty("user.home") + "\\Concur_Files\\" + environment + "\\Generated_Files\\Vendors_Terminated.txt";
 	}
 
-	protected String getPwd() {
+	private String getPwd() {
 		return System.getProperty("user.dir");
 	}
-	protected String pwd() {
+	String pwd() {
 		return getPwd();
 	}
-	protected boolean validItem(String object, ArrayList<ArrayList<String>> list, String item1, String item2,
-								Date date) {
+	private boolean validItem(String object, ArrayList<ArrayList<String>> list, String item1, String item2,
+                              Date date) {
 		for (int i = 0; i < list.size(); ++i) {
 			if (list.get(i).get(0).equals(item1) && list.get(i).get(1).equals(item2)) {
 				// FUND
@@ -701,7 +700,7 @@ class Function_Library {
 		return false;
 	}
 
-	protected boolean dateLessThanOrEqual(String tableDate, Date concurDate) {
+	private boolean dateLessThanOrEqual(String tableDate, Date concurDate) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Date date1 = null;
 		try {
@@ -724,7 +723,7 @@ class Function_Library {
 		}
 	}
 
-	protected void generateSAE(String columns, boolean validateItems,String transfer) {
+	void generateSAE(String columns, boolean validateItems, String transfer) {
 		System.out.println("Initiating SAE rewrite...");
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -930,7 +929,7 @@ class Function_Library {
 		//System.exit(0);
 	}
 
-	protected void rewritePRAE(String columns) {
+	void rewritePRAE(String columns) {
 		System.out.println("Initiating PRAE rewrite...");
 		String line = "";
 		String content = "";
@@ -992,7 +991,7 @@ class Function_Library {
 		System.out.println("DONE");
 	}
 
-	protected String searchPRAE(String str, int column, String contains_or_equals) {
+	String searchPRAE(String str, int column, String contains_or_equals) {
 		System.out.println("Initiating PRAE Report Key search...");
 		String line = "";
 		int count = 0;
@@ -1088,7 +1087,7 @@ class Function_Library {
 		return retStr.toString();
 	}
 
-	protected String buildSAE(ArrayList<String> parsedLine, String filePath, int line) {
+	private String buildSAE(ArrayList<String> parsedLine, String filePath, int line) {
 		String transAmount;
 		String message;
 
@@ -1118,7 +1117,7 @@ class Function_Library {
 
 		return message;
 	}
-	protected String buildSRE(ArrayList<String> parsedLine, String fileName, int line) {
+	private String buildSRE(ArrayList<String> parsedLine, String fileName, int line) {
 		System.out.println("FOUND!!!!!!");
 		if(parsedLine.get(0).equals("REQUEST DETAIL")){ //86 in length
 			return "\nFile: " + fileName + "\n"
@@ -1133,7 +1132,7 @@ class Function_Library {
 		return null;
 	}
 
-	protected String searchSAE(String str, int column, String searchMode, String module) {
+	String searchSAE(String str, int column, String searchMode, String module) {
 		System.out.println("Search column " + column + " to see if it " + searchMode + " " + str );
 		String line = "";
 		int count = 0;
@@ -1207,7 +1206,7 @@ class Function_Library {
 		return retStr.toString();
 	}
 
-	protected String searchSRE(String str, int column, String searchMode) {
+	String searchSRE(String str, int column, String searchMode) {
 		System.out.println("Search column " + column + " to see if it " + searchMode + " " + str );
 		String line = "";
 		int count = 0;
@@ -1265,7 +1264,7 @@ class Function_Library {
 		return retStr.toString();
 	}
 
-	protected String searchVendorTerm(String id) {
+	String searchVendorTerm(String id) {
 		String line = "";
 		int count = 0;
 		File[] files = new File(System.getProperty("user.home") + "//Concur_Files//" + environment + "//VENDOR_TERM_FEED_Files").listFiles();
@@ -1299,7 +1298,7 @@ class Function_Library {
 		return retStr.toString();
 	}
 
-	protected Float formatAmount(String amount){
+	private Float formatAmount(String amount){
 		amount=amount.trim();
 		if(amount.length()>2){
 			amount=amount.substring(0,amount.length()-2)+"."+amount.substring(amount.length()-2,amount.length());
@@ -1314,7 +1313,7 @@ class Function_Library {
 		}
 	}
 
-	protected void validateFupload (String filename){
+	void validateFupload(String filename){
 		String line = "";
 		File file = new File(System.getProperty("user.home") + "//Concur_Files//misc//"+filename);
 		double running_total = 0.0;
@@ -1387,7 +1386,7 @@ line := rpad(v_system_id,8)         || --8 SYSTEM_ID*
 
 	}
 
-	protected String searchVendor(String id) {
+	String searchVendor(String id) {
 		String line = "";
 		int count = 0;
 		File[] files = new File(System.getProperty("user.home") + "//Concur_Files//" + environment + "//VENDOR_FEED_Files").listFiles();
@@ -1428,7 +1427,7 @@ line := rpad(v_system_id,8)         || --8 SYSTEM_ID*
 		return retStr.toString();
 	}
 
-	protected static ArrayList<String> customSplitSpecific(String s, char delim) {
+	private static ArrayList<String> customSplitSpecific(String s, char delim) {
 		ArrayList<String> words = new ArrayList<String>();
 		boolean notInsideComma = true;
 		int start = 0;
@@ -1443,7 +1442,7 @@ line := rpad(v_system_id,8)         || --8 SYSTEM_ID*
 		return words;
 	}
 
-	protected String searchPaymentRequest(String key) {
+	String searchPaymentRequest(String key) {
 		String line = "";
 		int count = 0;
 		File[] files = new File(System.getProperty("user.home") + "//Concur_Files//" + environment + "//PAYMENT_REQUEST").listFiles();
@@ -1480,7 +1479,7 @@ line := rpad(v_system_id,8)         || --8 SYSTEM_ID*
 		}
 		return retStr.toString();
 	}
-	protected String searchPaymentReceipt(String key) {
+	String searchPaymentReceipt(String key) {
 		String line = "";
 		int count = 0;
 		File[] files = new File(System.getProperty("user.home") + "//Concur_Files//" + environment + "//PAYMENT_RECEIPT").listFiles();
@@ -1520,7 +1519,7 @@ line := rpad(v_system_id,8)         || --8 SYSTEM_ID*
 		return retStr.toString();
 	}
 
-	protected String search710(String chart, String fund, String orgn, String cwid,String level) {
+	String search710(String chart, String fund, String orgn, String cwid, String level) {
 		System.out.println("Initiating 710 search..");
 		String line = "";
 		int count = 0;
@@ -1586,7 +1585,7 @@ line := rpad(v_system_id,8)         || --8 SYSTEM_ID*
 		return retStr.toString();
 	}
 
-	protected String writeListToFile(String fileName, String header, List<String> stuff) {
+	String writeListToFile(String fileName, String header, List<String> stuff) {
 		try {
 			String path = System.getProperty("user.home") + "//Concur_Files//" + environment + "//Generated_Files";
 			BufferedWriter output = new BufferedWriter(new FileWriter(path+"//"+fileName, false));
@@ -1601,7 +1600,7 @@ line := rpad(v_system_id,8)         || --8 SYSTEM_ID*
 		}
 	}
 
-	protected String getContents(String fileName){
+	String getContents(String fileName){
 		String line;
 		StringBuilder key = new StringBuilder();
 		File file = new File(fileName);

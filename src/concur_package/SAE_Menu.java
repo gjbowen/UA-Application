@@ -25,8 +25,8 @@ import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
 class SAE_Menu {
-	protected final Function_Library connection;
-	protected JFrame saeFrame;
+	private final Function_Library connection;
+	JFrame saeFrame;
 
 	private String mode;
 	private String module;

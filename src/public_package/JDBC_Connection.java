@@ -11,12 +11,12 @@ import java.util.ArrayList;
 public class JDBC_Connection {
 	protected ResultSet rs;
 	public Connection connection;
-	protected String environment;
+	private String environment;
 	private String username;
 	static public String password;
-	protected String userFirstName;
+	String userFirstName;
 
-	protected JDBC_Connection(String env, String user, String pass) {
+	protected JDBC_Connection( String user, String pass,String env) {
 		environment = env;
 		username = user;
 		password = pass;
@@ -155,7 +155,7 @@ public class JDBC_Connection {
 		}
 	}
 
-	public String getPIDMFromName(String name) {
+	private String getPIDMFromName(String name) {
 		if(name==null || name.equals("TOO_MANY_RETURNED")|| name.equals("NONE_RETURNED"))
 			return name;
 
@@ -263,7 +263,7 @@ public class JDBC_Connection {
 		}
 		return null;
 	}
-	public String getPIDMFromMyBama(String myBama) {
+	private String getPIDMFromMyBama(String myBama) {
 		if(myBama==null || myBama.equals("TOO_MANY_RETURNED")|| myBama.equals("NONE_RETURNED"))
 			return myBama;
 
@@ -295,7 +295,7 @@ public class JDBC_Connection {
 		}
 		return null;
 	}
-	public String getPIDMFromEmail(String email) {
+	private String getPIDMFromEmail(String email) {
 		if (email==null || email.equals("NONE_RETURNED") || email.equals("TOO_MANY_RETURNED"))
 			return email;
 
@@ -399,7 +399,7 @@ public class JDBC_Connection {
 		}
 		return null;
 	}
-	public String getEmailFromPIDM(String pidm) {
+	private String getEmailFromPIDM(String pidm) {
 		if(pidm==null || pidm.equals("TOO_MANY_RETURNED")|| pidm.equals("NONE_RETURNED"))
 			return pidm;
 
@@ -432,7 +432,7 @@ public class JDBC_Connection {
 		}
 		return null;
 	}
-	public String getMyBamaFromPIDM(String pidm) {
+	private String getMyBamaFromPIDM(String pidm) {
 		if(pidm==null || pidm.equals("TOO_MANY_RETURNED")|| pidm.equals("NONE_RETURNED"))
 			return pidm;
 
@@ -546,7 +546,7 @@ public class JDBC_Connection {
 	}
 
 	
-	protected boolean connected() {
+	boolean connected() {
 		try {
             return connection != null && !connection.isClosed();
         }
@@ -554,7 +554,7 @@ public class JDBC_Connection {
 			return false;
 		}
 	}
-	protected void jdbcConnect() {
+	void jdbcConnect() {
 		String JDBC_DRIVER = "oracle.jdbc.driver.OracleDriver";
 		try {
 			Class.forName(JDBC_DRIVER);

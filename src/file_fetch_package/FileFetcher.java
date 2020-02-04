@@ -11,21 +11,26 @@ import public_package.SSH_Connection;
 public class FileFetcher
 {
 	public JFrame frameMenu;
-	protected SFTP_Connection connection;
-	protected SSH_Connection ssh;
+	private SFTP connection;
+	private SSH_Connection ssh;
 	private JTextField textField;
 	private String mode;
 	private String location=null;
 	private JTextField textField_count;
 	private int count;
 
-	JRadioButton rdbtnLatest,rdbtnAll,radio_specified; // Amount
-	JRadioButton rdbtnContains,rdbtnEquals,rdbtnStartsWith,rdbtnEndsWith;// Mode
+	private JRadioButton rdbtnLatest;
+	private JRadioButton rdbtnAll;
+	private JRadioButton radio_specified; // Amount
+	private JRadioButton rdbtnContains;
+	private JRadioButton rdbtnEquals;
+	private JRadioButton rdbtnStartsWith;
+	private JRadioButton rdbtnEndsWith;// Mode
 
 	public FileFetcher(SftpClient conn_sftp, Session con_ssh, String first, String user, String pass, String env){
-		connection=new SFTP_Connection(conn_sftp,env,user,pass);
+		connection=new SFTP(conn_sftp,env,user,pass);
 
-		ssh = new file_fetch_package.SSH_Connection(con_ssh,env,user,pass);
+		ssh = new SSH(con_ssh,env,user,pass);
 		count=1;
 		//connection = conn_sftp;
 		initialize();
@@ -358,7 +363,7 @@ public class FileFetcher
 		frameMenu.setVisible(true);
 	}
 
-	void lockRetrieve(){
+	private void lockRetrieve(){
 		rdbtnLatest.setEnabled(false);
 		rdbtnAll.setEnabled(false);
 		radio_specified.setEnabled(false);
@@ -370,7 +375,7 @@ public class FileFetcher
 		textField_count.setEnabled(false);
 		textField_count.setText("1");
 	}
-	void unlockRetrieve(){
+	private void unlockRetrieve(){
 		rdbtnLatest.setEnabled(true);
 		if(radio_specified.isSelected())
 			textField_count.setEnabled(true);

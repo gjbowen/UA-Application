@@ -8,10 +8,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public class Fupload_Menu {
-	protected JFrame frame;
-    Function_Library connection;
-	String location="LOCAL";
+class Fupload_Menu {
+	JFrame frame;
+    private Function_Library connection;
+	private String location="LOCAL";
 
 	public Fupload_Menu(Function_Library fun) {
 		connection = fun;

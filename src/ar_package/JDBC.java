@@ -6,13 +6,13 @@ import java.sql.SQLException;
 import java.sql.SQLSyntaxErrorException;
 import java.sql.Statement;
 
-class JDBC_Connection extends public_package.JDBC_Connection{
-	JDBC_Connection(Connection conn,String env, String user, String pass) {
-		super(env, user, pass);
+class JDBC extends public_package.JDBC_Connection{
+	JDBC(Connection conn, String user, String pass, String env) {
+		super(user, pass,env);
 		connection=conn;
 	}
 
-	protected String getAccountInformation(String cwid) {
+	String getAccountInformation(String cwid) {
 		String message;
 		String pidm=cwid;
 		if(isCWID(cwid))
@@ -54,12 +54,10 @@ class JDBC_Connection extends public_package.JDBC_Connection{
 				++count;
 				attributes = attributes+rs.getString(1)+" ";
 			}
-			switch (count) {
-				case 0:
-					return "NONE_RETURNED";
-				default:
-					return attributes.trim();
+			if (count == 0) {
+				return "NONE_RETURNED";
 			}
+			return attributes.trim();
 		}
 		catch (SQLException e2) {
 			System.out.println("Too many people were returned - " + pidm);
@@ -94,12 +92,10 @@ class JDBC_Connection extends public_package.JDBC_Connection{
 				++count;
 				attributes = attributes+rs.getString(1)+" ";
 			}
-			switch (count) {
-				case 0:
-					return "NONE_RETURNED";
-				default:
-					return attributes.trim();
+			if (count == 0) {
+				return "NONE_RETURNED";
 			}
+			return attributes.trim();
 		}
 		catch (SQLException e2) {
 			System.out.println("Too many people were returned - " + pidm);
@@ -107,7 +103,7 @@ class JDBC_Connection extends public_package.JDBC_Connection{
 		}
 		return null;
 	}
-	protected String getTransactions(String pidm) {
+	String getTransactions(String pidm) {
 		if (pidm==null)
 			return null;
 		else if(pidm.equals("NONE_RETURNED"))
@@ -146,7 +142,7 @@ class JDBC_Connection extends public_package.JDBC_Connection{
 		}
 		return null;
 	}
-	protected String getDetailCodes(String code) {
+	String getDetailCodes(String code) {
 		Statement stmt;
 		try {
 			stmt = connection.createStatement();
@@ -184,7 +180,7 @@ class JDBC_Connection extends public_package.JDBC_Connection{
 		return null;
 	}
 
-	protected String getFootballDetailCodes(String cwid,String year) {
+	String getFootballDetailCodes(String cwid, String year) {
 		Statement stmt;
 		String pidm;
 		try {
@@ -224,7 +220,7 @@ class JDBC_Connection extends public_package.JDBC_Connection{
 		return null;
 	}
 
-	protected String getFootballHistory(String cwid,String year) {
+	String getFootballHistory(String cwid, String year) {
 		Statement stmt;
 		String pidm;
 		try {
@@ -264,7 +260,7 @@ class JDBC_Connection extends public_package.JDBC_Connection{
 		}
 		return null;
 	}
-	protected String getFootballInfo(String cwid,String year) {
+	String getFootballInfo(String cwid, String year) {
 		Statement stmt;
 		String pidm;
 		try {
@@ -308,7 +304,7 @@ class JDBC_Connection extends public_package.JDBC_Connection{
 					if(result==null)
 						result="";
 
-					if(row=="") {
+					if(row.equals("")) {
 						if(rsmd.getColumnName(i).trim().equals("GROUP_ID")) {
 							String group = getFootballGroupDesc(result,year);
 							row = rsmd.getColumnName(i)+" "+group+": "+result+" - "+group;
@@ -332,7 +328,7 @@ class JDBC_Connection extends public_package.JDBC_Connection{
 				message=message+row+"\n";				
 
 			}
-			if(stmt != null) {stmt.close();	}
+			stmt.close();
 			return message;
 		}
 		catch(SQLSyntaxErrorException e1) {
@@ -344,7 +340,7 @@ class JDBC_Connection extends public_package.JDBC_Connection{
 
 		return null;
 	}
-	protected String getFootballGroupDesc(String group,String year) {
+	private String getFootballGroupDesc(String group, String year) {
 		Statement stmt;
 		String message = "";
 		try {
@@ -367,7 +363,7 @@ class JDBC_Connection extends public_package.JDBC_Connection{
 		}
 		return null;
 	}
-	protected String getFootballYear () {
+	String getFootballYear() {
 		Statement stmt;
 		String message = "";
 		try {
@@ -387,7 +383,7 @@ class JDBC_Connection extends public_package.JDBC_Connection{
 		}
 		return null;
 	}
-	protected String getFootballGroupReason(String cwid,String year) {
+	String getFootballGroupReason(String cwid, String year) {
 		Statement stmt;
 		String pidm;
 		try {
@@ -438,8 +434,7 @@ class JDBC_Connection extends public_package.JDBC_Connection{
 
 				}
 			}
-			if(stmt != null)
-				stmt.close();	
+			stmt.close();
 			return getReason(group,plan_purchased,removed,reg_number,date_ordered,opt_in_date);
 		}
 		catch(SQLSyntaxErrorException e1) {
@@ -451,7 +446,7 @@ class JDBC_Connection extends public_package.JDBC_Connection{
 
 		return null;
 	}
-	String getReason(String group,String plan_purchased,String removed,String reg_number,String date_ordered,String opt_in_date) {
+	private String getReason(String group, String plan_purchased, String removed, String reg_number, String date_ordered, String opt_in_date) {
 		if(group.equals("GRP1"))
 			return "Student never opted in.";
 		else if(!removed.equals("N"))
@@ -499,7 +494,7 @@ class JDBC_Connection extends public_package.JDBC_Connection{
 					"  date_ordered: "+date_ordered+"\n"+
 					"  opt_in_date: "+ opt_in_date;
 	}
-	protected String getFootballGroups(String year) {
+	String getFootballGroups(String year) {
 		Statement stmt;
 		try {
 			stmt = connection.createStatement();
@@ -515,7 +510,7 @@ class JDBC_Connection extends public_package.JDBC_Connection{
 		}
 		return null;
 	}
-	protected String getFootballGames(String year) {
+	String getFootballGames(String year) {
 		Statement stmt;
 		try {
 			stmt = connection.createStatement();
@@ -541,7 +536,7 @@ class JDBC_Connection extends public_package.JDBC_Connection{
 	}
 
 
-	protected String getCategoryCodes(String code) {
+	String getCategoryCodes(String code) {
 		Statement stmt;
 		try {
 			stmt = connection.createStatement();

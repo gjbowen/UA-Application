@@ -1,37 +1,37 @@
 package concur_package;
 
-public class Vendor {
+class Vendor {
 	Vendor(){}
 
-    String ID="";
-	String URI="";
+    private String ID="";
+	private String URI="";
 	String VendorCode="";
-	String VendorName="";
+	private String VendorName="";
 	String AddressCode="";
-	String Address1="";
-	String Address2="";
-	String Address3="";
-	String City="";
-	String State="";
+	private String Address1="";
+	private String Address2="";
+	private String Address3="";
+	private String City="";
+	private String State="";
 
-	String PostalCode="";
-	String CountryCode="";
-	String Country="";
-	String Approved="";
-	String TaxID = "";
-	String CurrencyCode="";
-	String ContactEmail="";
-	String PaymentMethodType="";
-	String Custom1="";
-	String Custom2="";
-	String Custom3="";
-	String Custom4="";
-	String Custom5="";
-    String IsVisibleForContentExtraction="";
-	String AddressImportSyncID="";
-	String VendorGroup="";
-	String ContactPhoneNumber="";
-	String ContactFirstName="";
+	private String PostalCode="";
+	private String CountryCode="";
+	private String Country="";
+	private String Approved="";
+	private String TaxID = "";
+	private String CurrencyCode="";
+	private String ContactEmail="";
+	private String PaymentMethodType="";
+	private String Custom1="";
+	private String Custom2="";
+	private String Custom3="";
+	private String Custom4="";
+	private String Custom5="";
+    private String IsVisibleForContentExtraction="";
+	private String AddressImportSyncID="";
+	private String VendorGroup="";
+	private String ContactPhoneNumber="";
+	private String ContactFirstName="";
 
 
 	String CONCUR_VENDOR_PIDM = "";

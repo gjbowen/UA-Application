@@ -10,16 +10,16 @@ import com.sshtools.sftp.SftpStatusException;
 import com.sshtools.sftp.TransferCancelledException;
 import com.sshtools.ssh.SshException;
 
-class SFTP_Connection extends public_package.SFTP_Connection{
+class SFTP extends public_package.SFTP_Connection{
 
-	SFTP_Connection(SftpClient conn_sftp,String env,String user,String pass) {
-		super(env, user, pass);
+	SFTP(SftpClient conn_sftp, String user, String pass, String env) {
+		super(user, pass,env);
 		connection = conn_sftp;
 	}
 
 	//FUNCTION CALL:
 	//connection.getFiles(textField.getText().trim(), location, mode, count);
-	protected void getFiles(String fileName,String location,String mode,Integer count) {
+	void getFiles(String fileName, String location, String mode, Integer count) {
 		ArrayList<String> fileList = new ArrayList<String>();
 		String pwd;
 		if(location.equals("GURJOBS"))

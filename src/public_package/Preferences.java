@@ -15,7 +15,7 @@ public class Preferences {
 	//static String fileNsame=getFileName();
 	public static Map<String,String> contents = read();
 
-	public static Map<String,String> read(){
+	private static Map<String,String> read(){
 		if(!fileExists()) {
 			writeFile(null);
 		}
@@ -36,10 +36,10 @@ public class Preferences {
 	public static boolean isWindows() {
         return System.getProperty("os.name").toLowerCase().contains("windows");
 		}
-	static String getFileName() {
+	private static String getFileName() {
 		return System.getProperty("user.home")+"/.preferences";
 	}
-	static void writeFile(Map<String,String> m)  {
+	private static void writeFile(Map<String, String> m)  {
 		deleteFile();
 		try {
 			BufferedWriter output = new BufferedWriter(new FileWriter(getFileName()));
@@ -66,10 +66,10 @@ public class Preferences {
 		writeFile(contents);
 	}
 
-	static boolean fileExists() {
+	private static boolean fileExists() {
         return new File(getFileName()).exists();
 	}
-	static void readFile(){
+	private static void readFile(){
 		contents = new HashMap<String,String>();
 		String line;
 		try {
@@ -82,7 +82,7 @@ public class Preferences {
 			System.err.println("Cannot read "+getFileName());
 		}
 	}
-	static void deleteFile(){
+	private static void deleteFile(){
 		File file = new File(getFileName());
 		if(file.exists())
 			file.delete();

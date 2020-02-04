@@ -11,19 +11,19 @@ import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
-public class Employee_Menu {
-	protected JFrame frameEmployeeMenu;
+class Employee_Menu {
+	JFrame frameEmployeeMenu;
 	private final Function_Library connection;
 	private final API_Package api;
 	private JTextField cwidField_emp;
 
 	private JTextField textField_column;
 
-	JTextField textField_cwid;
-	JTextField textField_pidm;
-	JTextField textField_name;
-	JTextField textField_myBama;
-	JTextField textField_email;
+	private JTextField textField_cwid;
+	private JTextField textField_pidm;
+	private JTextField textField_name;
+	private JTextField textField_myBama;
+	private JTextField textField_email;
 
 	public Employee_Menu(Function_Library conn) {
 		connection = conn;

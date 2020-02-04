@@ -14,7 +14,7 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.JSeparator;
 import javax.swing.JTextArea;
 
-public class Football_Menu
+class Football_Menu
 {	
 	JFrame frameMenu;
 	private JTextField textField_name;
@@ -23,8 +23,8 @@ public class Football_Menu
 	private JTextField textField_person;
 	private JTextField textField_email;
 	private JTextField textField_myBama;
-	protected Function_Library fun;
-	String environment;
+	private Function_Library fun;
+	private String environment;
 	private JTextField textField_year;
 
 	public Football_Menu(Function_Library function_lib, String mode){

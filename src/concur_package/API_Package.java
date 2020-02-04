@@ -31,15 +31,15 @@ import org.w3c.dom.Node;
 
 class API_Package {
 
-	static String access_token;
-	static String tokenParameters;
-	static List<Vendor> vendors = new ArrayList<Vendor>();
-	static List<User> people = new ArrayList<User>();
-	String url;
+	private static String access_token;
+	private static String tokenParameters;
+	private static List<Vendor> vendors = new ArrayList<Vendor>();
+	private static List<User> people = new ArrayList<User>();
+	private String url;
 	Function_Library functions;
 	String serverResponse;
-	int vendorCount = 0;
-	int userCount = 0;
+	private int vendorCount = 0;
+	private int userCount = 0;
 
 	API_Package(Function_Library conn){
 		functions = conn;
@@ -59,7 +59,7 @@ class API_Package {
 	}
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	boolean vendorInBanner(ArrayList<Vendor> banner,Vendor vendor){
+	private boolean vendorInBanner(ArrayList<Vendor> banner, Vendor vendor){
 		for(int i=0;i<banner.size();++i)
 			if(banner.get(i).CONCUR_VENDOR_CWID.equals(vendor.VendorCode))
 				if(banner.get(i).CONCUR_VENDOR_ADDR_CODE.equals(vendor.AddressCode))
@@ -76,7 +76,7 @@ class API_Package {
 		return functions.writeListToFile("vendors_remove_from_concur.csv", Vendor.getHeader(), differences);
 	}
 	///////////////////////////////////////////////////////////////////////////
-	boolean vendorInConcur(Vendor v){
+	private boolean vendorInConcur(Vendor v){
 		for(int i=0;i<vendors.size();++i)
 			if(vendors.get(i).VendorCode.equals(v.CONCUR_VENDOR_CWID))
 				if(vendors.get(i).AddressCode.equals(v.CONCUR_VENDOR_ADDR_CODE))
@@ -99,14 +99,14 @@ class API_Package {
 	String writeTrackingTableVendors(ArrayList<Vendor> ttVendors) {
 		return functions.writeListToFile("vendors_in_tracking_table.csv", Vendor.getVendorHeader(), vendorList2RegList(ttVendors));
 	}
-	ArrayList<String> vendorList2RegList(ArrayList<Vendor> p) { //tt
+	private ArrayList<String> vendorList2RegList(ArrayList<Vendor> p) { //tt
 		ArrayList<String> newList = new ArrayList<String>();
 		for(int i=0;i<p.size();++i) {
 			newList.add(p.get(i).toStringCSV_TrackingTable());
 		}
 		return newList;
 	}
-	ArrayList<String> vendorList2RegList(List<Vendor> p) { //API
+	private ArrayList<String> vendorList2RegList(List<Vendor> p) { //API
 		ArrayList<String> newList = new ArrayList<String>();
 		for(int i=0;i<p.size();++i) {
 			newList.add(p.get(i).toStringCSV_API());
@@ -115,7 +115,7 @@ class API_Package {
 	}
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	boolean userInBanner(ArrayList<User> banner,User person){
+	private boolean userInBanner(ArrayList<User> banner, User person){
 		for(int i=0;i<banner.size();++i)
 			if(banner.get(i).CONCUR_CWID.equals(person.EmployeeID)) {
 				return true;
@@ -134,7 +134,7 @@ class API_Package {
 		return functions.writeListToFile("users_remove_from_concur.csv", User.getHeader(), differences);
 	}
 	/////////////////////////////////////////////////////////////////////
-	boolean userInConcur(User p){
+	private boolean userInConcur(User p){
 		for(int i=0;i<people.size();++i)
 			if(people.get(i).EmployeeID.equals(p.CONCUR_CWID))
 				return true;
@@ -158,14 +158,14 @@ class API_Package {
 	String writeTrackingTableUsers(ArrayList<User> ttPeople) {
 		return functions.writeListToFile("users_in_tracking_table.csv", User.getEmpHeader(), userList2RegList(ttPeople));
 	}
-	ArrayList<String> userList2RegList(ArrayList<User> p) { //tt
+	private ArrayList<String> userList2RegList(ArrayList<User> p) { //tt
 		ArrayList<String> newList = new ArrayList<String>();
 		for(int i=0;i<p.size();++i) {
 			newList.add(p.get(i).toStringCSV_Table());
 		}
 		return newList;
 	}
-	ArrayList<String> userList2RegList(List<User> p) { //API
+	private ArrayList<String> userList2RegList(List<User> p) { //API
 		ArrayList<String> newList = new ArrayList<String>();
 		for(int i=0;i<p.size();++i) {
 			newList.add(p.get(i).toStringCSV_API());
@@ -195,7 +195,7 @@ class API_Package {
 		}
 		return retStr.toString();
 	}
-	void setCredentials() {
+	private void setCredentials() {
 		if(functions.environment.equals("PROD"))
 			tokenParameters =
 					functions.getContents("S:\\EDAS\\Aux Serv\\Banner Finance\\Concur Project\\" +
@@ -205,7 +205,7 @@ class API_Package {
 					functions.getContents("S:\\EDAS\\Aux Serv\\Banner Finance\\Concur Project\\" +
 							"CONCUR PROD\\Concur API\\documentation\\test.dat");
 	}
-	String jsonRead(String jsonString){
+	private String jsonRead(String jsonString){
 		try {
 			JSONObject jsonObject = new JSONObject(jsonString);
 			return jsonObject.getString("access_token");
@@ -257,7 +257,7 @@ class API_Package {
 			e.printStackTrace();
 		}
 	}
-	String clearPrefix(String site) {
+	private String clearPrefix(String site) {
 		if(site.startsWith("https://implementation.concursolutions.com"))
 			return site.replaceAll("https://implementation.concursolutions.com","");
 		else
@@ -313,7 +313,7 @@ class API_Package {
 			e.printStackTrace();
 		}
 	}
-	void responseCode(int code) {
+	private void responseCode(int code) {
 		if(code==200)
 			System.out.println("200 - GOOD!!");
 		else if(code==503)
@@ -321,7 +321,7 @@ class API_Package {
 		else if(code==400)
 			System.out.println("400 - Bad Request");
 	}
-	void setAccessToken() {
+	private void setAccessToken() {
 		try {
 			String url ;
 			if(functions.environment.equals("PROD"))
@@ -369,7 +369,7 @@ class API_Package {
 		}
 
 	}
-	Document loadXMLFromString(String xml){
+	private Document loadXMLFromString(String xml){
 		try {
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder builder;
@@ -382,7 +382,7 @@ class API_Package {
 		return null;
 
 	}
-	void xmlParse(String xml,String module) {
+	private void xmlParse(String xml, String module) {
 		try {
 			Document doc =  loadXMLFromString(xml);
 			if (doc.hasChildNodes()) {
@@ -397,7 +397,7 @@ class API_Package {
 		}
 
 	}
-	void printNodeVendors(NodeList nodeList) {
+	private void printNodeVendors(NodeList nodeList) {
 		Node headNode = nodeList.item(0);
 		for (int i = 0; i < headNode.getChildNodes().getLength(); i++) {
 			Node tempNode = headNode.getChildNodes().item(i);
@@ -483,7 +483,7 @@ class API_Package {
 			}
 		}
 	}
-	void printNodeUsers(NodeList nodeList) {
+	private void printNodeUsers(NodeList nodeList) {
 		Node headNode = nodeList.item(0);
 		for (int i = 0; i < headNode.getChildNodes().getLength(); ++i) {
 			Node tempNode = headNode.getChildNodes().item(i);

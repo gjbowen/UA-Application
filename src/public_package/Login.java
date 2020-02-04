@@ -22,11 +22,11 @@ public class Login
 {
 	private JTextField userField;
 	private JPasswordField passwordField;
-	String mode="PROD";
-	JLabel status;
-	JFrame frameLogin;
-	JCheckBox chckbxSaveLogin;
-	String application;
+	private String env="PROD";
+	private JLabel status;
+	private JFrame frameLogin;
+	private JCheckBox chckbxSaveLogin;
+	private String application;
 	public Login(String app){
 		application=app;
 		initialize();
@@ -35,9 +35,9 @@ public class Login
 	private void connect() {
 
 		//Connection_SFTP_JDBC connection = new Connection_SFTP_JDBC(mode, userField.getText(), passwordField.getText());		
-		JDBC_Connection jdbc = new JDBC_Connection(mode, userField.getText(), passwordField.getText());
-		SFTP_Connection sftp = new SFTP_Connection(mode, userField.getText(), passwordField.getText());
-		SSH_Connection ssh = new SSH_Connection(mode, userField.getText(), passwordField.getText());
+		JDBC_Connection jdbc = new JDBC_Connection(userField.getText(), passwordField.getText(),env);
+		SFTP_Connection sftp = new SFTP_Connection(userField.getText(), passwordField.getText(),env);
+		SSH_Connection ssh = new SSH_Connection(userField.getText(), passwordField.getText(),env);
 
 		Thread t3 = new Thread(() -> ssh.sshConnect());
 		t3.start();
@@ -63,12 +63,12 @@ public class Login
 						jdbc.password,
 						sftp.connection,
 						ssh.session,
-						mode);
+						env);
 			}
 			else if(application.equals("concur"))
-				new concur_package.Main_Menu(jdbc.connection,sftp.connection,ssh.session,userField.getText(),jdbc.password,mode);
+				new concur_package.Main_Menu(jdbc.connection,sftp.connection,ssh.session,userField.getText(),jdbc.password,env);
 			else if(application.equals("ar"))
-				new ar_package.Main_Menu(jdbc.connection,sftp.connection,ssh.session,userField.getText(),jdbc.password,mode);
+				new ar_package.Main_Menu(jdbc.connection,sftp.connection,ssh.session,userField.getText(),jdbc.password,env);
 			else if(application.equals("git"))
 				new Main_Menu(new Function_Library());
 
@@ -85,7 +85,7 @@ public class Login
 
 	@SuppressWarnings("deprecation")
 	private void initialize(){
-		mode = "PROD";
+		env = "PROD";
 		frameLogin = new JFrame();
 		frameLogin.setIconImage(Toolkit.getDefaultToolkit().getImage(Master_Menu.class.getResource("/Jar Files/ua_background_mobile.jpg")));
 		frameLogin.setTitle("Login Menu");
@@ -167,21 +167,21 @@ public class Login
 		btnExit.addActionListener(e -> System.exit(0));
 		rdbtnSEVL.addActionListener(e -> {
 			if (rdbtnSEVL.isSelected()){
-				mode = "SEVL";
+				env = "SEVL";
 				rdbtnTEST.setSelected(false);
 				rdbtnPROD.setSelected(false);
 			}
 		});
 		rdbtnTEST.addActionListener(e -> {
 			if (rdbtnTEST.isSelected()){
-				mode = "TEST";
+				env = "TEST";
 				rdbtnSEVL.setSelected(false);
 				rdbtnPROD.setSelected(false);
 			}
 		});
 		rdbtnPROD.addActionListener(e -> {
 			if (rdbtnPROD.isSelected()){
-				mode = "PROD";
+				env = "PROD";
 				rdbtnSEVL.setSelected(false);
 				rdbtnTEST.setSelected(false);
 			}
@@ -192,11 +192,11 @@ public class Login
 			userField.setText(map.get("alpha"));
 			passwordField.setText(map.get("omega"));
 			if(Preferences.contents.get("environment").equals("SEVL"))
-				mode = "SEVL";
+				env = "SEVL";
 			else if(Preferences.contents.get("environment").equals("TEST"))
-				mode = "TEST";
+				env = "TEST";
 			else
-				mode = "PROD";
+				env = "PROD";
 			connect();
 		}
 		else {

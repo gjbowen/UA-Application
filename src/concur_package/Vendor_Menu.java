@@ -15,9 +15,9 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingWorker;
 
-public class Vendor_Menu {
-    protected Function_Library connection;
-    protected JFrame vendorFrame;
+class Vendor_Menu {
+    private Function_Library connection;
+    JFrame vendorFrame;
     private JTextField textField;
 
     public Vendor_Menu(Function_Library conn) {

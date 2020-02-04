@@ -1,6 +1,8 @@
 package public_package;
 
 import com.jcraft.jsch.*;
+import com.sshtools.sftp.SftpStatusException;
+import com.sshtools.ssh.SshException;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,7 +15,7 @@ public class SSH_Connection {
     protected String user;
     private String password;
     protected String fileName;
-    public SSH_Connection(String env, String userName, String pass) {
+    protected SSH_Connection(String userName, String pass, String env) {
         host = getInstance(env);
         user = userName;
         password = pass;
@@ -38,7 +40,7 @@ public class SSH_Connection {
             e.printStackTrace();
         }
     }
-    public String getInstance(String environment) {
+    private String getInstance(String environment) {
         if (environment.equals("SEVL"))
             return "js-dev.ua.edu";
         else if (environment.equals("TEST"))
@@ -73,12 +75,10 @@ public class SSH_Connection {
                     if(i<0)
                         break;
                     str.append(new String(tmp, 0, i));
-                    //System.out.print(new String(tmp, 0, i));
+                    System.out.print(new String(tmp, 0, i));
                 }
-                if(channel.isClosed()){
-                    System.out.println("exit-status: "+channel.getExitStatus());
+                if(channel.isClosed())
                     break;
-                }
                 try{
                     Thread.sleep(1000);
                 }
@@ -112,7 +112,7 @@ public class SSH_Connection {
         return password;
     }
 
-    protected ArrayList<String> getFileCredentials(String fileName){
+    private ArrayList<String> getFileCredentials(String fileName){
         String line;
         ArrayList<String> content = new ArrayList<String>();
         File file = new File(fileName);

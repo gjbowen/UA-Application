@@ -12,12 +12,12 @@ import java.util.List;
 import java.util.Map;
 
 class Encryption {
-	protected static String fileName;
-	protected static void setFileName() {
+	private static String fileName;
+	private static void setFileName() {
 		fileName = System.getProperty("user.home")+"/.project2";
 	}
 
-	protected static Map<String, String> readFile(){
+	static Map<String, String> readFile(){
 		setFileName();
 		Map<String, String> map = new HashMap<String, String>();
 		File file = new File(fileName);
@@ -40,13 +40,13 @@ class Encryption {
 		}
 		return map;
 	}
-	protected static void deleteFile(){
+	static void deleteFile(){
 		setFileName();
 		File file = new File(fileName);
 		if(file.exists())
 			file.delete();
 	}
-	protected static void encryptToFile(String str1,String str2){
+	static void encryptToFile(String str1, String str2){
 		try{
 			setFileName();
 			PrintWriter writer = new PrintWriter(fileName);
@@ -79,7 +79,7 @@ class Encryption {
 			e.printStackTrace();
 		}
 	}
-	protected static String shuffleString(){
+	private static String shuffleString(){
 		String x = "wEVY!3MUxutQiS*TOkF-9WB8qf@5LbcljAD61#zrKm2vdg7NX$%nshyCJ<GoPR>apHeI04Z";
 		List<String> letters = Arrays.asList(x.split(""));
 		Collections.shuffle(letters);
@@ -88,7 +88,7 @@ class Encryption {
 			shuffled += letter;
 		return shuffled;
 	}
-	protected static  String encrypt(String cipherText, int shiftKey,String c){
+	private static  String encrypt(String cipherText, int shiftKey, String c){
 		String plainText = "";
 		for (int i = 0; i < cipherText.length(); i++)
 			if(c.indexOf(cipherText.charAt(i))<0)
@@ -99,7 +99,7 @@ class Encryption {
 				plainText += c.charAt((c.indexOf(cipherText.charAt(i)) + shiftKey) % c.length());
 		return plainText;
 	}
-	protected static String decrypt(String cipherText, int shiftKey,String alpha){
+	private static String decrypt(String cipherText, int shiftKey, String alpha){
 		String plainText = "";
 		int inverse = (alpha.length()-shiftKey %alpha.length())%alpha.length();
 		// System.out.println(inverse);

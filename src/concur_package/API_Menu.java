@@ -14,10 +14,10 @@ import java.awt.EventQueue;
 import java.awt.GridLayout;
 import java.awt.Panel;
 
-public class API_Menu {
-	protected JFrame frame;
+class API_Menu {
+	JFrame frame;
 	private API_Package api;
-    Function_Library connection;
+    private Function_Library connection;
 	public API_Menu(Function_Library fun) {
 		connection = fun;
 

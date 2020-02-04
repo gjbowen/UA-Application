@@ -15,9 +15,9 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingWorker;
 
-public class VendorTerm_Menu {
-	protected Function_Library connection;
-	protected JFrame vendorTermFrame;
+class VendorTerm_Menu {
+	private Function_Library connection;
+	JFrame vendorTermFrame;
 	private JTextField textField;
 	private JTextField fileNameField;
 	private String message;

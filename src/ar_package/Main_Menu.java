@@ -16,7 +16,6 @@ import javax.swing.ScrollPaneConstants;
 
 import com.jcraft.jsch.Session;
 import com.sshtools.sftp.SftpClient;
-import public_package.SSH_Connection;
 
 import javax.swing.JSeparator;
 import javax.swing.JTextArea;
@@ -33,17 +32,17 @@ public class Main_Menu
 	private JTextField textField_categoryCodes;
 	private JTextField textField_email;
 	private JTextField textField_myBama;
-	protected Function_Library fun;
-	String environment;
+	private Function_Library fun;
+	private String environment;
 
-	public Main_Menu(Connection conn_jdbc, SftpClient conn_sftp, Session conn_ssh, String user, String pass, String mode){
-		environment=mode;
+	public Main_Menu(Connection conn_jdbc, SftpClient conn_sftp, Session conn_ssh, String user, String pass, String env){
+		environment=env;
 		fun = new Function_Library(conn_jdbc,conn_sftp,conn_ssh,user,pass,environment);
 		initialize();
 
 
 	}
-	void openFootball() {
+	private void openFootball() {
 		EventQueue.invokeLater(() -> {
 			try{
 				Football_Menu window = new Football_Menu(fun,environment);

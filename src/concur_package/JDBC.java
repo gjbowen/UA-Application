@@ -6,9 +6,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 
-class JDBC_Connection extends public_package.JDBC_Connection{
-	JDBC_Connection(Connection conn,String env, String user, String pass) {
-		super(env, user, pass);
+class JDBC extends public_package.JDBC_Connection{
+	JDBC(Connection conn, String user, String pass, String env) {
+		super(user, pass,env);
 		connection=conn;
 	}
 

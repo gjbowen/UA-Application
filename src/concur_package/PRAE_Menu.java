@@ -19,9 +19,9 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingWorker;
 
-public class PRAE_Menu {
-    protected Function_Library connection;
-    protected JFrame praeFrame;
+class PRAE_Menu {
+    private Function_Library connection;
+    JFrame praeFrame;
     private JTextField searchString;
     private JTextField searchColumn;
     private String mode;

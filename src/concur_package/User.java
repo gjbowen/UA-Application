@@ -1,17 +1,17 @@
 package concur_package;
 
 class User {
-	String ID="";//api ref
-	String URI="";
-	String LoginID="";//same as email
+	private String ID="";//api ref
+	private String URI="";
+	private String LoginID="";//same as email
 	String EmployeeID="";//cwid
-	String FirstName="";
-	String LastName="";
-	String MiddleName="";
-	String PrimaryEmail="";
-	String Active="";
-	String CellPhoneNumber="";
-	String OrganizationUnit="";
+	private String FirstName="";
+	private String LastName="";
+	private String MiddleName="";
+	private String PrimaryEmail="";
+	private String Active="";
+	private String CellPhoneNumber="";
+	private String OrganizationUnit="";
 
 	public void setID(String ID) {
 		this.ID = ID;

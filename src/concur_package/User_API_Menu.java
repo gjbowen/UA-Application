@@ -4,13 +4,13 @@ import java.awt.*;
 import java.util.ArrayList;
 import javax.swing.*;
 
-public class User_API_Menu {
-	protected API_Package api;
-	protected JFrame frame;
+class User_API_Menu {
+	private API_Package api;
+	JFrame frame;
 
 	private JTextField textField_users;
 	private JTextField textField_userGET;
-	String message;
+	private String message;
 	public User_API_Menu(API_Package a) {
 		api = a;
 		initialize();

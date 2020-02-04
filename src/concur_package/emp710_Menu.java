@@ -15,9 +15,9 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingWorker;
 
-public class emp710_Menu {
-    protected Function_Library connection;
-    protected JFrame frame;
+class emp710_Menu {
+    private Function_Library connection;
+    JFrame frame;
     private JTextField textField_orgn;
     private JTextField textField_fund;
     private JTextField textField_coas;

@@ -20,15 +20,15 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.util.ArrayList;
 
-public class Vendor_API_Menu {
-	protected API_Package api;
-	protected JFrame frame;
+class Vendor_API_Menu {
+	private API_Package api;
+	JFrame frame;
 
 	private JTextField textField_vendors;
 	private JTextField textField_deleteID;
 	private JTextField textField_deleteRT;
 	private JTextField textField;
-	String message = null;
+	private String message = null;
 
 	public Vendor_API_Menu(API_Package a) {
 		api = a;

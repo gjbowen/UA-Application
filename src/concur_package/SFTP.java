@@ -5,20 +5,22 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.sshtools.net.SocketTransport;
 import com.sshtools.sftp.SftpClient;
 import com.sshtools.sftp.SftpFile;
 import com.sshtools.sftp.SftpStatusException;
 import com.sshtools.sftp.TransferCancelledException;
-import com.sshtools.ssh.SshException;
+import com.sshtools.ssh.*;
+import com.sshtools.ssh2.Ssh2Client;
 
-class SFTP_Connection extends public_package.SFTP_Connection{
+class SFTP extends public_package.SFTP_Connection{
 
-	SFTP_Connection(SftpClient conn_sftp,String user,String pass,String env) {
+	SFTP(SftpClient conn_sftp, String user, String pass, String env) {
 		super(env, user, pass);
 		connection = conn_sftp;
 	}
 
-	public List<String> getCurrentDownloaded() {
+	private List<String> getCurrentDownloaded() {
 		List<String> allFiles = new ArrayList<String>();
 
 		File rootF = new File(System.getProperty("user.home")+dirDelim+"Concur_Files");
@@ -167,6 +169,77 @@ class SFTP_Connection extends public_package.SFTP_Connection{
 		moveFile(dest,"SRE_Files",fileName,"sre.txt");
 	}
 	public void moveActiveDept(String dest,String fileName){ moveFile(dest,"Active_Departments",fileName,"activeDepartments.csv"); }
+	public void moveFile(String dest,String localFolder,String localFileName,String remoteName){
+		SftpClient destConnection=null;
+		try {
+			String hostname = getInstance(dest);
+
+			if (username == null || username.trim().equals("")){
+				username = System.getProperty("user.name");
+			}
+			System.out.println("Connecting to " +username+"@"+ hostname+"...");
+
+			/**
+			 * Create an SshConnector instance
+			 */
+			SshConnector con = SshConnector.createInstance();
+
+			/*
+			  Connect to the host
+			 */
+			SocketTransport t = new SocketTransport(hostname, 22);
+			t.setTcpNoDelay(true);
+
+			SshClient ssh = con.connect(t, username, true);
+
+			Ssh2Client ssh2 = (Ssh2Client) ssh;
+			/*
+			  Authenticate the user using password authentication
+			 */
+			PasswordAuthentication pwd;
+			pwd = new PasswordAuthentication();
+
+			do {
+				pwd.setPassword(password);
+			}
+			while (ssh2.authenticate(pwd) != SshAuthentication.COMPLETE
+					&& ssh.isConnected());
+			/**
+			 * Start a session and do basic IO
+			 */
+			String localPath = System.getProperty("user.home")+ "\\Concur_Files\\" + environment + "\\"+localFolder+"\\";
+			if (ssh.isAuthenticated()) {
+				System.out.println("Local path: "+localPath);
+				System.out.println("Moving to: "+"/u03/import/" + dest+"/"+localFileName);
+				destConnection = new SftpClient(ssh2);
+				destConnection.cd("/u03/import/" + dest);
+				destConnection.lcd(localPath);
+				destConnection.put(localFileName, remoteName);
+				destConnection.chmod(0777, "/u03/import/" + dest+"/"+remoteName);
+				destConnection.exit();
+				System.out.println("  "+remoteName + " has been transfered");
+			}
+		}
+		catch (Throwable th) {
+			if(th.getLocalizedMessage().trim().equals("Permission denied.: Permission denied")) {
+				try {
+					destConnection.rm(remoteName);
+					destConnection.put(localFileName, remoteName);
+					destConnection.chmod(0777, "/u03/import/" + dest+"/"+remoteName);
+					destConnection.exit();
+					System.out.println("  "+remoteName + " has been transfered");
+				} catch (SftpStatusException |
+						SshException |
+						FileNotFoundException |
+						TransferCancelledException e) {
+					e.printStackTrace();
+					System.err.println("File failed to transfer");
+				}
+			}else {
+				System.err.println(th.getMessage());
+			}
+		}
+	}
 
 	public void syncFiles() {
 		try {

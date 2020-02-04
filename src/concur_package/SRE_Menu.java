@@ -4,9 +4,9 @@ import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import java.awt.*;
 
-public class SRE_Menu {
-	protected Function_Library connection;
-	protected JFrame sreFrame;
+class SRE_Menu {
+	private Function_Library connection;
+	JFrame sreFrame;
 	private JTextField searchString;
 	private JTextField searchColumn;
 	private String mode;
