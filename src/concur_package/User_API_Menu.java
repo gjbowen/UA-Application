@@ -78,7 +78,7 @@ class User_API_Menu {
 		///////////
 		SwingWorker<Void, Void> sw = new SwingWorker<Void, Void>() {
 			protected Void doInBackground() {
-				ArrayList<User> people = api.functions.jdbc.getActiveUsers();
+				ArrayList<User> people = api.func_lib.jdbc.getActiveUsers();
 
 				message=api.writeApiUsers();
 				message+="\n";

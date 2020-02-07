@@ -36,14 +36,14 @@ class API_Package {
 	private static List<Vendor> vendors = new ArrayList<Vendor>();
 	private static List<User> people = new ArrayList<User>();
 	private String url;
-	Function_Library functions;
+	Function_Library func_lib;
 	String serverResponse;
 	private int vendorCount = 0;
 	private int userCount = 0;
 
 	API_Package(Function_Library conn){
-		functions = conn;
-		if(functions.environment.equals("PROD"))
+		func_lib = conn;
+		if(func_lib.environment.equals("PROD"))
 			url="https://www.concursolutions.com";
 		else
 			url="https://implementation.concursolutions.com";
@@ -73,7 +73,7 @@ class API_Package {
 			if(!vendorInBanner(bannerVendors,vendors.get(i)))
 				differences.add(vendors.get(i).toStringCSV_API());
 		System.out.println(differences.size() + " vendors not active in Banner that are in Concur.");
-		return functions.writeListToFile("vendors_remove_from_concur.csv", Vendor.getHeader(), differences);
+		return func_lib.writeListToFile("vendors_remove_from_concur.csv", Vendor.getHeader(), differences);
 	}
 	///////////////////////////////////////////////////////////////////////////
 	private boolean vendorInConcur(Vendor v){
@@ -90,14 +90,14 @@ class API_Package {
 			if(!vendorInConcur(bannerVendors.get(i)))
 				differences.add(bannerVendors.get(i).toStringCSV_API());
 		System.out.println(differences.size() + " vendors active in Banner that are not in Concur.");
-		return functions.writeListToFile("vendors_add_to_concur.csv", Vendor.getVendorHeader(), differences);
+		return func_lib.writeListToFile("vendors_add_to_concur.csv", Vendor.getVendorHeader(), differences);
 	}
 	///////////////////////////////////////////////////////////////////////////
 	String writeApiVendors() {
-		return functions.writeListToFile("vendors_in_api.csv", Vendor.getHeader(), vendorList2RegList(vendors));
+		return func_lib.writeListToFile("vendors_in_api.csv", Vendor.getHeader(), vendorList2RegList(vendors));
 	}
 	String writeTrackingTableVendors(ArrayList<Vendor> ttVendors) {
-		return functions.writeListToFile("vendors_in_tracking_table.csv", Vendor.getVendorHeader(), vendorList2RegList(ttVendors));
+		return func_lib.writeListToFile("vendors_in_tracking_table.csv", Vendor.getVendorHeader(), vendorList2RegList(ttVendors));
 	}
 	private ArrayList<String> vendorList2RegList(ArrayList<Vendor> p) { //tt
 		ArrayList<String> newList = new ArrayList<String>();
@@ -131,7 +131,7 @@ class API_Package {
 			}
 		}
 		System.out.println(differences.size() + " users not active in Banner that are in Concur.");
-		return functions.writeListToFile("users_remove_from_concur.csv", User.getHeader(), differences);
+		return func_lib.writeListToFile("users_remove_from_concur.csv", User.getHeader(), differences);
 	}
 	/////////////////////////////////////////////////////////////////////
 	private boolean userInConcur(User p){
@@ -149,14 +149,14 @@ class API_Package {
 			}
 		}
 		System.out.println(differences.size() + " users active in Banner that are not in Concur.");
-		return functions.writeListToFile("users_add_to_concur.csv",User.getEmpHeader(), differences);
+		return func_lib.writeListToFile("users_add_to_concur.csv",User.getEmpHeader(), differences);
 	}
 
 	String writeApiUsers() {
-		return functions.writeListToFile("users_in_api.csv", User.getHeader(), userList2RegList(people));
+		return func_lib.writeListToFile("users_in_api.csv", User.getHeader(), userList2RegList(people));
 	}
 	String writeTrackingTableUsers(ArrayList<User> ttPeople) {
-		return functions.writeListToFile("users_in_tracking_table.csv", User.getEmpHeader(), userList2RegList(ttPeople));
+		return func_lib.writeListToFile("users_in_tracking_table.csv", User.getEmpHeader(), userList2RegList(ttPeople));
 	}
 	private ArrayList<String> userList2RegList(ArrayList<User> p) { //tt
 		ArrayList<String> newList = new ArrayList<String>();
@@ -196,14 +196,13 @@ class API_Package {
 		return retStr.toString();
 	}
 	private void setCredentials() {
-		if(functions.environment.equals("PROD"))
+		if(func_lib.environment.equals("PROD"))
 			tokenParameters =
-					functions.getContents("S:\\EDAS\\Aux Serv\\Banner Finance\\Concur Project\\" +
-							"CONCUR PROD\\Concur API\\documentation\\prod.dat");
+					func_lib.getContents("C:\\Users\\"+func_lib.userName+"\\Box Sync\\Business Admin Team Shared\\Concur\\API-PROD.dat");
 		else
 			tokenParameters =
-					functions.getContents("S:\\EDAS\\Aux Serv\\Banner Finance\\Concur Project\\" +
-							"CONCUR PROD\\Concur API\\documentation\\test.dat");
+					func_lib.getContents("C:\\Users\\"+func_lib.userName+"\\Box Sync\\Business Admin Team Shared\\Concur\\API-TEST.dat");
+
 	}
 	private String jsonRead(String jsonString){
 		try {
@@ -264,7 +263,7 @@ class API_Package {
 			return site.replace("https://www.concursolutions.com", "");
 	}
 	void sendDeleteRequest(String urlSuffix){
-		if(functions.environment.equals("PROD")) {
+		if(func_lib.environment.equals("PROD")) {
 			JOptionPane.showMessageDialog(null,"OVERRIDING TO TEST.");
 		}
 		String url ="https://implementation.concursolutions.com";
@@ -324,7 +323,7 @@ class API_Package {
 	private void setAccessToken() {
 		try {
 			String url ;
-			if(functions.environment.equals("PROD"))
+			if(func_lib.environment.equals("PROD"))
 				url= "https://us.api.concursolutions.com/oauth2/v0/token";
 			else
 				url = "https://us-impl.api.concursolutions.com/oauth2/v0/token";

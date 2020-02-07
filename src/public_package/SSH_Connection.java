@@ -20,9 +20,7 @@ public class SSH_Connection {
         user = userName;
         password = pass;
         session=null;
-
     }
-
 
     public void sshConnect(){
         System.out.println("Connecting SSH to " +user+"@"+ host+"...");

@@ -97,7 +97,7 @@ class Vendor_API_Menu {
 		///////////
 		SwingWorker<Void, Void> sw = new SwingWorker<Void, Void>() {
 			protected Void doInBackground() {
-				ArrayList<Vendor> vendors = api.functions.jdbc.getActiveVendors();
+				ArrayList<Vendor> vendors = api.func_lib.jdbc.getActiveVendors();
 
 				message = api.writeTrackingTableVendors(vendors);
 				message += "\n";
@@ -192,7 +192,7 @@ class Vendor_API_Menu {
 		button.addActionListener(e -> {
 			api.reinit();
 
-			String message=api.functions.jdbc.getVendorInfo(textField.getText().trim());
+			String message=api.func_lib.jdbc.getVendorInfo(textField.getText().trim());
 
 			JTextArea textArea = new JTextArea(message);
 			JScrollPane scrollPane = new JScrollPane(textArea);

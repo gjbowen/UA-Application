@@ -1,5 +1,6 @@
 package concur_package;
 
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -15,7 +16,9 @@ import java.util.*;
 import com.jcraft.jsch.Session;
 import com.sshtools.sftp.SftpClient;
 
+import javax.swing.*;
 import java.text.ParseException;
+import java.util.List;
 
 class Function_Library {
 	JDBC jdbc;
@@ -605,7 +608,7 @@ class Function_Library {
 	 * given a file with cwid and rt address, find all instances of them in sent
 	 * files and output the file.
 	 */
-    String retireVendorTerms(String fileName) {
+	String retireVendorTerms(String fileName) {
 		System.out.println("Initiating vendor termination..");
 		File file = new File(fileName);
 		String[] parsedLine = null;
@@ -651,7 +654,7 @@ class Function_Library {
 		return getPwd();
 	}
 	private boolean validItem(String object, ArrayList<ArrayList<String>> list, String item1, String item2,
-                              Date date) {
+							  Date date) {
 		for (int i = 0; i < list.size(); ++i) {
 			if (list.get(i).get(0).equals(item1) && list.get(i).get(1).equals(item2)) {
 				// FUND
@@ -1539,38 +1542,20 @@ line := rpad(v_system_id,8)         || --8 SYSTEM_ID*
 						if (parsedLine.length == 7 || !parsedLine[1].equals("EXP"))
 							continue;
 
-
 						if ((chart.equals("") || parsedLine[3].equals(chart))
 								&& (fund.equals("") || parsedLine[4].equals(fund))
 								&& (orgn.equals("") || parsedLine[5].equals(orgn))
 								&& (cwid.equals("") || parsedLine[2].equals(cwid))
-								&& (level.equals("") || parsedLine[parsedLine.length - 1].equals(level))
-						) {
-							{
-
-								retStr.append("File: " + file.getName() + "\t\t" + "CWID: " + parsedLine[2] + "\t"
-										+ "COAS: " + parsedLine[3] + "\t" + "Fund: " + parsedLine[4] + "\t" + "ORGN: "
-										+ parsedLine[5] + "\t");
-								if (parsedLine[0].equals("710")) {
-									retStr.append("\tLEVEL: " + parsedLine[parsedLine.length - 1] + "\n");
-									System.out.println(line);
-								}
-								else
-									retStr.append("\tREMOVED\n");
-								++count;
-
-							}
+								&& (level.equals("") || parsedLine[parsedLine.length - 1].equals(level))){
+							retStr.append("File: " + file.getName() + "\t\t" + "CWID: " + parsedLine[2] + "\t"
+									+ "COAS: " + parsedLine[3] + "\t" + "Fund: " + parsedLine[4] + "\t" + "ORGN: "
+									+ parsedLine[5] + "\t");
+							if (parsedLine[0].equals("710"))
+								retStr.append("\tLEVEL: " + parsedLine[parsedLine.length - 1] + "\n");
+							else
+								retStr.append("\tREMOVED\n");
+							++count;
 						}
-					/*
-
-						 if(parsedLine[3].equals("A") && parsedLine[5].equals("217201") ){
-
-							 retStr.append("File: " + file.getName() + "\t\t" + "CWID: " + parsedLine[2] + "\t"
-									 + "COAS: " + parsedLine[3] + "\t" + "Fund: " + parsedLine[4] + "\t" + "ORGN: "
-									 + parsedLine[5] + "\t");
-						 }
-						 */
-
 					}
 					br.close();
 				} catch (IOException e2) {
@@ -1614,7 +1599,16 @@ line := rpad(v_system_id,8)         || --8 SYSTEM_ID*
 			}
 			br.close();
 		} catch (IOException e2) {
-			System.out.println("File not found - "+file.getAbsolutePath());
+			System.err.println("File not found - "+file.getAbsolutePath());
+			JFileChooser chooser = new JFileChooser("C:\\Users\\"+userName+"\\Box Sync");
+			chooser.setPreferredSize(new Dimension(700, 500));
+			Action details = chooser.getActionMap().get("viewTypeDetails");
+			details.actionPerformed(null);
+			chooser.setDialogTitle("INVALID FILE - USE FILE IN \"C:\\Users\\"+userName+"\\Box Sync\\Business Admin Team Shared\"");
+			if(chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION)
+				return getContents(chooser.getSelectedFile().getPath());
+			else
+				return null;
 		}
 		return key.toString();
 	}

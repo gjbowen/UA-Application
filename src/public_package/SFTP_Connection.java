@@ -7,10 +7,13 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Vector;
 import java.util.zip.GZIPInputStream;
 
+import com.jcraft.jsch.ChannelSftp;
 import com.sshtools.net.SocketTransport;
 import com.sshtools.sftp.SftpClient;
+import com.sshtools.sftp.SftpFile;
 import com.sshtools.sftp.SftpStatusException;
 import com.sshtools.sftp.TransferCancelledException;
 import com.sshtools.ssh.PasswordAuthentication;
@@ -150,6 +153,35 @@ public class SFTP_Connection {
 		catch (SftpStatusException e) {e.printStackTrace();}
 		catch (SshException e) {e.printStackTrace();}
 		catch (TransferCancelledException e) {e.printStackTrace();}
+	}
+	public void getFolder(String remoteFolder,String localFolder) {
+		SftpFile[] files = new SftpFile[0];
+
+		File folder = new File(localFolder);
+		if(!folder.isDirectory())
+			folder.mkdir();
+
+		try {
+			files = connection.ls(remoteFolder);
+			connection.lcd(localFolder);
+			connection.cd(remoteFolder);
+		}
+		catch (SftpStatusException e){e.printStackTrace();}
+		catch (SshException e){e.printStackTrace();}
+
+		for(int i=0; i<files.length;i++){
+			//System.out.println(files[i].getFilename());
+			// Grap and get the file by WORKING_DIR/filelist.get(i).toString();
+			// Save it to your local directory with its original name.
+
+			try {
+				connection.get(files[i].getFilename());
+			}
+			catch (FileNotFoundException e){e.printStackTrace();}
+			catch (TransferCancelledException e){e.printStackTrace();}
+			catch (SshException e){e.printStackTrace();}
+			catch (SftpStatusException e) {e.printStackTrace();}
+		}
 	}
 
 	public void moveFile(String env,String localFolder,String localFileName,String remoteFolder,String remoteName){

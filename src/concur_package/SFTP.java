@@ -16,7 +16,7 @@ import com.sshtools.ssh2.Ssh2Client;
 class SFTP extends public_package.SFTP_Connection{
 
 	SFTP(SftpClient conn_sftp, String user, String pass, String env) {
-		super(env, user, pass);
+		super(user,pass,env);
 		connection = conn_sftp;
 	}
 

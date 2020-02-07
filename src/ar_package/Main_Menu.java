@@ -1,24 +1,15 @@
 package ar_package;
-import java.awt.Dimension;
-import java.awt.EventQueue;
-import java.awt.Font;
-import java.awt.Toolkit;
+import java.awt.*;
+import java.io.IOException;
 import java.sql.Connection;
 import java.util.ArrayList;
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-import javax.swing.ScrollPaneConstants;
+import javax.swing.*;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
 
 import com.jcraft.jsch.Session;
 import com.sshtools.sftp.SftpClient;
-
-import javax.swing.JSeparator;
-import javax.swing.JTextArea;
 
 public class Main_Menu
 {	
@@ -285,15 +276,50 @@ public class Main_Menu
 
 		JButton btnFootballStream = new JButton("Football Program");
 		btnFootballStream.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		btnFootballStream.setBounds(494, 30, 181, 65);
+		frameMenu.getContentPane().add(btnFootballStream);
+
 		btnFootballStream.addActionListener(e -> {
-
 			openFootball();
-
 			//frameMenu.setVisible(false);
 		});
 
-		btnFootballStream.setBounds(494, 75, 181, 65);
-		frameMenu.getContentPane().add(btnFootballStream);
+		JButton btnCadence = new JButton("Get Cadence Files");
+		btnCadence.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		btnCadence.setBounds(494, 125, 181, 65);
+		frameMenu.getContentPane().add(btnCadence);
+
+		btnCadence.addActionListener(e -> {
+			JDialog dlgProgress;
+			dlgProgress = new JDialog((java.awt.Frame)null, "Please wait.", true);//true means that the dialog created is modal
+			JLabel lblStatus = new JLabel("Getting files.."); // this is just a label in which you can indicate the state of the processing
+			dlgProgress.setIconImage(Toolkit.getDefaultToolkit().getImage(Main_Menu.class.getResource("/Jar Files/ua_background_mobile.jpg")));
+			JProgressBar pbProgress = new JProgressBar(100, 100);
+			pbProgress.setIndeterminate(true); //we'll use an indeterminate progress bar
+
+			dlgProgress.getContentPane().add(BorderLayout.NORTH, lblStatus);
+			dlgProgress.getContentPane().add(BorderLayout.CENTER, pbProgress);
+			dlgProgress.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE); // prevent the user from closing the dialog
+			dlgProgress.setSize(300, 90);
+			dlgProgress.setLocationRelativeTo(frameMenu);
+			SwingWorker<Void, Void> sw = new SwingWorker<Void, Void>() {
+				protected Void doInBackground() {
+					fun.getCadence();
+					return null;
+				}
+
+				protected void done() {
+					dlgProgress.dispose();//close the modal dialog
+				}
+			};
+			JButton cancelButton = new JButton("Cancel");
+			cancelButton.addActionListener(e1 -> sw.cancel(true));
+			dlgProgress.getContentPane().add(BorderLayout.EAST, cancelButton);
+			sw.execute(); // this will start the processing on a separate thread
+			dlgProgress.setVisible(true); //this will block user input as long as the processing task is working
+
+			//frameMenu.setVisible(false);
+		});
 
 		button_exit.addActionListener(e -> System.exit(0));
 		frameMenu.setVisible(true);

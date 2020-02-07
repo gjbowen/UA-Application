@@ -16,7 +16,7 @@ public class JDBC_Connection {
 	static public String password;
 	String userFirstName;
 
-	protected JDBC_Connection( String user, String pass,String env) {
+	protected JDBC_Connection(String user, String pass,String env) {
 		environment = env;
 		username = user;
 		password = pass;
