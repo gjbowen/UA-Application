@@ -183,7 +183,16 @@ public class SFTP_Connection {
 			catch (SftpStatusException e) {e.printStackTrace();}
 		}
 	}
+	public void rm(String path){
+		try {
+			connection.rm(path);
+		} catch (SftpStatusException e) {
+			e.printStackTrace();
+		} catch (SshException e) {
+			e.printStackTrace();
+		}
 
+	}
 	public void moveFile(String env,String localFolder,String localFileName,String remoteFolder,String remoteName){
 		SftpClient destConnection=null;
 		try {

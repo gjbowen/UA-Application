@@ -1,8 +1,6 @@
 package ar_package;
 
 import com.jcraft.jsch.Session;
-import com.sshtools.sftp.SftpStatusException;
-import com.sshtools.ssh.SshException;
 
 import java.io.*;
 
@@ -16,7 +14,7 @@ class SSH extends public_package.SSH_Connection {
         return "C:\\Users\\"+user+"\\Box Sync\\Business Admin Team Shared\\AR\\Cadence SFTP.txt";
     }
 
-    void writeEFile_RC(String file) {
+    void writeEFile_RC(String file,String month, String year) {
         String line,sshPassword;
         sshPassword=getPassword(getFileName());
         try {
@@ -25,7 +23,7 @@ class SSH extends public_package.SSH_Connection {
             output.write("#!/usr/bin/expect -f\n");
             output.write("set timeout -1\n");
             output.write("spawn mkdir -p /home/"+user+"/RETURNED_CHECKS\n");
-            output.write("spawn sftp uofalasas@filetransmissions.cadencebank.com:/ACH_OUT/ACH_RETURNS/* /home/"+user+"/RETURNED_CHECKS\n");
+            output.write("spawn sftp uofalasas@filetransmissions.cadencebank.com:/ACH_OUT/ACH_RETURNS/UnivOfAlabama.ACHo.SAS."+month+"*"+year+"* /home/"+user+"/RETURNED_CHECKS\n");
             output.write("expect \"uofalasas@filetransmissions.cadencebank.com's password: \"\n");
             output.write("send -- \""+sshPassword+"\\r\"\n");
             output.write("expect eof\n");
@@ -36,7 +34,7 @@ class SSH extends public_package.SSH_Connection {
         }
     }
 
-    void writeEFile_LB(String file) {
+    void writeEFile_LB(String file,String month, String year) {
         String line,sshPassword;
         sshPassword=getPassword(getFileName());
         try {
@@ -45,7 +43,7 @@ class SSH extends public_package.SSH_Connection {
             output.write("#!/usr/bin/expect -f\n");
             output.write("set timeout -1\n");
             output.write("spawn mkdir -p /home/"+user+"/LOCKBOX\n");
-            output.write("spawn sftp uofalasas@filetransmissions.cadencebank.com:/LBX_OUT/1001121.LBXo."+"* /home/"+user+"/LOCKBOX\n");
+            output.write("spawn sftp uofalasas@filetransmissions.cadencebank.com:/LBX_OUT/1001121.LBXo."+year+month+"* /home/"+user+"/LOCKBOX\n");
             output.write("expect \"uofalasas@filetransmissions.cadencebank.com's password: \"\n");
             output.write("send -- \""+sshPassword+"\\r\"\n");
             output.write("expect eof\n");

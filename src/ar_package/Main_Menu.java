@@ -284,12 +284,19 @@ public class Main_Menu
 			//frameMenu.setVisible(false);
 		});
 
-		JButton btnCadence = new JButton("Get Cadence Files");
-		btnCadence.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		btnCadence.setBounds(494, 125, 181, 65);
-		frameMenu.getContentPane().add(btnCadence);
 
-		btnCadence.addActionListener(e -> {
+
+		JLabel lblCadence = new JLabel("Get Cadence Files");
+		lblCadence.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblCadence.setBounds(494, 105, 120, 14);
+		frameMenu.getContentPane().add(lblCadence);
+
+		JButton btnCadence_recent = new JButton("Recent");
+		btnCadence_recent.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		btnCadence_recent.setBounds(494, 125, 90, 65);
+		frameMenu.getContentPane().add(btnCadence_recent);
+
+		btnCadence_recent.addActionListener(e -> {
 			JDialog dlgProgress;
 			dlgProgress = new JDialog((java.awt.Frame)null, "Please wait.", true);//true means that the dialog created is modal
 			JLabel lblStatus = new JLabel("Getting files.."); // this is just a label in which you can indicate the state of the processing
@@ -304,7 +311,7 @@ public class Main_Menu
 			dlgProgress.setLocationRelativeTo(frameMenu);
 			SwingWorker<Void, Void> sw = new SwingWorker<Void, Void>() {
 				protected Void doInBackground() {
-					fun.getCadence();
+					fun.getCadence("RECENT");
 					return null;
 				}
 
@@ -320,6 +327,44 @@ public class Main_Menu
 
 			//frameMenu.setVisible(false);
 		});
+
+		JButton btnCadence_all = new JButton("All");
+		btnCadence_all.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		btnCadence_all.setBounds(584, 125, 90, 65);
+		frameMenu.getContentPane().add(btnCadence_all);
+
+		btnCadence_all.addActionListener(e -> {
+			JDialog dlgProgress;
+			dlgProgress = new JDialog((java.awt.Frame)null, "Please wait.", true);//true means that the dialog created is modal
+			JLabel lblStatus = new JLabel("Getting files.."); // this is just a label in which you can indicate the state of the processing
+			dlgProgress.setIconImage(Toolkit.getDefaultToolkit().getImage(Main_Menu.class.getResource("/Jar Files/ua_background_mobile.jpg")));
+			JProgressBar pbProgress = new JProgressBar(100, 100);
+			pbProgress.setIndeterminate(true); //we'll use an indeterminate progress bar
+
+			dlgProgress.getContentPane().add(BorderLayout.NORTH, lblStatus);
+			dlgProgress.getContentPane().add(BorderLayout.CENTER, pbProgress);
+			dlgProgress.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE); // prevent the user from closing the dialog
+			dlgProgress.setSize(300, 90);
+			dlgProgress.setLocationRelativeTo(frameMenu);
+			SwingWorker<Void, Void> sw = new SwingWorker<Void, Void>() {
+				protected Void doInBackground() {
+					fun.getCadence("ALL");
+					return null;
+				}
+
+				protected void done() {
+					dlgProgress.dispose();//close the modal dialog
+				}
+			};
+			JButton cancelButton = new JButton("Cancel");
+			cancelButton.addActionListener(e1 -> sw.cancel(true));
+			dlgProgress.getContentPane().add(BorderLayout.EAST, cancelButton);
+			sw.execute(); // this will start the processing on a separate thread
+			dlgProgress.setVisible(true); //this will block user input as long as the processing task is working
+
+			//frameMenu.setVisible(false);
+		});
+
 
 		button_exit.addActionListener(e -> System.exit(0));
 		frameMenu.setVisible(true);
