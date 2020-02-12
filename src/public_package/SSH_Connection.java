@@ -1,8 +1,6 @@
 package public_package;
 
 import com.jcraft.jsch.*;
-import com.sshtools.sftp.SftpStatusException;
-import com.sshtools.ssh.SshException;
 
 import javax.swing.*;
 import java.awt.*;

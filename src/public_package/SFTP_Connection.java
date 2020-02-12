@@ -7,10 +7,8 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Vector;
 import java.util.zip.GZIPInputStream;
 
-import com.jcraft.jsch.ChannelSftp;
 import com.sshtools.net.SocketTransport;
 import com.sshtools.sftp.SftpClient;
 import com.sshtools.sftp.SftpFile;

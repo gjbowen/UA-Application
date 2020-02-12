@@ -36,9 +36,9 @@ class Function_Library {
 			String user,
 			String pass,
 			String mode) {
-		sftp= new SFTP(conn_sftp, user, pass, mode);
-		ssh = new SSH(conn_ssh,mode, user, pass);
-		jdbc= new JDBC(conn_jdbc,mode,user,pass);
+		sftp= new SFTP(conn_sftp,user,pass,mode);
+		ssh = new SSH(conn_ssh,user,pass,mode);
+		jdbc= new JDBC(conn_jdbc,user,pass,mode);
 
 		firstName = jdbc.getUserFirstName(user);
 		environment = mode;
