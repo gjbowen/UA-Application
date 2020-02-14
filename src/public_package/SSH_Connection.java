@@ -120,11 +120,11 @@ public class SSH_Connection {
             br.close();
         } catch (IOException e2) {
             System.err.println("File not found - "+file.getAbsolutePath());
-            JFileChooser chooser = new JFileChooser("C:\\Users\\"+user+"\\Box Sync");
+            JFileChooser chooser = new JFileChooser(System.getProperty("user.home")+"\\Box Sync");
             chooser.setPreferredSize(new Dimension(700, 500));
             Action details = chooser.getActionMap().get("viewTypeDetails");
             details.actionPerformed(null);
-            chooser.setDialogTitle("INVALID FILE - USE FILE IN \"C:\\Users\\"+user+"\\Box Sync\\Business Admin Team Shared\"");
+            chooser.setDialogTitle("INVALID FILE - USE FILE IN \""+System.getProperty("user.home")+"\\Box Sync\\Business Admin Team Shared\"");
             if(chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION)
                 return getFileCredentials(chooser.getSelectedFile().getPath());
             else

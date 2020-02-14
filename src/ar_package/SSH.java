@@ -11,7 +11,7 @@ class SSH extends public_package.SSH_Connection {
 
     }
     private String getFileName() {
-        return "C:\\Users\\"+user+"\\Box Sync\\Business Admin Team Shared\\AR\\Cadence SFTP.txt";
+        return System.getProperty("user.home")+"\\Box Sync\\Business Admin Team Shared\\AR\\Cadence SFTP.txt";
     }
 
     void writeEFile_RC(String file,String month, String year) {

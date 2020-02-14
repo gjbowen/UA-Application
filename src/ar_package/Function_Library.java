@@ -35,43 +35,42 @@ class Function_Library {
 	}
 
 	void getCadence(String range) {
-//		if(range.equals("ALL")){
-//			Thread t1,t2;
-//			t1 = new Thread(() -> getLockBox("lScript1","*", "*"));
-//			t1.start();
-//
-//			t2 = new Thread(() -> getReturnedChecks("rScript1","*", "*"));
-//			t2.start();
-//			while (t1.isAlive() || t2.isAlive()) {
-//				//holds off until both are done...
-//			}
-//		}
-//		else if(range.equals("RECENT")){
-//			Thread t1,t2,t3,t4;
-//
-//			t1 = new Thread(() -> getLockBox("lScript1",getMonth(), getYear()));
-//			t1.start();
-//
-//			t2 = new Thread(() -> getReturnedChecks("rScript1",getMonth(), getYear()));
-//			t2.start();
-//			while (t1.isAlive() || t2.isAlive()) {
-//				//holds off until both are done...
-//			}
-//			t3 = new Thread(() -> getLockBox("lScript2",getLastMonth(),getLastMonthsYear()));
-//			t3.start();
-//
-//			t4 = new Thread(() -> getReturnedChecks("rScript2",getLastMonth(),getLastMonthsYear()));
-//			t4.start();
-//
-//			while (t3.isAlive() || t4.isAlive()) {
-//				//holds off until both are done...
-//			}
-//		}
+		if(range.equals("ALL")){
+			Thread t1,t2;
+			t1 = new Thread(() -> getLockBox("lScript1.sh","*", "*"));
+			t1.start();
+
+			t2 = new Thread(() -> getReturnedChecks("rScript1.sh","*", "*"));
+			t2.start();
+			while (t1.isAlive() || t2.isAlive()) {
+				//holds off until both are done...
+			}
+		}
+		else if(range.equals("RECENT")){
+			Thread t1,t2,t3,t4;
+
+			t1 = new Thread(() -> getLockBox("lScript1.sh",getMonth(), getYear()));
+			t1.start();
+
+			t2 = new Thread(() -> getReturnedChecks("rScript1.sh",getMonth(), getYear()));
+			t2.start();
+			while (t1.isAlive() || t2.isAlive()) {
+				//holds off until both are done...
+			}
+			t3 = new Thread(() -> getLockBox("lScript2.sh",getLastMonth(),getLastMonthsYear()));
+			t3.start();
+
+			t4 = new Thread(() -> getReturnedChecks("rScript2.sh",getLastMonth(),getLastMonthsYear()));
+			t4.start();
+
+			while (t3.isAlive() || t4.isAlive()) {
+				//holds off until both are done...
+			}
+		}
 
 		ssh.run("chmod -R 0700 /home/"+userName);
 
 		System.out.println("DONE GETTING FILES!");
-		new public_package.Error_Menu("Apples","error desc");
 	}
 	void getLockBox(String fileName,String month,String year){
 		ssh.writeEFile_LB(fileName,month,year);
@@ -79,8 +78,9 @@ class Function_Library {
 		ssh.run("mkdir -p /home/"+userName+"/LOCKBOX");
 		ssh.run("chmod -R 0700 /home/"+userName);
 		ssh.run("./"+fileName);
-		sftp.getFolder("/home/"+userName+"/LOCKBOX","C:\\Users\\"+userName+"\\Box Sync\\SAS-OIT Shared\\Cadence - Lockbox");
+		sftp.getFolder("/home/"+userName+"/LOCKBOX",System.getProperty("user.home")+"\\Box Sync\\SAS-OIT Shared\\Cadence - Lockbox");
 		sftp.rm("/home/"+userName+"/"+fileName);
+		sftp.lrm(System.getProperty("user.dir")+"\\"+fileName);
 	}
 	void getReturnedChecks(String fileName,String month,String year){
 		ssh.writeEFile_RC(fileName,month,year);
@@ -88,8 +88,9 @@ class Function_Library {
 		ssh.run("mkdir -p /home/"+userName+"/RETURNED_CHECKS");
 		ssh.run("chmod -R 0700 /home/"+userName);
 		ssh.run("./"+fileName);
-		sftp.getFolder("/home/"+userName+"/RETURNED_CHECKS","C:\\Users\\"+userName+"\\Box Sync\\SAS-OIT Shared\\Cadence - Returned Checks");
+		sftp.getFolder("/home/"+userName+"/RETURNED_CHECKS",System.getProperty("user.home")+"\\Box Sync\\SAS-OIT Shared\\Cadence - Returned Checks");
 		sftp.rm("/home/"+userName+"/"+fileName);
+		sftp.lrm(System.getProperty("user.dir")+"\\"+fileName);
 	}
 	public void openLink(String URL) {
 		try {

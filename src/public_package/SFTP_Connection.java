@@ -262,5 +262,10 @@ public class SFTP_Connection {
 			}
 		}
 	}
+	public void lrm(String path){
+		File f = new File(path);
+		if(f.exists())
+			f.delete();
+	}
 
 }
