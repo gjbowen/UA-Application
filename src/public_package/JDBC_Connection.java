@@ -11,8 +11,8 @@ import java.util.ArrayList;
 public class JDBC_Connection {
 	protected ResultSet rs;
 	public Connection connection;
-	private String environment;
-	private String username;
+	private final String environment;
+	private final String username;
 	static public String password;
 	String userFirstName;
 
@@ -84,7 +84,7 @@ public class JDBC_Connection {
 		}
 		return header;
 	}
-	public String prettyPrint(ResultSet rs) { 
+	protected String prettyPrint(ResultSet rs) {
 		StringBuilder retVal = new StringBuilder();
 		try {
 			ResultSetMetaData rsmd = rs.getMetaData();
@@ -143,7 +143,7 @@ public class JDBC_Connection {
 	public boolean isPIDM(String s) {
         return Integer.parseInt(s) > 0;
 	}
-	public boolean isCWID(String cwid) {
+	protected boolean isCWID(String cwid) {
 		if (cwid.length() != 8)
 			return false;
 		try {
@@ -365,7 +365,7 @@ public class JDBC_Connection {
 		}
 		return null;
 	}
-	public String getNameFromPIDM(String pidm) {
+	protected String getNameFromPIDM(String pidm) {
 		if (pidm==null || pidm.equals("NONE_RETURNED") || pidm.equals("TOO_MANY_RETURNED"))
 			return pidm;
 

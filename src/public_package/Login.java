@@ -9,7 +9,6 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JRadioButton;
@@ -195,8 +194,8 @@ public class Login
 				env = "TEST";
 			else
 				env = "PROD";
-
-			if(Preferences.contents.get("debug").equals("false"))
+			if(Preferences.contents.containsKey("debug")&&
+					Preferences.contents.get("debug").equals("false"))
 				debug = false;
 			else
 				debug = true;

@@ -17,17 +17,17 @@ import java.util.ArrayList;
 
 public class Main_Menu
 {
-	JPanel panel;
-	Function_Library f;
-	JTextField textField_switch;
-	JTextField textField_commit;
-	JLabel lbl_branch;
-	String input;
+	private JPanel panel;
+	private final Function_Library f;
+	private JTextField textField_switch;
+	private JTextField textField_commit;
+	private JLabel lbl_branch;
+	private String input;
 
-	JFrame frameMainMenu;
-	JComboBox dropDownBox;
-	String[] branches;
-	ArrayList<String> recentBranches;
+	private JFrame frame;
+	private JComboBox dropDownBox;
+	private String[] branches;
+	private ArrayList<String> recentBranches;
 	public boolean done = false;
 
 	public Main_Menu(Function_Library f2){
@@ -43,24 +43,24 @@ public class Main_Menu
 	 */
 	private void initialize() {
 		f.readPacked_Refs();
-		frameMainMenu = new JFrame();
+		frame = new JFrame();
 
-		frameMainMenu.setIconImage(Toolkit.getDefaultToolkit().getImage(Main_Menu.class.getResource("/Jar Files/ua_background_mobile.jpg")));
-		frameMainMenu.setTitle("Main Menu");//("+f.userFolder+")");
+		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(Main_Menu.class.getResource("/Jar Files/ua_background_mobile.jpg")));
+		frame.setTitle("Main Menu");//("+f.userFolder+")");
 
-		frameMainMenu.setBounds(100, 100, 550, 298);
-		frameMainMenu.setDefaultCloseOperation(3);
-		frameMainMenu.getContentPane().setLayout(null);
+		frame.setBounds(100, 100, 550, 298);
+		frame.setDefaultCloseOperation(3);
+		frame.getContentPane().setLayout(null);
 
 		JButton button_exit = new JButton("Exit");
 		button_exit.setBounds(10, 191, 122, 57);
 		button_exit.setFont(new Font("Lucida Grande", 0, 15));
-		frameMainMenu.getContentPane().add(button_exit);
+		frame.getContentPane().add(button_exit);
 
 		lbl_branch = new JLabel(f.getBranch());
 		lbl_branch.setBounds(10, 11, 102, 30);
 		lbl_branch.setFont(new Font("Tahoma", Font.PLAIN, 19));
-		frameMainMenu.getContentPane().add(lbl_branch);
+		frame.getContentPane().add(lbl_branch);
 
 		JButton btnDeletePreferences = new JButton("Reset GIT");
 		btnDeletePreferences.setBounds(300, 225, 89, 25);
@@ -70,7 +70,7 @@ public class Main_Menu
 			if(selection==0) {
 				f.deleteFile(f.getUserHome()+"\\.gitPreference");
 
-				frameMainMenu.dispose();
+				frame.dispose();
 				EventQueue.invokeLater(() -> {
 					try {
 						new Setup_Menu(f);
@@ -80,12 +80,12 @@ public class Main_Menu
 				});
 			}
 		});
-		frameMainMenu.getContentPane().add(btnDeletePreferences);
+		frame.getContentPane().add(btnDeletePreferences);
 
 		panel = new JPanel();
 		panel.setBorder(new TitledBorder(null, "Basic Operations", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panel.setBounds(10, 52, 383, 136);
-		frameMainMenu.getContentPane().add(panel);
+		frame.getContentPane().add(panel);
 		panel.setLayout(null);
 
 		JPopupMenu popupMenu = new JPopupMenu();
@@ -151,7 +151,7 @@ public class Main_Menu
 		JPanel panel_1 = new JPanel();
 		panel_1.setBorder(new TitledBorder(null, "Basic Commands", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panel_1.setBounds(403, 52, 129, 136);
-		frameMainMenu.getContentPane().add(panel_1);
+		frame.getContentPane().add(panel_1);
 
 		JButton btnFetch = new JButton("FETCH");
 
@@ -170,11 +170,11 @@ public class Main_Menu
 		JButton btnViewDiffs = new JButton("View Diffs To Remote");
 		btnViewDiffs.addActionListener(arg0 -> f.diff());
 		btnViewDiffs.setBounds(136, 15, 169, 31);
-		frameMainMenu.getContentPane().add(btnViewDiffs);
+		frame.getContentPane().add(btnViewDiffs);
 
 		JButton btn_hard_reset = new JButton("Hard Reset To Remote");
 		btn_hard_reset.setBounds(313, 15, 169, 30);
-		frameMainMenu.getContentPane().add(btn_hard_reset);
+		frame.getContentPane().add(btn_hard_reset);
 		btn_hard_reset.addActionListener(e -> {
 			int selection;
 			selection=f.okCancel("Are you sure? ALL changes made locally will be lost and the remote branch will be restored.");
@@ -210,24 +210,24 @@ public class Main_Menu
 		});
 		button_exit.addActionListener(e -> {
 			public_package.Exit_Confirmation window = new public_package.Exit_Confirmation(null);
-			window.frameExitConfirmation.setVisible(true);
+			window.frame.setVisible(true);
 		});
 
 		JButton btnClose = new JButton("Close");
 		btnClose.addActionListener(arg0 -> {
-			frameMainMenu.dispose();
+			frame.dispose();
 			EventQueue.invokeLater(() -> {
 				new public_package.Login(null);
 			});
 		});
 		btnClose.setFont(new Font("Dialog", Font.PLAIN, 15));
 		btnClose.setBounds(400, 191, 122, 57);
-		frameMainMenu.getContentPane().add(btnClose);
+		frame.getContentPane().add(btnClose);
 
 		JButton btnRefresh = new JButton("Refresh");
 		btnRefresh.addActionListener(arg0 -> refreshInfo());
 		btnRefresh.setBounds(300, 191, 89, 25);
-		frameMainMenu.getContentPane().add(btnRefresh);
+		frame.getContentPane().add(btnRefresh);
 
 		JButton btnOpen = new JButton("Open uabanner");
 		btnOpen.addActionListener(e -> {
@@ -240,7 +240,7 @@ public class Main_Menu
 			}
 		});
 		btnOpen.setBounds(150, 191, 140, 25);
-		frameMainMenu.getContentPane().add(btnOpen);
+		frame.getContentPane().add(btnOpen);
 
 		JButton btnOpenBan = new JButton("Open SCM");
 		btnOpenBan.addActionListener(e -> {
@@ -250,9 +250,9 @@ public class Main_Menu
 		});
 		btnOpenBan.setBounds(150, 225, 140, 25);
 
-		frameMainMenu.getContentPane().add(btnOpenBan);
+		frame.getContentPane().add(btnOpenBan);
 		//final frame
-		frameMainMenu.setVisible(true);
+		frame.setVisible(true);
 	}
 	private void updateRecentBranches(){
 		System.out.println("updating recent branch..");

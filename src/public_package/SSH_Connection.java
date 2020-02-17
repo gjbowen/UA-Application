@@ -9,9 +9,9 @@ import java.util.ArrayList;
 
 public class SSH_Connection {
     public Session session;
-    private String host;
-    protected String user;
-    private String password;
+    private final String host;
+    protected final String user;
+    private final String password;
     protected String fileName;
     protected SSH_Connection(String userName, String pass, String env) {
         host = getInstance(env);

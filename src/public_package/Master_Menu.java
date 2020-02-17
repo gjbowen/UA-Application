@@ -25,11 +25,11 @@ public class Master_Menu
 	private JFrame frameMenu;
 	private Connection jdbc;
 	private SftpClient sftp;
-	private Session ssh;
-	private String userName;
-	private String password;
+	private final Session ssh;
+	private final String userName;
+	private final String password;
 	private String environment;
-	private String firstName;
+	private final String firstName;
 	private JMenu option_button;
 	private JMenu environment_button;
 	private JMenu debug_button;
@@ -183,7 +183,7 @@ public class Master_Menu
 		btnConcur.addActionListener(arg0 -> EventQueue.invokeLater(() -> {
 			try {
 				concur_package.Main_Menu window = new concur_package.Main_Menu(jdbc, sftp,ssh, userName, password, environment);
-				window.frameMenu.setVisible(true);
+				window.frame.setVisible(true);
 				frameMenu.setVisible(false);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -198,7 +198,7 @@ public class Master_Menu
 			EventQueue.invokeLater(() -> {
 				try {
 					ar_package.Main_Menu window = new ar_package.Main_Menu(jdbc, sftp, ssh, userName, password, environment);
-					window.frameMenu.setVisible(true);
+					window.frame.setVisible(true);
 					frameMenu.setVisible(false);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -229,7 +229,7 @@ public class Master_Menu
 		btnFileFetchProgram.addActionListener(arg0 -> EventQueue.invokeLater(() -> {
 			try {
 				file_fetch_package.FileFetcher window = new file_fetch_package.FileFetcher(sftp,ssh, firstName, userName, password, environment);
-				window.frameMenu.setVisible(true);
+				window.frame.setVisible(true);
 				frameMenu.dispose();
 				frameMenu.setVisible(false);
 			} catch (Exception e2) {
@@ -240,7 +240,7 @@ public class Master_Menu
 
 		button_exit.addActionListener(e -> {
 			Exit_Confirmation window = new Exit_Confirmation(firstName);
-			window.frameExitConfirmation.setVisible(true);
+			window.frame.setVisible(true);
 		});
 		frameMenu.setVisible(true);
 		setButtons();

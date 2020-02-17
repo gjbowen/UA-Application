@@ -16,8 +16,8 @@ import java.awt.Panel;
 
 class API_Menu {
 	JFrame frame;
-	private API_Package api;
-    private Function_Library connection;
+	private final API_Package api;
+    private final Function_Library connection;
 	public API_Menu(Function_Library fun) {
 		connection = fun;
 

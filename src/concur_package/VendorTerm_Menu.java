@@ -16,8 +16,8 @@ import javax.swing.JTextField;
 import javax.swing.SwingWorker;
 
 class VendorTerm_Menu {
-	private Function_Library connection;
-	JFrame vendorTermFrame;
+	private final Function_Library connection;
+	JFrame frame;
 	private JTextField textField;
 	private JTextField fileNameField;
 	private String message;
@@ -27,33 +27,33 @@ class VendorTerm_Menu {
 	}
 
 	private void initialize() {
-		vendorTermFrame = new JFrame();
-		vendorTermFrame.setIconImage(Toolkit.getDefaultToolkit().getImage(VendorTerm_Menu.class.getResource("/Jar Files/ua_background_mobile.jpg")));
-		vendorTermFrame.setTitle("Vendor Term Menu");
-		vendorTermFrame.setBounds(100, 100, 461, 355);
-		vendorTermFrame.setDefaultCloseOperation(3);
-		vendorTermFrame.getContentPane().setLayout(null);
+		frame = new JFrame();
+		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(VendorTerm_Menu.class.getResource("/Jar Files/ua_background_mobile.jpg")));
+		frame.setTitle("Vendor Term Menu");
+		frame.setBounds(100, 100, 461, 355);
+		frame.setDefaultCloseOperation(3);
+		frame.getContentPane().setLayout(null);
 		JButton btnExit = new JButton("Exit");
 		btnExit.setFont(new Font("Dialog", 0, 15));
 		btnExit.setBounds(10, 248, 122, 57);
-		vendorTermFrame.getContentPane().add(btnExit);
+		frame.getContentPane().add(btnExit);
 		JButton btnClose = new JButton("Close");
 		btnClose.setFont(new Font("Dialog", 0, 15));
 		btnClose.setBounds(313, 248, 122, 57);
-		vendorTermFrame.getContentPane().add(btnClose);
+		frame.getContentPane().add(btnClose);
 		JLabel lblReportKey = new JLabel("Vendor ID");
 		lblReportKey.setFont(new Font("Tahoma", 0, 18));
 		lblReportKey.setBounds(10, 37, 134, 35);
-		vendorTermFrame.getContentPane().add(lblReportKey);
+		frame.getContentPane().add(lblReportKey);
 		textField = new JTextField();
 		textField.setBounds(136, 42, 167, 30);
-		vendorTermFrame.getContentPane().add(textField);
+		frame.getContentPane().add(textField);
 		textField.setColumns(10);
 		textField.setText("");
 		JButton btnReportKey = new JButton("Submit");
 		btnReportKey.setFont(new Font("Tahoma", 0, 15));
 		btnReportKey.setBounds(313, 42, 105, 30);
-		vendorTermFrame.getContentPane().add(btnReportKey);
+		frame.getContentPane().add(btnReportKey);
 
 		JButton btnSubmit = new JButton("Submit");
 		btnSubmit.addActionListener(e -> {
@@ -63,18 +63,18 @@ class VendorTerm_Menu {
 			}
 		});
 		btnSubmit.setBounds(10, 191, 89, 23);
-		vendorTermFrame.getContentPane().add(btnSubmit);
+		frame.getContentPane().add(btnSubmit);
 
 		JLabel lblRetireVendorTerms = new JLabel("Retire Vendor Terms with file \r\nof CWID's and RT Addresses.");
 		lblRetireVendorTerms.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		lblRetireVendorTerms.setBounds(10, 117, 425, 35);
-		vendorTermFrame.getContentPane().add(lblRetireVendorTerms);
+		frame.getContentPane().add(lblRetireVendorTerms);
 
 		fileNameField = new JTextField();
 		fileNameField.setText(connection.pwd()+"\\active_to_delete.csv");
 		fileNameField.setColumns(10);
 		fileNameField.setBounds(10, 150, 373, 30);
-		vendorTermFrame.getContentPane().add(fileNameField);
+		frame.getContentPane().add(fileNameField);
 		btnReportKey.addActionListener(e2 -> {
 
 			JDialog dlgProgress;
@@ -94,7 +94,7 @@ class VendorTerm_Menu {
 			dlgProgress.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE); // prevent the user from closing the dialog
 			dlgProgress.setSize(300, 110);
 			dlgProgress.setResizable(true);
-			dlgProgress.setLocationRelativeTo(vendorTermFrame);
+			dlgProgress.setLocationRelativeTo(frame);
 			///////////
 			SwingWorker<Void, Void> sw = new SwingWorker<Void, Void>() {
 				protected Void doInBackground() {
@@ -127,7 +127,7 @@ class VendorTerm_Menu {
 			dlgProgress.setVisible(true);
 		});
 		btnExit.addActionListener(e2 -> System.exit(0));
-		btnClose.addActionListener(e2 -> vendorTermFrame.dispose());
+		btnClose.addActionListener(e2 -> frame.dispose());
 	}
 }
 

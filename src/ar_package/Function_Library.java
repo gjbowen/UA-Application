@@ -1,6 +1,5 @@
 package ar_package;
 import java.awt.Desktop;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -10,19 +9,16 @@ import java.time.format.DateTimeFormatter;
 
 import com.jcraft.jsch.Session;
 import com.sshtools.sftp.SftpClient;
-import com.sshtools.sftp.SftpStatusException;
-import com.sshtools.sftp.TransferCancelledException;
-import com.sshtools.ssh.SshException;
 
 class Function_Library {
-	String environment;
-	String firstName;
-	JDBC jdbc;
-	SFTP sftp;
-	SSH ssh;
-	String userName;
+	final String environment;
+	final String firstName;
+	final JDBC jdbc;
+	final SFTP sftp;
+	final SSH ssh;
+	final String userName;
 
-	String password;
+	final String password;
 	Function_Library(Connection conn_jdbc, SftpClient conn_sftp, Session conn_ssh, String user, String pass, String env) {
 		jdbc=new JDBC(conn_jdbc,user,pass,env);
 		sftp=new SFTP(conn_sftp,user,pass,env);
@@ -72,7 +68,7 @@ class Function_Library {
 
 		System.out.println("DONE GETTING FILES!");
 	}
-	void getLockBox(String fileName,String month,String year){
+	private void getLockBox(String fileName, String month, String year){
 		ssh.writeEFile_LB(fileName,month,year);
 		sftp.putFile(System.getProperty("user.dir"),fileName,"/home/"+userName,fileName);
 		sftp.lrm(System.getProperty("user.dir")+"\\"+fileName);
@@ -82,7 +78,7 @@ class Function_Library {
 		sftp.getFolder("/home/"+userName+"/LOCKBOX",System.getProperty("user.home")+"\\Box Sync\\SAS-OIT Shared\\Cadence - Lockbox");
 		sftp.rm("/home/"+userName+"/"+fileName);
 	}
-	void getReturnedChecks(String fileName,String month,String year){
+	private void getReturnedChecks(String fileName, String month, String year){
 		ssh.writeEFile_RC(fileName,month,year);
 		sftp.putFile(System.getProperty("user.dir"),fileName,"/home/"+userName,fileName);
 		sftp.lrm(System.getProperty("user.dir")+"\\"+fileName);
@@ -107,14 +103,14 @@ class Function_Library {
 		else
 			return "https://ssb.ua.edu/pls/APEX_PROD/f?p=145";
 	}
-	String getMonth(){
+	private String getMonth(){
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM");
 		LocalDateTime now = LocalDateTime.now();
 
 		String month =  dtf.format(now);
 		return month;
 	}
-	String getLastMonth(){
+	private String getLastMonth(){
 		String month=getMonth();
 		int iMonth;
 		if(month.equals("01"))
@@ -126,14 +122,14 @@ class Function_Library {
 		else
 			return ""+iMonth;
 	}
-	String getYear(){
+	private String getYear(){
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yy");
 		LocalDateTime now = LocalDateTime.now();
 
 		String year =  dtf.format(now);
 		return year;
 	}
-	String getLastMonthsYear(){
+	private String getLastMonthsYear(){
 		String year =  getYear();
 		if(getLastMonth().equals("12"))
 			return ""+(Integer.parseInt(year)-1);

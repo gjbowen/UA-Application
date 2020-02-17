@@ -16,7 +16,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingWorker;
 
 class emp710_Menu {
-    private Function_Library connection;
+    private final Function_Library connection;
     JFrame frame;
     private JTextField textField_orgn;
     private JTextField textField_fund;

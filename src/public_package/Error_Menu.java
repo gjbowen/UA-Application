@@ -3,9 +3,9 @@ package public_package;
 import javax.swing.*;
 import java.awt.*;
 
-public class Error_Menu
+class Error_Menu
 {
-	public Error_Menu(String name, String error){
+	private Error_Menu(String name, String error){
 		JFrame frame = new JFrame();
 		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(Error_Menu.class.getResource("/Jar Files/ua_background_mobile.jpg")));
 		frame.setTitle("Confirmation");

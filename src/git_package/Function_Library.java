@@ -28,7 +28,7 @@ public class Function_Library {
 		gitFolder = getUserHome();
 		userName = getUserName();
 	}
-	public boolean done(){
+	private boolean done(){
 		 return Preferences.contents.containsKey("git")
 				 && sshKeysExist()
 				 && GITprogramExists()
@@ -60,7 +60,7 @@ public class Function_Library {
 					EventQueue.invokeLater(() -> {
 						try {
 							SSH_Menu sshWindow = new SSH_Menu(this);
-							sshWindow.frameMainMenu.setVisible(true);
+							sshWindow.frame.setVisible(true);
 						}
 						catch (Exception e2) {
 							e2.printStackTrace();
@@ -86,7 +86,7 @@ public class Function_Library {
 		}
 	}
 
-	protected boolean GITfolderExists(String location) {
+	boolean GITfolderExists(String location) {
 		File folder = new File(location+"\\.git");
 		return folder.isDirectory();
 	}
@@ -98,14 +98,14 @@ public class Function_Library {
 		File program = new File("C:\\Program Files\\TortoiseGit");
 		return program.isDirectory();
 	}
-	public void downloadGIT() {
+	private void downloadGIT() {
 		try {
 			Desktop.getDesktop().browse(new URI("https://git-scm.com/download"));
 		} catch (IOException | URISyntaxException   e) {
 			e.printStackTrace();
 		}
 	}
-	public void downloadTortoise() {
+	private void downloadTortoise() {
 		try {
 			Desktop.getDesktop().browse(new URI("https://tortoisegit.org/download/"));
 		} catch (IOException | URISyntaxException   e) {
@@ -247,7 +247,7 @@ public class Function_Library {
 		}
 		return line;
 	}
-	protected int okCancel(String message) {
+	int okCancel(String message) {
 		return JOptionPane.showConfirmDialog(
 				null,
 				message,
@@ -255,7 +255,7 @@ public class Function_Library {
 				JOptionPane.CANCEL_OPTION);
 	}
 
-    protected int yesNo(String message) {
+    private int yesNo(String message) {
 		return JOptionPane.showConfirmDialog(
 				null,
 				message,

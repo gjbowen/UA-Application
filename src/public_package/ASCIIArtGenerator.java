@@ -42,9 +42,9 @@ public class ASCIIArtGenerator {
         ART_FONT_DIALOG("Dialog"), ART_FONT_DIALOG_INPUT("DialogInput"),
         ART_FONT_MONO("Monospaced"),ART_FONT_SERIF("Serif"), ART_FONT_SANS_SERIF("SansSerif");
 
-        private String value;
+        private final String value;
 
-        public String getValue() {
+        String getValue() {
             return value;
         }
 
@@ -60,9 +60,8 @@ public class ASCIIArtGenerator {
      * @param textHeight - Use a predefined size or a custom type
      * @param fontType - Use one of the available fonts
      * @param artSymbol - Specify the character for printing the ascii art
-     * @throws Exception
      */
-    public void printTextArt(String artText, int textHeight, ASCIIArtFont fontType, String artSymbol) throws Exception {
+    private void printTextArt(String artText, int textHeight, ASCIIArtFont fontType, String artSymbol) {
         String fontName = fontType.getValue();
         int imageWidth = findImageWidth(textHeight, artText, fontName);
 
@@ -91,7 +90,7 @@ public class ASCIIArtGenerator {
      * @param textHeight
      * @throws Exception
      */
-    public void printTextArt(String artText, int textHeight) throws Exception {
+    private void printTextArt(String artText, int textHeight) throws Exception {
         printTextArt(artText, textHeight, ASCIIArtFont.ART_FONT_DIALOG, DEFAULT_ART_SYMBOL);
     }
 

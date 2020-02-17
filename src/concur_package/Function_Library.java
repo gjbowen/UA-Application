@@ -21,13 +21,13 @@ import java.text.ParseException;
 import java.util.List;
 
 class Function_Library {
-	JDBC jdbc;
-	SFTP sftp;
-	SSH ssh;
-	String environment;
-	String userName;
-	String firstName;
-	String password;
+	final JDBC jdbc;
+	final SFTP sftp;
+	final SSH ssh;
+	final String environment;
+	final String userName;
+	final String firstName;
+	final String password;
 
 	Function_Library(
 			Connection conn_jdbc,

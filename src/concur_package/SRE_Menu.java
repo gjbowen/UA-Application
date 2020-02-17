@@ -5,8 +5,8 @@ import javax.swing.border.EtchedBorder;
 import java.awt.*;
 
 class SRE_Menu {
-	private Function_Library connection;
-	JFrame sreFrame;
+	private final Function_Library connection;
+	JFrame frame;
 	private JTextField searchString;
 	private JTextField searchColumn;
 	private String mode;
@@ -22,25 +22,25 @@ class SRE_Menu {
 
 
 	private void initialize() {
-		sreFrame = new JFrame();
-		sreFrame.setIconImage(Toolkit.getDefaultToolkit().getImage(SRE_Menu.class.getResource("/Jar Files/ua_background_mobile.jpg")));
-		sreFrame.setTitle("SRE Menu");
-		sreFrame.setBounds(100, 100, 491, 402);
-		sreFrame.setDefaultCloseOperation(3);
-		sreFrame.getContentPane().setLayout(null);
+		frame = new JFrame();
+		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(SRE_Menu.class.getResource("/Jar Files/ua_background_mobile.jpg")));
+		frame.setTitle("SRE Menu");
+		frame.setBounds(100, 100, 491, 402);
+		frame.setDefaultCloseOperation(3);
+		frame.getContentPane().setLayout(null);
 		JButton btnExit = new JButton("Exit");
 		btnExit.setBounds(10, 295, 112, 57);
 		btnExit.setFont(new Font("Dialog", 0, 15));
-		sreFrame.getContentPane().add(btnExit);
+		frame.getContentPane().add(btnExit);
 		JButton btnClose = new JButton("Close");
 		btnClose.setBounds(359, 295, 112, 57);
 		btnClose.setFont(new Font("Dialog", 0, 15));
-		sreFrame.getContentPane().add(btnClose);
+		frame.getContentPane().add(btnClose);
 		JPanel panel = new JPanel();
 		panel.setBounds(10, 11, 305, 63);
 		FlowLayout flowLayout = (FlowLayout)panel.getLayout();
 		flowLayout.setAlignment(0);
-		sreFrame.getContentPane().add(panel);
+		frame.getContentPane().add(panel);
 		JLabel lblReportKey = new JLabel("String to Search ");
 		panel.add(lblReportKey);
 		lblReportKey.setFont(new Font("Tahoma", 0, 18));
@@ -61,7 +61,7 @@ class SRE_Menu {
 		panel_1.setBounds(359, 11, 108, 125);
 		FlowLayout flowLayout_1 = (FlowLayout)panel_1.getLayout();
 		flowLayout_1.setAlignment(0);
-		sreFrame.getContentPane().add(panel_1);
+		frame.getContentPane().add(panel_1);
 		final JRadioButton rdbtnEquals = new JRadioButton("Equals");
 		panel_1.add(rdbtnEquals);
 		rdbtnEquals.setSelected(true);
@@ -97,12 +97,12 @@ class SRE_Menu {
 		});
 		JButton btnSubmit = new JButton("Search");
 		btnSubmit.setBounds(359, 162, 108, 57);
-		sreFrame.getContentPane().add(btnSubmit);
+		frame.getContentPane().add(btnSubmit);
 		btnSubmit.setFont(new Font("Tahoma", 0, 15));
 		JPanel panel_2 = new JPanel();
 		panel_2.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		panel_2.setBounds(10, 85, 337, 134);
-		sreFrame.getContentPane().add(panel_2);
+		frame.getContentPane().add(panel_2);
 		panel_2.setLayout(null);
 		JLabel lblKey = new JLabel("Column Cheat Sheet");
 		lblKey.setFont(new Font("Tahoma", 0, 15));
@@ -138,7 +138,7 @@ class SRE_Menu {
 				dlgProgress.getContentPane().add(BorderLayout.CENTER, pbProgress);
 				dlgProgress.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE); // prevent the user from closing the dialog
 				dlgProgress.setSize(300, 90);
-				dlgProgress.setLocationRelativeTo(sreFrame);
+				dlgProgress.setLocationRelativeTo(frame);
 				SwingWorker<Void, Void> sw = new SwingWorker<Void, Void>() {
 					protected Void doInBackground() {
 						String message = connection.searchSRE(searchString.getText().trim(), Integer.parseInt(searchColumn.getText().trim()), mode);
@@ -174,8 +174,8 @@ class SRE_Menu {
 		});
 		btnExit.addActionListener(e2 -> {
 			public_package.Exit_Confirmation window = new public_package.Exit_Confirmation(connection.firstName);
-			window.frameExitConfirmation.setVisible(true);
+			window.frame.setVisible(true);
 		});
-		btnClose.addActionListener(e2 -> sreFrame.dispose());
+		btnClose.addActionListener(e2 -> frame.dispose());
 	}
 }

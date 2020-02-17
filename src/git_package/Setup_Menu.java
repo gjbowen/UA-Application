@@ -14,15 +14,15 @@ import javax.swing.JLabel;
 
 import java.awt.Color;
 
-public class Setup_Menu
+class Setup_Menu
 {
-	JFrame frameMainMenu;
-	Function_Library f;
-	JTextField textField;
-	JLabel lblVerified;
-	JButton buttonSubmit;
-	JButton btnValidate;
-	JLabel lblMode;
+	private JFrame frame;
+	private final Function_Library f;
+	private JTextField textField;
+	private JLabel lblVerified;
+	private JButton buttonSubmit;
+	private JButton btnValidate;
+	private JLabel lblMode;
 	private JButton btnExplore;
 	public Setup_Menu(Function_Library obj ){
 		f = obj;
@@ -34,29 +34,29 @@ public class Setup_Menu
 	 */
 	private void initialize()
 	{
-		frameMainMenu = new JFrame();
-		frameMainMenu.setIconImage(Toolkit.getDefaultToolkit().getImage(Main_Menu.class.getResource("/Jar Files/ua_background_mobile.jpg")));
-		frameMainMenu.setTitle("Setup Menu - Welcome, " + f.userName);
+		frame = new JFrame();
+		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(Main_Menu.class.getResource("/Jar Files/ua_background_mobile.jpg")));
+		frame.setTitle("Setup Menu - Welcome, " + f.userName);
 
-		frameMainMenu.setBounds(100, 100, 445, 336);
-		frameMainMenu.setDefaultCloseOperation(3);
-		frameMainMenu.getContentPane().setLayout(null);
+		frame.setBounds(100, 100, 445, 336);
+		frame.setDefaultCloseOperation(3);
+		frame.getContentPane().setLayout(null);
 
 
 		JButton button_close = new JButton("Close");
 		button_close.setFont(new Font("Lucida Grande", 0, 15));
 		button_close.setBounds(128, 221, 122, 57);
-		frameMainMenu.getContentPane().add(button_close);
+		frame.getContentPane().add(button_close);
 
 		JButton button_exit = new JButton("Exit");
 		button_exit.setFont(new Font("Lucida Grande", 0, 15));
 		button_exit.setBounds(6, 221, 122, 57);
-		frameMainMenu.getContentPane().add(button_exit);
+		frame.getContentPane().add(button_exit);
 
 		JPanel panel = new JPanel();
 		panel.setBorder(null);
 		panel.setBounds(6, 6, 148, 71);
-		frameMainMenu.getContentPane().add(panel);
+		frame.getContentPane().add(panel);
 		panel.setLayout(new GridLayout(2, 2, 0, 0));
 
 		JRadioButton rbNew = new JRadioButton("Clone and create");
@@ -68,13 +68,13 @@ public class Setup_Menu
 
 		textField = new JTextField();
 		textField.setBounds(10, 126, 231, 31);
-		frameMainMenu.getContentPane().add(textField);
+		frame.getContentPane().add(textField);
 		textField.setColumns(10);
 		textField.setText(f.getUserHome()+"\\Desktop");
 
 		lblMode = new JLabel("Enter location to clone GIT folder");
 		lblMode.setBounds(10, 109, 231, 14);
-		frameMainMenu.getContentPane().add(lblMode);
+		frame.getContentPane().add(lblMode);
 
 		rbExists.addActionListener(e -> {
 			lblMode.setText("Enter current GIT folder containing .git");
@@ -92,25 +92,25 @@ public class Setup_Menu
 
 		btnValidate = new JButton("Validate");
 		btnValidate.setBounds(251, 126, 148, 31);
-		frameMainMenu.getContentPane().add(btnValidate);
+		frame.getContentPane().add(btnValidate);
 
 		lblVerified = new JLabel("Verified");
 
 		lblVerified.setFont(new Font("Tahoma", Font.BOLD, 16));
 		lblVerified.setBounds(6, 168, 235, 31);
-		frameMainMenu.getContentPane().add(lblVerified);
+		frame.getContentPane().add(lblVerified);
 
 		buttonSubmit = new JButton("Submit");
 
 		buttonSubmit.setBounds(251, 170, 148, 31);
-		frameMainMenu.getContentPane().add(buttonSubmit);
+		frame.getContentPane().add(buttonSubmit);
 
 
 
 		JButton btnViewRepos = new JButton("View All Repos Available");
 		btnViewRepos.addActionListener(arg0 -> f.openLink("http://fisheye01.ua.edu:7990/stash/projects/"));
 		btnViewRepos.setBounds(251, 28, 189, 23);
-		//frameMainMenu.getContentPane().add(btnViewRepos); //hold off on supporting multiple repos
+		//frame.getContentPane().add(btnViewRepos); //hold off on supporting multiple repos
 
 		btnExplore = new JButton("Browse");
 		btnExplore.addActionListener(e -> {
@@ -129,11 +129,11 @@ public class Setup_Menu
 		
 		
 		btnExplore.setBounds(251, 75, 89, 23);
-		frameMainMenu.getContentPane().add(btnExplore);
+		frame.getContentPane().add(btnExplore);
 		lblVerified.setVisible(false);
 		buttonSubmit.setVisible(false);
 		button_exit.addActionListener(e -> System.exit(0));
-		button_close.addActionListener(e -> frameMainMenu.dispose() );
+		button_close.addActionListener(e -> frame.dispose() );
 
 		btnValidate.addActionListener(e -> {
 			if(rbExists.isSelected()){
@@ -170,13 +170,13 @@ public class Setup_Menu
 			}
 		});
 
-		frameMainMenu.setVisible(true);		
+		frame.setVisible(true);		
 
 	}
 	private void done() {
 		public_package.Preferences.addPreference("git",f.gitFolder);
 
-		frameMainMenu.setVisible(false);
+		frame.setVisible(false);
 
 
 

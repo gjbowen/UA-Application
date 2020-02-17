@@ -21,7 +21,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 
 class Vendor_API_Menu {
-	private API_Package api;
+	private final API_Package api;
 	JFrame frame;
 
 	private JTextField textField_vendors;

@@ -9,12 +9,9 @@ import com.jcraft.jsch.Session;
 import com.sshtools.sftp.SftpClient;
 
 
-public class Main_Menu
-{
-	public JFrame frameMenu;
-
-	private Function_Library fun;
-
+public class Main_Menu{
+	public JFrame frame;
+	private final Function_Library fun;
 
 	public Main_Menu(Connection connection, SftpClient conn_sftp, Session conn_ssh,String user, String pass, String env){
 		fun = new Function_Library(connection,conn_sftp,conn_ssh,user,pass,env);
@@ -41,7 +38,7 @@ public class Main_Menu
 		dlgProgress.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE); // prevent the user from closing the dialog
 		dlgProgress.setSize(300, 110);
 		dlgProgress.setResizable(true);
-		dlgProgress.setLocationRelativeTo(frameMenu);
+		dlgProgress.setLocationRelativeTo(frame);
 		///////////
 		SwingWorker<Void, Void> sw = new SwingWorker<Void, Void>() {
 			protected Void doInBackground() {
@@ -62,18 +59,18 @@ public class Main_Menu
 	}
 	private void initialize()
 	{
-		frameMenu = new JFrame();
-		frameMenu.setIconImage(Toolkit.getDefaultToolkit().getImage(Main_Menu.class.getResource("/Jar Files/ua_background_mobile.jpg")));
-		frameMenu.setTitle("Main Menu ("+fun.environment+") - Welcome, " + fun.firstName);
+		frame = new JFrame();
+		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(Main_Menu.class.getResource("/Jar Files/ua_background_mobile.jpg")));
+		frame.setTitle("Main Menu ("+fun.environment+") - Welcome, " + fun.firstName);
 
-		frameMenu.setBounds(100, 100, 445, 336);
-		frameMenu.setDefaultCloseOperation(3);
-		frameMenu.getContentPane().setLayout(null);
+		frame.setBounds(100, 100, 445, 336);
+		frame.setDefaultCloseOperation(3);
+		frame.getContentPane().setLayout(null);
 
 		JPanel panel = new JPanel();
 		panel.setBorder(null);
 		panel.setBounds(15, 6, 400, 198);
-		frameMenu.getContentPane().add(panel);
+		frame.getContentPane().add(panel);
 		panel.setLayout(new GridLayout(0, 2, 5, 5));
 
 		////////////////
@@ -118,18 +115,18 @@ public class Main_Menu
 		JButton btnClose = new JButton("Close");
 		btnClose.setFont(new Font("Dialog", Font.PLAIN, 15));
 		btnClose.setBounds(297, 221, 122, 57);
-		frameMenu.getContentPane().add(btnClose);
+		frame.getContentPane().add(btnClose);
 
 		JButton button_exit = new JButton("Exit");
 		button_exit.setFont(new Font("Lucida Grande", 0, 15));
 		button_exit.setBounds(6, 221, 122, 57);
-		frameMenu.getContentPane().add(button_exit);
+		frame.getContentPane().add(button_exit);
 
 		btnFeed.addActionListener(arg0 -> EventQueue.invokeLater(() -> {
 			try {
 				emp710_Menu window = new emp710_Menu(fun);
 				window.frame.setVisible(true);
-				//frameMenu.dispose();
+				//frame.dispose();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -138,7 +135,7 @@ public class Main_Menu
 			try {
 				API_Menu window = new API_Menu(fun);
 				window.frame.setVisible(true);
-				//frameMenu.dispose();
+				//frame.dispose();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -147,7 +144,7 @@ public class Main_Menu
 			try {
 				Fupload_Menu window = new Fupload_Menu(fun);
 				window.frame.setVisible(true);
-				//frameMenu.dispose();
+				//frame.dispose();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -175,7 +172,7 @@ public class Main_Menu
 			dlgProgress.getContentPane().add(BorderLayout.CENTER, pbProgress);
 			dlgProgress.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE); // prevent the user from closing the dialog
 			dlgProgress.setSize(300, 90);
-			dlgProgress.setLocationRelativeTo(frameMenu);
+			dlgProgress.setLocationRelativeTo(frame);
 			SwingWorker<Void, Void> sw = new SwingWorker<Void, Void>() {
 				protected Void doInBackground() {
 					fun.sftp.moveSAE("SEVL", fun.getLatestSAE());
@@ -210,13 +207,13 @@ public class Main_Menu
 						fun.ssh.session,
 						fun.environment);
 			});
-			frameMenu.dispose();
+			frame.dispose();
 		});
 		btnEmp.addActionListener(e -> EventQueue.invokeLater(() -> {
 			try {
 				Employee_Menu window = new Employee_Menu(fun);
-				window.frameEmployeeMenu.setVisible(true);
-				//frameMenu.dispose();
+				window.frame.setVisible(true);
+				//frame.dispose();
 			} catch (Exception e16) {
 				e16.printStackTrace();
 			}
@@ -224,8 +221,8 @@ public class Main_Menu
 		btnReceipted_Paid.addActionListener(e -> EventQueue.invokeLater(() -> {
 			try {
 				PaidReceipted_Menu window = new PaidReceipted_Menu(fun);
-				window.frame_Paid_Receipted.setVisible(true);
-				//frameMenu.dispose();
+				window.frame.setVisible(true);
+				//frame.dispose();
 			} catch (Exception e15) {
 				e15.printStackTrace();
 			}
@@ -233,8 +230,8 @@ public class Main_Menu
 		btnSAE.addActionListener(e -> EventQueue.invokeLater(() -> {
 			try {
 				SAE_Menu window = new SAE_Menu(fun);
-				window.saeFrame.setVisible(true);
-				//frameMenu.dispose();
+				window.frame.setVisible(true);
+				//frame.dispose();
 			} catch (Exception e14) {
 				e14.printStackTrace();
 			}
@@ -242,8 +239,8 @@ public class Main_Menu
 		btnPRAE.addActionListener(e -> EventQueue.invokeLater(() -> {
 			try {
 				PRAE_Menu window = new PRAE_Menu(fun);
-				window.praeFrame.setVisible(true);
-				//frameMenu.dispose();
+				window.frame.setVisible(true);
+				//frame.dispose();
 			} catch (Exception e17) {
 				e17.printStackTrace();
 			}
@@ -251,8 +248,8 @@ public class Main_Menu
 		btnSRE.addActionListener(e -> EventQueue.invokeLater(() -> {
 			try {
 				SRE_Menu window = new SRE_Menu(fun);
-				window.sreFrame.setVisible(true);
-				//frameMenu.dispose();
+				window.frame.setVisible(true);
+				//frame.dispose();
 			} catch (Exception e14) {
 				e14.printStackTrace();
 			}
@@ -260,8 +257,8 @@ public class Main_Menu
 		btnVendorFeed.addActionListener(e -> EventQueue.invokeLater(() -> {
 			try {
 				Vendor_Menu window = new Vendor_Menu(fun);
-				window.vendorFrame.setVisible(true);
-				//frameMenu.dispose();
+				window.frame.setVisible(true);
+				//frame.dispose();
 			} catch (Exception e13) {
 				e13.printStackTrace();
 			}
@@ -269,18 +266,18 @@ public class Main_Menu
 		btnVendorTermFeed.addActionListener(e -> EventQueue.invokeLater(() -> {
 			try {
 				VendorTerm_Menu window = new VendorTerm_Menu(fun);
-				window.vendorTermFrame.setVisible(true);
-				//frameMenu.dispose();
+				window.frame.setVisible(true);
+				//frame.dispose();
 			} catch (Exception e12) {
 				e12.printStackTrace();
 			}
 		}));
 		button_exit.addActionListener(e -> {
 			public_package.Exit_Confirmation window = new public_package.Exit_Confirmation(fun.firstName);
-			window.frameExitConfirmation.setVisible(true);
+			window.frame.setVisible(true);
 			//System.exit(0);
 		});
 
-		frameMenu.setVisible(true);
+		frame.setVisible(true);
 	}
 }

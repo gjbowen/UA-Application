@@ -16,15 +16,15 @@ import javax.swing.JLabel;
 import java.awt.Color;
 import java.awt.EventQueue;
 
-public class SSH_Menu
+class SSH_Menu
 {
-	JFrame frameMainMenu;
-	Function_Library f;
-	JTextField textField;
-	JLabel lblVerified;
-	JButton buttonSubmit;
-	JButton btnValidate;
-	JLabel lblMode;
+	JFrame frame;
+	private final Function_Library f;
+	private JTextField textField;
+	private JLabel lblVerified;
+	private JButton buttonSubmit;
+	private JButton btnValidate;
+	private JLabel lblMode;
 	SSH_Menu(Function_Library obj ){
 		f = obj;
 		initialize();
@@ -32,28 +32,28 @@ public class SSH_Menu
 
 	private void initialize()
 	{
-		frameMainMenu = new JFrame();
-		frameMainMenu.setIconImage(Toolkit.getDefaultToolkit().getImage(Main_Menu.class.getResource("/Jar Files/ua_background_mobile.jpg")));
-		frameMainMenu.setTitle("SSH Menu - Welcome, "+f.getUserName());
+		frame = new JFrame();
+		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(Main_Menu.class.getResource("/Jar Files/ua_background_mobile.jpg")));
+		frame.setTitle("SSH Menu - Welcome, "+f.getUserName());
 
-		frameMainMenu.setBounds(100, 100, 445, 336);
-		frameMainMenu.setDefaultCloseOperation(3);
-		frameMainMenu.getContentPane().setLayout(null);
+		frame.setBounds(100, 100, 445, 336);
+		frame.setDefaultCloseOperation(3);
+		frame.getContentPane().setLayout(null);
 
 		JButton button_exit = new JButton("Exit");
 		button_exit.setFont(new Font("Lucida Grande", 0, 15));
 		button_exit.setBounds(6, 221, 122, 57);
-		frameMainMenu.getContentPane().add(button_exit);
+		frame.getContentPane().add(button_exit);
 
 		JButton button_close = new JButton("Close");
 		button_close.setFont(new Font("Lucida Grande", 0, 15));
 		button_close.setBounds(154, 221, 122, 57);
-		frameMainMenu.getContentPane().add(button_close);
+		frame.getContentPane().add(button_close);
 
 		JPanel panel = new JPanel();
 		panel.setBorder(null);
 		panel.setBounds(6, 6, 148, 71);
-		frameMainMenu.getContentPane().add(panel);
+		frame.getContentPane().add(panel);
 		panel.setLayout(new GridLayout(2, 2, 0, 0));
 
 		JRadioButton rbNew = new JRadioButton("Generate New Keys");
@@ -66,7 +66,7 @@ public class SSH_Menu
 
 		textField = new JTextField();
 		textField.setBounds(10, 126, 231, 31);
-		frameMainMenu.getContentPane().add(textField);
+		frame.getContentPane().add(textField);
 		textField.setColumns(10);
 		textField.setText(f.userName+"@ua.edu");
 
@@ -92,26 +92,26 @@ public class SSH_Menu
 
 		btnValidate = new JButton("Validate");
 		btnValidate.setBounds(251, 126, 148, 31);
-		frameMainMenu.getContentPane().add(btnValidate);
+		frame.getContentPane().add(btnValidate);
 
 		lblVerified = new JLabel("Verified");
 
 		lblVerified.setFont(new Font("Tahoma", Font.BOLD, 16));
 		lblVerified.setBounds(6, 168, 235, 31);
-		frameMainMenu.getContentPane().add(lblVerified);
+		frame.getContentPane().add(lblVerified);
 
 		buttonSubmit = new JButton("Submit");
 
 		buttonSubmit.setBounds(251, 170, 148, 31);
-		frameMainMenu.getContentPane().add(buttonSubmit);
+		frame.getContentPane().add(buttonSubmit);
 
 		lblMode = new JLabel("Enter email address");
 		lblMode.setBounds(10, 109, 231, 14);
-		frameMainMenu.getContentPane().add(lblMode);
+		frame.getContentPane().add(lblMode);
 		lblVerified.setVisible(false);
 		buttonSubmit.setVisible(false);
 		button_exit.addActionListener(e -> System.exit(0));
-		button_close.addActionListener(e -> frameMainMenu.dispose() );
+		button_close.addActionListener(e -> frame.dispose() );
 
 		btnValidate.addActionListener(e -> {
 			if(btnValidate.getText().equals("Change"))
@@ -137,7 +137,7 @@ public class SSH_Menu
 				f.copyFolder(textField.getText().trim(), f.getUserHome()+"\\.ssh");
 				if(f.folderExists("H:\\"))
 					f.copyFolder(textField.getText().trim(), "H:\\.ssh");
-				frameMainMenu.setVisible(false);
+				frame.setVisible(false);
 			}
 			else if(rbNew.isSelected()){
 				f.generateKeys(textField.getText().trim());
@@ -166,16 +166,16 @@ public class SSH_Menu
 
 
 			}
-			frameMainMenu.setVisible(false);
+			frame.setVisible(false);
 			done();
 		});
 
-		frameMainMenu.setVisible(true);		
+		frame.setVisible(true);		
 		//valid();
 	}
 
 	private void done() {
-		frameMainMenu.dispose();
+		frame.dispose();
 		EventQueue.invokeLater(() -> {
 			try {
 				new Setup_Menu(f);

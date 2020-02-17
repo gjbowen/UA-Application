@@ -12,7 +12,7 @@ import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
 class Employee_Menu {
-	JFrame frameEmployeeMenu;
+	JFrame frame;
 	private final Function_Library connection;
 	private final API_Package api;
 	private JTextField cwidField_emp;
@@ -29,22 +29,21 @@ class Employee_Menu {
 		connection = conn;
 		this.initialize();
 		api = new API_Package(connection);
-
 	}
 
 	private void initialize() {
-		frameEmployeeMenu = new JFrame();
-		frameEmployeeMenu.setIconImage(Toolkit.getDefaultToolkit().getImage(Employee_Menu.class.getResource("/Jar Files/ua_background_mobile.jpg")));
-		frameEmployeeMenu.setTitle("Employee Menu");
-		frameEmployeeMenu.setBounds(100, 100, 718, 508);
-		frameEmployeeMenu.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		frameEmployeeMenu.getContentPane().setLayout(null);
-		frameEmployeeMenu.setResizable(false);
+		frame = new JFrame();
+		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(Employee_Menu.class.getResource("/Jar Files/ua_background_mobile.jpg")));
+		frame.setTitle("Employee Menu");
+		frame.setBounds(100, 100, 718, 508);
+		frame.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		frame.getContentPane().setLayout(null);
+		frame.setResizable(false);
 
 		JPanel panel = new JPanel();
 		panel.setBorder(null);
 		panel.setBounds(6, 6, 686, 453);
-		frameEmployeeMenu.getContentPane().add(panel);
+		frame.getContentPane().add(panel);
 		panel.setLayout(null);
 
 		final JLabel lblStatus = new JLabel("Status: WAIT!");
@@ -399,7 +398,7 @@ class Employee_Menu {
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		JButton btnClose = new JButton("Close");
 		btnClose.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
-		btnClose.addActionListener(e2 -> frameEmployeeMenu.dispose());
+		btnClose.addActionListener(e2 -> frame.dispose());
 		btnClose.setBounds(554, 395, 122, 54);
 		panel.add(btnClose);
 
@@ -408,7 +407,7 @@ class Employee_Menu {
 		btnExit.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
 		btnExit.addActionListener(e2 -> {
 			public_package.Exit_Confirmation window = new public_package.Exit_Confirmation(connection.firstName);
-			window.frameExitConfirmation.setVisible(true);
+			window.frame.setVisible(true);
 			System.exit(0);
 		});
 		btnExit.setBounds(6, 395, 122, 57);

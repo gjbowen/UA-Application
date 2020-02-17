@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import javax.swing.*;
 
 class User_API_Menu {
-	private API_Package api;
+	private final API_Package api;
 	JFrame frame;
 
 	private JTextField textField_users;

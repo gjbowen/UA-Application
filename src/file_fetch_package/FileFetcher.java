@@ -10,9 +10,9 @@ import public_package.SSH_Connection;
 
 public class FileFetcher
 {
-	public JFrame frameMenu;
-	private SFTP connection;
-	private SSH_Connection ssh;
+	public JFrame frame;
+	private final SFTP connection;
+	private final SSH_Connection ssh;
 	private JTextField textField;
 	private String mode;
 	private String location=null;
@@ -28,35 +28,33 @@ public class FileFetcher
 	private JRadioButton rdbtnEndsWith;// Mode
 
 	public FileFetcher(SftpClient conn_sftp, Session con_ssh, String first, String user, String pass, String env){
-		connection=new SFTP(conn_sftp,env,user,pass);
-
+		connection=new SFTP(conn_sftp,user,pass,env);
 		ssh = new SSH(con_ssh,env,user,pass);
 		count=1;
-		//connection = conn_sftp;
 		initialize();
 	}
 
 	private void initialize()
 	{
-		frameMenu = new JFrame();
-		frameMenu.setIconImage(Toolkit.getDefaultToolkit().getImage(FileFetcher.class.getResource("/Jar Files/ua_background_mobile.jpg")));
-		frameMenu.setTitle("Get Files  -  "+connection.getInstance(connection.environment));
-		frameMenu.setBounds(100, 100, 678, 290);
-		frameMenu.setDefaultCloseOperation(3);
-		frameMenu.getContentPane().setLayout(null);
+		frame = new JFrame();
+		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(FileFetcher.class.getResource("/Jar Files/ua_background_mobile.jpg")));
+		frame.setTitle("Get Files  -  "+connection.getInstance(connection.environment));
+		frame.setBounds(100, 100, 678, 290);
+		frame.setDefaultCloseOperation(3);
+		frame.getContentPane().setLayout(null);
 
 		JButton btnNewButton = new JButton("Exit");
 		btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		btnNewButton.addActionListener(arg0 -> System.exit(0));
 		btnNewButton.setBounds(10, 178, 101, 62);
-		frameMenu.getContentPane().add(btnNewButton);
+		frame.getContentPane().add(btnNewButton);
 
 		JPanel panel = new JPanel();
 		panel.setBorder(new TitledBorder(null, "Mode", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		FlowLayout flowLayout = (FlowLayout) panel.getLayout();
 		flowLayout.setAlignment(FlowLayout.LEFT);
 		panel.setBounds(264, 11, 133, 137);
-		frameMenu.getContentPane().add(panel);
+		frame.getContentPane().add(panel);
 
 		rdbtnContains = new JRadioButton("Contains");
 		panel.add(rdbtnContains);
@@ -77,34 +75,34 @@ public class FileFetcher
 
 		textField = new JTextField();
 		textField.setBounds(10, 11, 146, 32);
-		frameMenu.getContentPane().add(textField);
+		frame.getContentPane().add(textField);
 		textField.setColumns(10);
 
 		JButton button = new JButton("Close");
 		button.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		button.addActionListener(e -> {
-			frameMenu.dispose();
+			frame.dispose();
 			EventQueue.invokeLater(() -> {
 				new public_package.Login(null);
 			});
 		});
 		button.setBounds(551, 178, 101, 62);
-		frameMenu.getContentPane().add(button);
+		frame.getContentPane().add(button);
 
 		JButton btnGet = new JButton("Get");
 		btnGet.setBounds(166, 16, 89, 23);
-		frameMenu.getContentPane().add(btnGet);
+		frame.getContentPane().add(btnGet);
 
 		JButton btnShow = new JButton("Show");
 		btnShow.setBounds(166, 45, 89, 23);
-		frameMenu.getContentPane().add(btnShow);
+		frame.getContentPane().add(btnShow);
 
 		JPanel panel_1 = new JPanel();
 		FlowLayout flowLayout_1 = (FlowLayout) panel_1.getLayout();
 		flowLayout_1.setAlignment(FlowLayout.LEFT);
 		panel_1.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Location", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		panel_1.setBounds(407, 11, 101, 137);
-		frameMenu.getContentPane().add(panel_1);
+		frame.getContentPane().add(panel_1);
 
 		JRadioButton rdbtnExport = new JRadioButton("Export");
 		rdbtnExport.setSelected(true);
@@ -123,7 +121,7 @@ public class FileFetcher
 		JPanel panel_2 = new JPanel();
 		panel_2.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Retrieve", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		panel_2.setBounds(518, 11, 133, 137);
-		frameMenu.getContentPane().add(panel_2);
+		frame.getContentPane().add(panel_2);
 		panel_2.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
 
 		rdbtnLatest = new JRadioButton("Latest          ");
@@ -237,7 +235,7 @@ public class FileFetcher
 		JPanel panel_3 = new JPanel();
 		panel_3.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Show Settings", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		panel_3.setBounds(10, 50, 133, 100);
-		frameMenu.getContentPane().add(panel_3);
+		frame.getContentPane().add(panel_3);
 		panel_3.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
 
 		JCheckBox box_showInfo = new JCheckBox("Show Info");
@@ -265,7 +263,7 @@ public class FileFetcher
 			dlgProgress.getContentPane().add(BorderLayout.CENTER, pbProgress);
 			dlgProgress.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE); // prevent the user from closing the dialog
 			dlgProgress.setSize(300, 90);
-			dlgProgress.setLocationRelativeTo(frameMenu);
+			dlgProgress.setLocationRelativeTo(frame);
 			SwingWorker<Void, Void> sw = new SwingWorker<Void, Void>() {
 				protected Void doInBackground() {
 					connection.getFiles(textField.getText().trim(), location, mode, count);
@@ -301,7 +299,7 @@ public class FileFetcher
 			dlgProgress.getContentPane().add(BorderLayout.CENTER, pbProgress);
 			dlgProgress.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE); // prevent the user from closing the dialog
 			dlgProgress.setSize(300, 90);
-			dlgProgress.setLocationRelativeTo(frameMenu);
+			dlgProgress.setLocationRelativeTo(frame);
 			SwingWorker<Void, Void> sw = new SwingWorker<Void, Void>() {
 				protected Void doInBackground() {
 					//connection.getFiles(textField.getText().trim(), location, mode, count);
@@ -360,7 +358,7 @@ public class FileFetcher
 			sw.execute(); // this will start the processing on a separate thread
 			dlgProgress.setVisible(true); //this will block user input as long as the processing task is working
 		});
-		frameMenu.setVisible(true);
+		frame.setVisible(true);
 	}
 
 	private void lockRetrieve(){

@@ -10,7 +10,7 @@ import java.nio.file.Paths;
 
 class Fupload_Menu {
 	JFrame frame;
-    private Function_Library connection;
+    private final Function_Library connection;
 	private String location="LOCAL";
 
 	public Fupload_Menu(Function_Library fun) {

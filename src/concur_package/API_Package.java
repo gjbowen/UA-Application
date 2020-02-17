@@ -35,8 +35,8 @@ class API_Package {
 	private static String tokenParameters;
 	private static List<Vendor> vendors = new ArrayList<Vendor>();
 	private static List<User> people = new ArrayList<User>();
-	private String url;
-	Function_Library func_lib;
+	private final String url;
+	final Function_Library func_lib;
 	String serverResponse;
 	private int vendorCount = 0;
 	private int userCount = 0;

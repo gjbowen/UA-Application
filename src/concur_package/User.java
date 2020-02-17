@@ -2,7 +2,7 @@ package concur_package;
 
 class User {
 	private String ID="";//api ref
-	private String URI="";
+	private final String URI="";
 	private String LoginID="";//same as email
 	String EmployeeID="";//cwid
 	private String FirstName="";

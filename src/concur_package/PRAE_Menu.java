@@ -20,8 +20,8 @@ import javax.swing.JTextField;
 import javax.swing.SwingWorker;
 
 class PRAE_Menu {
-    private Function_Library connection;
-    JFrame praeFrame;
+    private final Function_Library connection;
+    JFrame frame;
     private JTextField searchString;
     private JTextField searchColumn;
     private String mode;
@@ -37,29 +37,29 @@ class PRAE_Menu {
     }
 
     private void initialize() {
-        this.praeFrame = new JFrame();
-        this.praeFrame.setIconImage(Toolkit.getDefaultToolkit().getImage(PRAE_Menu.class.getResource("/Jar Files/ua_background_mobile.jpg")));
-        this.praeFrame.setTitle("PRAE Menu");
-        this.praeFrame.setBounds(100, 100, 583, 448);
-        this.praeFrame.setDefaultCloseOperation(3);
-        this.praeFrame.getContentPane().setLayout(null);
+        this.frame = new JFrame();
+        this.frame.setIconImage(Toolkit.getDefaultToolkit().getImage(PRAE_Menu.class.getResource("/Jar Files/ua_background_mobile.jpg")));
+        this.frame.setTitle("PRAE Menu");
+        this.frame.setBounds(100, 100, 583, 448);
+        this.frame.setDefaultCloseOperation(3);
+        this.frame.getContentPane().setLayout(null);
         JButton btnExit = new JButton("Exit");
         btnExit.setBounds(10, 341, 122, 57);
         btnExit.setFont(new Font("Dialog", 0, 15));
-        this.praeFrame.getContentPane().add(btnExit);
+        this.frame.getContentPane().add(btnExit);
         JButton btnClose = new JButton("Close");
         btnClose.setBounds(435, 341, 122, 57);
         btnClose.setFont(new Font("Dialog", 0, 15));
-        this.praeFrame.getContentPane().add(btnClose);
+        this.frame.getContentPane().add(btnClose);
         final JLabel status = new JLabel("Status: Ready for tasking");
         status.setBounds(142, 363, 281, 35);
         status.setFont(new Font("Tahoma", 0, 18));
-        this.praeFrame.getContentPane().add(status);
+        this.frame.getContentPane().add(status);
         JPanel panel = new JPanel();
         panel.setBounds(10, 11, 305, 63);
         FlowLayout flowLayout = (FlowLayout)panel.getLayout();
         flowLayout.setAlignment(0);
-        this.praeFrame.getContentPane().add(panel);
+        this.frame.getContentPane().add(panel);
         JLabel lblReportKey = new JLabel("String to Search ");
         panel.add(lblReportKey);
         lblReportKey.setFont(new Font("Tahoma", 0, 18));
@@ -79,7 +79,7 @@ class PRAE_Menu {
         panel_1.setBounds(422, 11, 135, 146);
         FlowLayout flowLayout_1 = (FlowLayout)panel_1.getLayout();
         flowLayout_1.setAlignment(0);
-        this.praeFrame.getContentPane().add(panel_1);
+        this.frame.getContentPane().add(panel_1);
         final JRadioButton rdbtnContains = new JRadioButton("Contains");
         panel_1.add(rdbtnContains);
         final JRadioButton rdbtnEndsWith = new JRadioButton("Ends with");
@@ -128,11 +128,11 @@ class PRAE_Menu {
         });
         JButton btnSubmit = new JButton("Submit");
         btnSubmit.setBounds(435, 168, 122, 57);
-        this.praeFrame.getContentPane().add(btnSubmit);
+        this.frame.getContentPane().add(btnSubmit);
         btnSubmit.setFont(new Font("Tahoma", 0, 15));
         JPanel panel_2 = new JPanel();
         panel_2.setBounds(10, 85, 387, 125);
-        this.praeFrame.getContentPane().add(panel_2);
+        this.frame.getContentPane().add(panel_2);
         panel_2.setLayout(null);
         JLabel lblKey = new JLabel("Column Cheat Sheet");
         lblKey.setFont(new Font("Tahoma", 0, 15));
@@ -170,19 +170,19 @@ class PRAE_Menu {
         generatePRAE.addActionListener(e2 -> PRAE_Menu.this.connection.rewritePRAE(textField.getText().trim()));
         generatePRAE.setFont(new Font("Tahoma", 0, 15));
         generatePRAE.setBounds(10, 244, 146, 35);
-        this.praeFrame.getContentPane().add(generatePRAE);
+        this.frame.getContentPane().add(generatePRAE);
         JSeparator separator = new JSeparator();
         separator.setBounds(8, 236, 547, 16);
-        this.praeFrame.getContentPane().add(separator);
+        this.frame.getContentPane().add(separator);
         this.textField = new JTextField();
         this.textField.setText("2,4,5,10,16,96,97,98,164,165,168,169,170,171,172,173,174");
         this.textField.setColumns(10);
         this.textField.setBounds(166, 243, 389, 40);
-        this.praeFrame.getContentPane().add(this.textField);
+        this.frame.getContentPane().add(this.textField);
         
         JLabel lblSeperatedByA = new JLabel("Create 1 master PRAE from all files.\r\nEnter desired columns seperated by a comma, or use * for all.");
         lblSeperatedByA.setBounds(10, 293, 523, 16);
-        praeFrame.getContentPane().add(lblSeperatedByA);
+        frame.getContentPane().add(lblSeperatedByA);
         btnSubmit.addActionListener(e2 -> {
             if (PRAE_Menu.this.searchColumn.getText().trim().equals("")) {
                 status.setText("Status: Fields not given.");
@@ -199,7 +199,7 @@ class PRAE_Menu {
                 dlgProgress.getContentPane().add(BorderLayout.CENTER, pbProgress);
                 dlgProgress.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE); // prevent the user from closing the dialog
                 dlgProgress.setSize(300, 90);
-                dlgProgress.setLocationRelativeTo(praeFrame);
+                dlgProgress.setLocationRelativeTo(frame);
                 SwingWorker<Void, Void> sw = new SwingWorker<Void, Void>() {
                     protected Void doInBackground() {
                         status.setText("Status: Searching PRAE files..");
@@ -226,7 +226,7 @@ class PRAE_Menu {
             }
         });
         btnExit.addActionListener(e2 -> System.exit(0));
-        btnClose.addActionListener(e2 -> PRAE_Menu.this.praeFrame.dispose());
+        btnClose.addActionListener(e2 -> PRAE_Menu.this.frame.dispose());
     }
 }
 
