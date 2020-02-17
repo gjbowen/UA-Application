@@ -1,5 +1,9 @@
+
 public class Driver {
-	public static void main(String[] args){
+	public static void main(String[] args) throws Exception {
+
+
+
 		if(args.length>0)
 			new public_package.Login(args[0]); //shortcut mode
 		else

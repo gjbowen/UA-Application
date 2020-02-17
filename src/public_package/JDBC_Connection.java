@@ -594,7 +594,8 @@ public class JDBC_Connection {
 				userFirstName=name;
 			else
 				userFirstName="";
-			System.out.println("Welcome, "+userFirstName);
+			new public_package.ASCIIArtGenerator("Welcome", public_package.ASCIIArtGenerator.ART_SIZE_SMALL, public_package.ASCIIArtGenerator.ASCIIArtFont.ART_FONT_MONO,"#");
+			new public_package.ASCIIArtGenerator(userFirstName, public_package.ASCIIArtGenerator.ART_SIZE_SMALL, public_package.ASCIIArtGenerator.ASCIIArtFont.ART_FONT_MONO,"#");
 		}
 		catch (SQLException e2) {
 			System.out.println("Too many people were returned - " + name);

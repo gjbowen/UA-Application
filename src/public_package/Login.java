@@ -25,16 +25,18 @@ public class Login
 	private String env="PROD";
 	private JLabel status;
 	private JFrame frameLogin;
-	private JCheckBox chckbxSaveLogin;
-	private String application;
+	private JCheckBox chckbxSaveLogin,debugMode;
+	private boolean debug;
 	public Login(String app){
-		application=app;
-		initialize();
+		initialize(app);
 	}
 	@SuppressWarnings("deprecation")
-	private void connect() {
+	private void connect(String app) {
+		if(debug||debugMode.isSelected()){
+			Preferences.addPreference("debug","true");
+			public_package.Console console = new public_package.Console();
+		}
 
-		//Connection_SFTP_JDBC connection = new Connection_SFTP_JDBC(mode, userField.getText(), passwordField.getText());		
 		JDBC_Connection jdbc = new JDBC_Connection(userField.getText(), passwordField.getText(),env);
 		SFTP_Connection sftp = new SFTP_Connection(userField.getText(), passwordField.getText(),env);
 		SSH_Connection ssh = new SSH_Connection(userField.getText(), passwordField.getText(),env);
@@ -55,7 +57,7 @@ public class Login
 		if(jdbc.connected()) {
 			frameLogin.dispose(); // hide login menu
 			//use for passing in parameters via shortcuts in Windows
-			if(application==null) {
+			if(app==null) {
 				new Master_Menu(
 						jdbc.connection,
 						jdbc.userFirstName,
@@ -65,15 +67,16 @@ public class Login
 						ssh.session,
 						env);
 			}
-			else if(application.equals("concur"))
+			else if(app.equals("concur"))
 				new concur_package.Main_Menu(jdbc.connection,sftp.connection,ssh.session,userField.getText(),jdbc.password,env);
-			else if(application.equals("ar"))
+			else if(app.equals("ar"))
 				new ar_package.Main_Menu(jdbc.connection,sftp.connection,ssh.session,userField.getText(),jdbc.password,env);
-			else if(application.equals("git"))
+			else if(app.equals("git"))
 				new Main_Menu(new Function_Library());
 
 			if(chckbxSaveLogin.isSelected())
 				save();
+
 		}
 		else {
 			Encryption.deleteFile();
@@ -84,7 +87,7 @@ public class Login
 	}
 
 	@SuppressWarnings("deprecation")
-	private void initialize(){
+	private void initialize(String app){
 		env = "PROD";
 		frameLogin = new JFrame();
 		frameLogin.setIconImage(Toolkit.getDefaultToolkit().getImage(Master_Menu.class.getResource("/Jar Files/ua_background_mobile.jpg")));
@@ -116,6 +119,10 @@ public class Login
 		chckbxSaveLogin.setEnabled(true);
 		panel.add(chckbxSaveLogin);
 
+		debugMode = new JCheckBox("Enable Debug Mode");
+		debugMode.setSelected(false);
+		panel.add(debugMode);
+
 
 		JButton button_Submit = new JButton("Submit");
 
@@ -132,7 +139,7 @@ public class Login
 				status.setText("ENTER USERNAME AND PASSWORD");
 			}
 			else
-				connect();
+				connect(app);
 		});
 		button_Submit.setBounds(10, 207, 91, 55);
 		frameLogin.getContentPane().add(button_Submit);
@@ -155,15 +162,6 @@ public class Login
 		btnExit.setBounds(267, 207, 91, 55);
 		frameLogin.getContentPane().add(btnExit);
 
-		JButton btnNewButton = new JButton("About");
-		btnNewButton.addActionListener(arg0 -> {
-			String message = "How it works:\n\tTBA"
-					+ "\n\n\n-greg ";
-
-			JOptionPane.showMessageDialog(null, message);
-		});
-		btnNewButton.setBounds(267, 144, 89, 23);
-		frameLogin.getContentPane().add(btnNewButton);
 		btnExit.addActionListener(e -> System.exit(0));
 		rdbtnSEVL.addActionListener(e -> {
 			if (rdbtnSEVL.isSelected()){
@@ -197,7 +195,13 @@ public class Login
 				env = "TEST";
 			else
 				env = "PROD";
-			connect();
+
+			if(Preferences.contents.get("debug").equals("false"))
+				debug = false;
+			else
+				debug = true;
+
+				connect(app);
 		}
 		else {
 			frameLogin.setVisible(true);

@@ -31,8 +31,8 @@ public class Master_Menu
 	private String environment;
 	private String firstName;
 	private JMenu option_button;
-    private JMenu help_button;
-    private JMenu environment_button;
+	private JMenu environment_button;
+	private JMenu debug_button;
     private JButton arProgram;
     private JButton btnConcur;
     private JButton btnGitProgram;
@@ -52,16 +52,15 @@ public class Master_Menu
 	
 	private void addMenuBar() {
 		// menu bar
-		JMenuItem m1,m2,m4,env_SEVL,env_TEST,env_PROD;
+		JMenuItem m1,m3,m4,env_SEVL,env_TEST,env_PROD;
 		JMenuBar mb;
 		mb = new JMenuBar();
 		frameMenu.setJMenuBar(mb);
 
 		// item on menu bar
-		m1 = new JMenuItem("Preferences");
 		m4 = new JMenuItem("Sign Out");
-		
-		m2 = new JMenuItem("About");
+		m1 = new JMenuItem("ENABLE");
+		m3 = new JMenuItem("DISABLE");
 
 		env_SEVL = new JMenuItem("SEVL");
 		env_TEST = new JMenuItem("TEST");
@@ -69,14 +68,22 @@ public class Master_Menu
 
 		// pop-up menus
 		option_button = new JMenu("Options");
-		help_button = new JMenu("Help");
 		environment_button = new JMenu("Change Sessions");
-		
+		debug_button = new JMenu("Debug Mode");
+
 		// add item to the drop-downs
-		option_button.add(m1);
 		option_button.add(m4);
-		
-		help_button.add(m2);
+
+		debug_button.add(m1);
+		debug_button.add(m3);
+		if(Preferences.contents.get("debug").equals("true")) {
+			m1.setEnabled(false);
+			m3.setEnabled(true);
+		}
+		else {
+			m1.setEnabled(true);
+			m3.setEnabled(false);
+		}
 
 		if(environment.equals("SEVL")) {
 			environment_button.add(env_TEST);
@@ -93,14 +100,20 @@ public class Master_Menu
 		
 		// add an item to the menu bar
 		mb.add(option_button);
-		mb.add(help_button);
 		mb.add(environment_button);
-		
+		mb.add(debug_button);
+
 		m1.addActionListener(arg0 -> {
-
+			m1.setEnabled(false);
+			m3.setEnabled(true);
+			public_package.Console console = new public_package.Console();
+			Preferences.addPreference("debug", "true");
 		});
-		m2.addActionListener(arg0 -> {
 
+		m3.addActionListener(arg0 -> {
+			m1.setEnabled(true);
+			m3.setEnabled(false);
+			Preferences.addPreference("debug", "false");
 		});
 		// change environments
 		env_SEVL.addActionListener(arg0 -> updateEnvironment("SEVL"));

@@ -75,22 +75,22 @@ class Function_Library {
 	void getLockBox(String fileName,String month,String year){
 		ssh.writeEFile_LB(fileName,month,year);
 		sftp.putFile(System.getProperty("user.dir"),fileName,"/home/"+userName,fileName);
+		sftp.lrm(System.getProperty("user.dir")+"\\"+fileName);
 		ssh.run("mkdir -p /home/"+userName+"/LOCKBOX");
 		ssh.run("chmod -R 0700 /home/"+userName);
 		ssh.run("./"+fileName);
 		sftp.getFolder("/home/"+userName+"/LOCKBOX",System.getProperty("user.home")+"\\Box Sync\\SAS-OIT Shared\\Cadence - Lockbox");
 		sftp.rm("/home/"+userName+"/"+fileName);
-		sftp.lrm(System.getProperty("user.dir")+"\\"+fileName);
 	}
 	void getReturnedChecks(String fileName,String month,String year){
 		ssh.writeEFile_RC(fileName,month,year);
 		sftp.putFile(System.getProperty("user.dir"),fileName,"/home/"+userName,fileName);
+		sftp.lrm(System.getProperty("user.dir")+"\\"+fileName);
 		ssh.run("mkdir -p /home/"+userName+"/RETURNED_CHECKS");
 		ssh.run("chmod -R 0700 /home/"+userName);
 		ssh.run("./"+fileName);
 		sftp.getFolder("/home/"+userName+"/RETURNED_CHECKS",System.getProperty("user.home")+"\\Box Sync\\SAS-OIT Shared\\Cadence - Returned Checks");
 		sftp.rm("/home/"+userName+"/"+fileName);
-		sftp.lrm(System.getProperty("user.dir")+"\\"+fileName);
 	}
 	public void openLink(String URL) {
 		try {

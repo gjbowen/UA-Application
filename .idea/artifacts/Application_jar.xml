@@ -7,6 +7,7 @@
       <element id="extracted-dir" path="$PROJECT_DIR$/jars/icon.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/jars/ojdbc7.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/jars/j2ssh-maverick-1.5.5.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/jars/jsch-0.1.55.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>

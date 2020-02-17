@@ -52,6 +52,7 @@ public class Preferences {
 				output.write("Developer,Greg Bowen\n");
 				output.write("created,"+formatter.format(date)+"\n");
 				output.write("environment,prod\n");
+				output.write("debug,false\n");
 			}
 			output.close();
 			hide(getFileName());
