@@ -44,6 +44,20 @@ public class SFTP_Connection {
 		else
 			dirDelim = "/";
 	}
+	public String getDelim(){
+		return dirDelim;
+	}
+
+	public String makePath(String[] args){
+
+		StringBuilder str = new StringBuilder();
+		str.append(System.getProperty("user.home"));
+		for(int i=0;i<args.length;++i){
+			str.append(getDelim()+args[i]);
+		}
+		System.out.println("path created: "+str.toString());
+		return str.toString();
+	}
 
     void sftpConnect(){
 		try {
@@ -131,7 +145,7 @@ public class SFTP_Connection {
 
 	public void putFile(String localFolder,String localFileName,String remoteFolder,String remoteName){
 		try {
-			connection.put(localFolder+"\\"+localFileName,remoteFolder+"/"+remoteName);
+			connection.put(localFolder+getDelim()+localFileName,remoteFolder+"/"+remoteName);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (SftpStatusException e) {
@@ -145,7 +159,7 @@ public class SFTP_Connection {
 	}
 	public void getFile(String localFolder,String localFileName,String remoteFolder,String remoteName){
 		try {
-			connection.getFiles(remoteFolder+"/"+remoteName,localFolder+"\\"+localFileName);
+			connection.getFiles(remoteFolder+"/"+remoteName,localFolder+getDelim()+localFileName);
 		}
 		catch (FileNotFoundException e) {e.printStackTrace();}
 		catch (SftpStatusException e) {e.printStackTrace();}

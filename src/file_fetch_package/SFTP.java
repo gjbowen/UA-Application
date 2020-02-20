@@ -30,7 +30,7 @@ class SFTP extends public_package.SFTP_Connection{
 		try {
 			String localPath=
 					System.getProperty("user.home")
-							+ "\\Downloads\\"
+							+ getDelim()+"Downloads"+getDelim()
 							+ location.toLowerCase()
 							+ "_"+mode.toLowerCase()
 							+ "_"+fileName.toLowerCase();

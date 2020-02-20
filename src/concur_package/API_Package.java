@@ -30,9 +30,8 @@ import org.xml.sax.SAXException;
 import org.w3c.dom.Node;
 
 class API_Package {
-
 	private static String access_token;
-	private static String tokenParameters;
+	private static String tokenParams;
 	private static List<Vendor> vendors = new ArrayList<Vendor>();
 	private static List<User> people = new ArrayList<User>();
 	private final String url;
@@ -197,13 +196,13 @@ class API_Package {
 	}
 	private void setCredentials() {
 		if(func_lib.environment.equals("PROD"))
-			tokenParameters =
-					func_lib.getContents("C:\\Users\\"+func_lib.userName+"\\Box Sync\\Business Admin Team Shared\\Concur\\API-PROD.dat");
+			tokenParams = func_lib.getContents(
+					func_lib.sftp.makePath(new String[]{"Box Sync", "Business Admin Team Shared", "Concur", "API-PROD.dat"})
+			);
 		else
-			tokenParameters =
-					func_lib.getContents("C:\\Users\\"+func_lib.userName+"\\Box Sync\\Business Admin Team Shared\\Concur\\API-TEST.dat");
-
-	}
+			tokenParams = func_lib.getContents(
+					func_lib.sftp.makePath(new String[]{"Box Sync", "Business Admin Team Shared", "Concur", "API-TEST.dat"})
+			);	}
 	private String jsonRead(String jsonString){
 		try {
 			JSONObject jsonObject = new JSONObject(jsonString);
@@ -339,13 +338,13 @@ class API_Package {
 			DataOutputStream wr = new DataOutputStream(con.getOutputStream());
 
 
-			wr.writeBytes(tokenParameters);
+			wr.writeBytes(tokenParams);
 			wr.flush();
 			wr.close();
 
 			int responseCode = con.getResponseCode();
 			System.out.println("Sending 'POST' request to URL: " + url);
-			System.out.println("Post parameters: " + tokenParameters);
+			System.out.println("Post parameters: " + tokenParams);
 			responseCode(responseCode);
 			if(responseCode==200) {
 				BufferedReader in = new BufferedReader(
