@@ -28,12 +28,20 @@ public class Function_Library {
 		gitFolder = getUserHome();
 		userName = getUserName();
 	}
+	private boolean isWindows() {
+		return System.getProperty("os.name").toLowerCase().contains("windows");
+	}
+
 	private boolean done(){
-		 return Preferences.contents.containsKey("git")
-				 && sshKeysExist()
-				 && GITprogramExists()
-				 && tortoiseProgramExists();
-	 }
+		if(isWindows())
+			return Preferences.contents.containsKey("git")
+					&& sshKeysExist()
+					&& GITprogramExists()
+					&& tortoiseProgramExists();
+		else
+			return Preferences.contents.containsKey("git")
+					&& sshKeysExist();
+	}
 	public boolean ready(){
 		if(done()) {
 			readPreferenceFile();
@@ -41,20 +49,19 @@ public class Function_Library {
 		}
 		else {
 			int val=0;
-			if (!tortoiseProgramExists()) {
-				val = yesNo("Tortoise was not found. Would you like to install it now? (During the install process, it will install GIT)");
-				if (val == 0) {
-					downloadTortoise();
+			if(isWindows()) {
+				if (!tortoiseProgramExists()) {
+					val = yesNo("Tortoise was not found. Would you like to install it now? (During the install process, it will install GIT)");
+					if (val == 0)
+						downloadTortoise();
+				}
+				else if (!GITprogramExists()) {
+					val = yesNo("GIT was not found. Would you like to install it now?");
+					if (val == 0)
+						downloadGIT();
 				}
 			}
-			else if (!GITprogramExists()) {
-				val = yesNo("GIT was not found. Would you like to install it now?");
-				if (val == 0) {
-					downloadGIT();
-				}
-
-			}
-			else if (!sshKeysExist()) {
+			if (!sshKeysExist()) {
 				val = yesNo("SSH keys were not found. Would you like to setup now?");
 				if (val == 0) {
 					EventQueue.invokeLater(() -> {
@@ -82,8 +89,8 @@ public class Function_Library {
 					});
 				}
 			}
-			return false;
 		}
+		return false;
 	}
 
 	boolean GITfolderExists(String location) {
@@ -131,7 +138,7 @@ public class Function_Library {
 	}
 	private void createBranch(String newBranch) {
 		String command;
-		if(isRemoteGIT(newBranch)) 
+		if(isRemoteGIT(newBranch))
 			command="cmd /c start cmd.exe /K \""
 					+ "cd \"" +	gitFolder +"\" && "
 					+ "git checkout prod && "
@@ -151,11 +158,11 @@ public class Function_Library {
 	}
 	public void switchBranch(String branch) {
 		String command;
-		if (!branch.equals(getBranch())) {		
+		if (!branch.equals(getBranch())) {
 			if(!isLocalGIT(branch))
 				createBranch(branch);
-			else { 
-				if(isRemoteGIT(branch)) 
+			else {
+				if(isRemoteGIT(branch))
 					command = "cmd /c start cmd.exe /K \""
 							+ "cd \"" +	gitFolder +"\" && "
 							+ "git checkout "+branch + " && "
@@ -186,7 +193,7 @@ public class Function_Library {
 				+ "git checkout " +branch+ " && "
 				+ "git push --progress \"origin\" " + branch + " && "
 				+ "exit \"";
-		cmd(command);	
+		cmd(command);
 	}
 	public void push(String comment) {
 		String branch = getBranch();
@@ -199,14 +206,14 @@ public class Function_Library {
 				+ "git commit -v -a -m \""+comment+"\" && "
 				+ "git push --progress \"origin\" " + branch + " && "
 				+ "exit \"";
-		cmd(command);	
+		cmd(command);
 	}
 	public void fetch() {
 		String command = "cmd /c start cmd.exe /K \""
 				+ "cd \"" +	gitFolder +"\" && "
 				+ "git fetch -v --progress \"origin\" && "
 				+ "exit \"";
-		cmd(command);	
+		cmd(command);
 	}
 	public void hardReset() {
 		String command = "cmd /c start cmd.exe /K \""
@@ -215,21 +222,22 @@ public class Function_Library {
 				+ "git reset --hard origin/master && "
 				+ "git pull && "
 				+ "exit \"";
-		cmd(command);		
+		cmd(command);
 	}
 	public void diff() {
 		String command = "cmd /c start cmd.exe /K \""
 				+ "cd \"" +	gitFolder +"\" && "
 				+ "git.exe diff --name-only\"";
-		cmd(command);		
+		cmd(command);
 	}
 	public void pull() {
 		String command = "cmd /c start cmd.exe /K \""
 				+ "cd \"" +	gitFolder +"\" && "
 				+ "git.exe pull --progress -v --no-rebase \"origin\" "+getBranch()+" && "
 				+ "exit \"";
-		cmd(command);		
+		cmd(command);
 	}
+
 	private void readPreferenceFile(){
 		//public_package.Preferences p = new public_package.Preferences();
 		gitFolder=Preferences.contents.get("git");
@@ -255,7 +263,7 @@ public class Function_Library {
 				JOptionPane.CANCEL_OPTION);
 	}
 
-    private int yesNo(String message) {
+	private int yesNo(String message) {
 		return JOptionPane.showConfirmDialog(
 				null,
 				message,
@@ -266,7 +274,7 @@ public class Function_Library {
 		File file = new File(f);
 		if(file.exists())
 			file.delete();
-	}	
+	}
 	public void readPacked_Refs(){
 		String line;
 		remoteBranches = new ArrayList<String>();
@@ -278,7 +286,7 @@ public class Function_Library {
 				parsedLine = line.split("/");
 				if(parsedLine.length>1) {
 					item=parsedLine[parsedLine.length-1];
-					remoteBranches.add(item); 
+					remoteBranches.add(item);
 				}
 			}
 			br.close();
@@ -292,11 +300,11 @@ public class Function_Library {
 		String host=
 				"[fisheye01.ua.edu]:7999,[10.8.81.153]:7999 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDSNpv15GY6jxbrfiTagxc1233xtqHhUfzGXtx+sCIzQUHWmZ0zEf0aYPD/xjNKE48oB3SZ0ciKoV/YT/D8x3Hm7E6P8CldunWjny/WPd4EGZLNd43vmD0xXVZeszL+T1zXnrBVVD0WU3Cdg0+Bk+bpoG/OAlis671+zXFBtMDD+U7IfKE892KQfXbjtJXsc88FLTR5Sr/xamQrC8xBhUGSIgN170m/y0/tG04uABcyCdHmyJVcU6+kf+x+mmbU1nL9NeRYWRcnYG/aqjAogV5vB8F8kFUW3OzYCXhqYR7XQlVJmVL38IAG67+0UEakr1G5v6Xa3FwccYL9J7jjZIs3\r\n";
 		try {
-			BufferedWriter output = new 
+			BufferedWriter output = new
 					BufferedWriter(new FileWriter(getUserHome()+"\\.ssh\\known_hosts", false));
-			output.write(host);	
-			output.close();	
-		} 
+			output.write(host);
+			output.close();
+		}
 		catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -309,18 +317,16 @@ public class Function_Library {
 	}
 	public boolean folderExists(String location) {
 		File folder = new File(location);
-        return folder.isDirectory();
+		return folder.isDirectory();
 	}
 	public String validateInput(String input) {
 		try{
-			if(input.startsWith("BAN-")) {
+			if(input.startsWith("BAN-"))
 				return input;
-			}
-			else if(Integer.parseInt(input)>0) {
+			else if(Integer.parseInt(input)>0)
 				return "BAN-"+input;
-			}else {
+			else
 				return input;
-			}
 		}
 		catch(NumberFormatException e) {
 			return input;
@@ -329,8 +335,8 @@ public class Function_Library {
 	}
 	private boolean isLocalGIT(String branch) {
 		File file = new File(gitFolder+"\\.git\\\\refs\\heads\\"+branch);
-        return file.exists();
-	}	
+		return file.exists();
+	}
 	public void generateKeys(String email) {
 		File file = new File(getUserHome()+"\\.ssh");
 		if(!file.isDirectory())
@@ -342,7 +348,7 @@ public class Function_Library {
 				+ "\"";
 		writeHostFile();
 
-		cmd(command);	
+		cmd(command);
 		//add host file...
 		if(folderExists("H:\\")){
 			String destination = "H:\\.ssh";
@@ -359,7 +365,7 @@ public class Function_Library {
 			if (!destination.exists()){
 				destination.mkdirs();
 			}
-            String[] files = source.list();
+			String[] files = source.list();
 
 			for (String file : Objects.requireNonNull(files)){
 				File srcFile = new File(source, file);
@@ -412,31 +418,27 @@ public class Function_Library {
 			Desktop.getDesktop().browse(new URI(URL));
 		} catch (IOException | URISyntaxException   e) {
 			e.printStackTrace();
-		} 	
+		}
 	}
 	public void addSSHPage() {
 		try {
 			Desktop.getDesktop().browse(new URI("http://fisheye01.ua.edu:7990/stash/plugins/servlet/ssh/account/keys/add"));
 		} catch (IOException | URISyntaxException   e) {
 			e.printStackTrace();
-		} 	
+		}
 	}
 	private boolean sshKeysExist() {
 		File folder = new File(getUserHome()+"\\.ssh");
 		File public_rsa  = new File(getUserHome()+"\\.ssh\\id_rsa.pub");
 		File private_rsa = new File(getUserHome()+"\\.ssh\\id_rsa");
-		if(!folder.isDirectory() ) {
+		if(!folder.isDirectory() || !public_rsa.exists() || !private_rsa.exists())
 			return false;
-		} 
-		if(!public_rsa.exists() ) {
-			return false;
-		}
-        return private_rsa.exists();
-
-    }
+		else
+			return true;
+	}
 	private boolean isRemoteGIT(String branch) {
-        return remoteBranches.contains(branch);
-	}	
+		return remoteBranches.contains(branch);
+	}
 	public String getBranch() {
 		String line;
 		String branch = null;

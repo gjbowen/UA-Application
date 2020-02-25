@@ -34,8 +34,8 @@ public class Preferences {
 		return cons;
 	}
 	public static boolean isWindows() {
-        return System.getProperty("os.name").toLowerCase().contains("windows");
-		}
+		return System.getProperty("os.name").toLowerCase().contains("windows");
+	}
 	private static String getFileName() {
 		return System.getProperty("user.home")+"/.preferences";
 	}
