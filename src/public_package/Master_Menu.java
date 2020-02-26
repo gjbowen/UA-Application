@@ -25,7 +25,7 @@ public class Master_Menu
 	private JFrame frameMenu;
 	private Connection jdbc;
 	private SftpClient sftp;
-	private final Session ssh;
+	private Session ssh;
 	private final String userName;
 	private final String password;
 	private String environment;
@@ -131,16 +131,19 @@ public class Master_Menu
 	private void updateEnvironment(String env) {
 		environment = env;
 
-		Preferences.addPreference("environment", environment);
-		
 		System.out.println("Switching to "+environment+"..");
+
 		JDBC_Connection jdbc_connection =  new JDBC_Connection(userName,password,environment);
 		jdbc_connection.jdbcConnect();
 		jdbc=jdbc_connection.connection;
-		
+
 		SFTP_Connection sftp_connection = new SFTP_Connection(userName,password,environment);
 		sftp_connection.sftpConnect();
 		sftp=sftp_connection.connection;
+
+		SSH_Connection ssh_connection = new SSH_Connection(userName,password,environment);
+		ssh_connection.sshConnect();;
+		ssh=ssh_connection.session;
 
 		frameMenu.dispose();
 		Preferences.addPreference("environment", environment);

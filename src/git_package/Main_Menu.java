@@ -18,7 +18,7 @@ import java.util.ArrayList;
 public class Main_Menu
 {
 	private JPanel panel;
-	private final Function_Library f;
+	private final Function_Library func_lib;
 	private JTextField textField_switch;
 	private JTextField textField_commit;
 	private JLabel lbl_branch;
@@ -31,8 +31,8 @@ public class Main_Menu
 	public boolean done = false;
 
 	public Main_Menu(Function_Library f2){
-		f = f2;
-		if(f.ready()) {
+		func_lib = f2;
+		if(func_lib.ready()) {
 			initialize();	
 			refreshInfo();
 			done = true;
@@ -42,7 +42,7 @@ public class Main_Menu
 	 * @wbp.parser.entryPoint
 	 */
 	private void initialize() {
-		f.readPacked_Refs();
+		func_lib.readPacked_Refs();
 		frame = new JFrame();
 
 		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(Main_Menu.class.getResource("/Jar Files/ua_background_mobile.jpg")));
@@ -57,23 +57,24 @@ public class Main_Menu
 		button_exit.setFont(new Font("Lucida Grande", 0, 15));
 		frame.getContentPane().add(button_exit);
 
-		lbl_branch = new JLabel(f.getBranch());
-		lbl_branch.setBounds(10, 11, 102, 30);
+		lbl_branch = new JLabel(func_lib.getBranch());
+		lbl_branch.setBounds(10, 11, 132, 30);
 		lbl_branch.setFont(new Font("Tahoma", Font.PLAIN, 19));
+		lbl_branch.setSize( lbl_branch.getPreferredSize() );
 		frame.getContentPane().add(lbl_branch);
-
-		JButton btnDeletePreferences = new JButton("Reset GIT");
+//		frame.pack();
+		JButton btnDeletePreferences = new JButton("Reset");
 		btnDeletePreferences.setBounds(300, 225, 89, 25);
 		btnDeletePreferences.addActionListener(e -> {
 			int selection;
-			selection=f.okCancel("Are you sure? This will delete the .gitPreference file.");
+			selection=func_lib.okCancel("Are you sure? This will delete the .gitPreference file.");
 			if(selection==0) {
-				f.deleteFile(f.getUserHome()+"\\.gitPreference");
+				func_lib.deleteFile(func_lib.getUserHome()+"/.gitPreference");
 
 				frame.dispose();
 				EventQueue.invokeLater(() -> {
 					try {
-						new Setup_Menu(f);
+						new Setup_Menu(func_lib);
 					} catch (Exception e2) {
 						e2.printStackTrace();
 					}
@@ -116,7 +117,9 @@ public class Main_Menu
 		////////////////////////////////////////////////////////////////////////////
 
 		JLabel lblSwitchBranch = new JLabel("Switch branch");
-		lblSwitchBranch.setBounds(10, 42, 92, 14);
+		lblSwitchBranch.setBounds(10, 42, 5, 14);
+		lblSwitchBranch.setFont(new Font("Tahoma", Font.BOLD, 10));
+		lblSwitchBranch.setSize( lblSwitchBranch.getPreferredSize() );
 		panel.add(lblSwitchBranch);
 
 		JLabel lblBranch = new JLabel("Branch");
@@ -146,6 +149,8 @@ public class Main_Menu
 
 		JLabel lblCommitAndPush = new JLabel("Commit and Push");
 		lblCommitAndPush.setBounds(10, 97, 158, 14);
+		lblCommitAndPush.setFont(new Font("Tahoma", Font.BOLD, 10));
+		lblCommitAndPush.setSize( lblCommitAndPush.getPreferredSize() );
 		panel.add(lblCommitAndPush);
 
 		JPanel panel_1 = new JPanel();
@@ -161,14 +166,14 @@ public class Main_Menu
 		JButton btn_pull = new JButton("PULL");
 		panel_1.add(btn_pull);
 		btn_pull.addActionListener(arg0 -> {
-			f.pull();
+			func_lib.pull();
 			refreshInfo();
 		});
 		panel_1.add(btnFetch);
 		panel_1.add(btnPush);
 
 		JButton btnViewDiffs = new JButton("View Diffs To Remote");
-		btnViewDiffs.addActionListener(arg0 -> f.diff());
+		btnViewDiffs.addActionListener(arg0 -> func_lib.diff());
 		btnViewDiffs.setBounds(136, 15, 169, 31);
 		frame.getContentPane().add(btnViewDiffs);
 
@@ -177,16 +182,16 @@ public class Main_Menu
 		frame.getContentPane().add(btn_hard_reset);
 		btn_hard_reset.addActionListener(e -> {
 			int selection;
-			selection=f.okCancel("Are you sure? ALL changes made locally will be lost and the remote branch will be restored.");
+			selection=func_lib.okCancel("Are you sure? ALL changes made locally will be lost and the remote branch will be restored.");
 			if(selection==0) {
-				f.hardReset();
+				func_lib.hardReset();
 			}
 		});
-		btnPush.addActionListener(e -> f.push(f.getBranch()));
-		btnFetch.addActionListener(arg0 -> f.fetch());
+		btnPush.addActionListener(e -> func_lib.push(func_lib.getBranch()));
+		btnFetch.addActionListener(arg0 -> func_lib.fetch());
 		btnSubmit_commit.addActionListener(e -> {
-			input = f.validateInput(textField_commit.getText().trim());
-			f.commitAndPush(input);
+			input = func_lib.validateInput(textField_commit.getText().trim());
+			func_lib.commitAndPush(input);
 			try {
 				Thread.sleep(2000);
 			} catch (InterruptedException e2) {
@@ -195,11 +200,10 @@ public class Main_Menu
 			textField_commit.setText("");
 		});
 		btnSubmit_switch.addActionListener(arg0 -> {
-			input = f.validateInput(textField_switch.getText().trim());
-			if(!input.equals(f.getBranch())) {
-				f.switchBranch(input);
+			input = func_lib.validateInput(textField_switch.getText().trim());
+			if(!input.equals(func_lib.getBranch())) {
+				func_lib.switchBranch(input);
 			}
-			addRecentBranch(input);
 			textField_switch.setText("");
 			try {
 				Thread.sleep(2000);
@@ -229,14 +233,21 @@ public class Main_Menu
 		btnRefresh.setBounds(300, 191, 89, 25);
 		frame.getContentPane().add(btnRefresh);
 
-		JButton btnOpen = new JButton("Open uabanner");
+		JButton btnOpen = new JButton("Open folder");
 		btnOpen.addActionListener(e -> {
-			try{
-				System.out.println(f.gitFolder);
-				Runtime.getRuntime().exec("explorer.exe /select,"+f.gitFolder+"\\.git");
+			if(func_lib.isWindows()) {
+				try {
+					Runtime.getRuntime().exec("explorer.exe /select," + func_lib.gitFolder + "\\.git");
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
 			}
-			catch (IOException e1){
-				e1.printStackTrace();
+			else{
+				try {
+					Runtime.getRuntime().exec("xdg-open " + func_lib.gitFolder);
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
 			}
 		});
 		btnOpen.setBounds(150, 191, 140, 25);
@@ -244,31 +255,14 @@ public class Main_Menu
 
 		JButton btnOpenBan = new JButton("Open SCM");
 		btnOpenBan.addActionListener(e -> {
-			System.out.println("f.gitFolder: "+f.gitFolder);
 			if(lbl_branch.getText().startsWith("BAN-"))
-				f.openLink("https://scm.oit.ua.edu/jira/browse/"+lbl_branch.getText());
+				func_lib.openLink("https://scm.oit.ua.edu/jira/browse/"+lbl_branch.getText());
 		});
 		btnOpenBan.setBounds(150, 225, 140, 25);
 
 		frame.getContentPane().add(btnOpenBan);
 		//final frame
 		frame.setVisible(true);
-	}
-	private void updateRecentBranches(){
-		System.out.println("updating recent branch..");
-		branches = new String[recentBranches.size()];
-		StringBuilder prettyStuff = new StringBuilder();
-		for(int i=0;i<recentBranches.size();++i){
-			branches[i]=recentBranches.get(i);
-			prettyStuff.append(branches[i]+"/");
-		}
-	}
-	private void addRecentBranch(String branch){
-		System.out.println("Adding recent branch..");
-		if(!recentBranches.contains(branch)){
-			recentBranches.add(branch);
-		}
-		updateRecentBranches();
 	}
 	private void getRecentBranches(){
 
@@ -281,7 +275,6 @@ public class Main_Menu
 			branches = new String[] {"","sevl","test","prod"};
 		}
 		recentBranches=stringArray_to_arrayList(branches);
-		System.out.println("Recent Branches from file: " + recentBranches.toString());
 	}
 
 	private ArrayList<String> stringArray_to_arrayList(String[] sArray){
@@ -300,8 +293,8 @@ public class Main_Menu
 		panel.add(dropDownBox);
 	}
 	private void refreshInfo() {
-		f.readPacked_Refs();
-		lbl_branch.setText(f.getBranch());
+		func_lib.readPacked_Refs();
+		lbl_branch.setText(func_lib.getBranch());
 	}
 	private static void addPopup(Component component, final JPopupMenu popup) {
 		component.addMouseListener(new MouseAdapter() {

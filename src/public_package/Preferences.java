@@ -55,7 +55,8 @@ public class Preferences {
 				output.write("debug,false\n");
 			}
 			output.close();
-			hide(getFileName());
+			if(isWindows())
+				hide(getFileName());
 		}
 		catch (IOException e2) {
 			System.err.println("Cannot write to "+getFileName());
@@ -96,7 +97,7 @@ public class Preferences {
 			p = Runtime.getRuntime().exec("attrib +h " + file);
 			p.waitFor(); // p.waitFor() important, so that the file really appears as hidden immediately after function exit.
 		} catch (IOException | InterruptedException e) {
-			System.out.println("Failed to hide - "+e.getMessage());
+			System.err.println("Failed to hide - "+e.getMessage());
 		}
 	}
 }

@@ -70,7 +70,7 @@ class Setup_Menu
 		textField.setBounds(10, 126, 231, 31);
 		frame.getContentPane().add(textField);
 		textField.setColumns(10);
-		textField.setText(f.getUserHome()+"\\Desktop");
+		textField.setText(f.getUserHome()+"/Desktop");
 
 		lblMode = new JLabel("Enter location to clone GIT folder");
 		lblMode.setBounds(10, 109, 231, 14);
@@ -147,7 +147,7 @@ class Setup_Menu
 			else if(rbNew.isSelected()){
 				if(btnValidate.getText().equals("Change"))
 					reset(); //reset it out
-				else if(f.GITfolderExists(textField.getText().trim()+"\\uabanner"))
+				else if(f.GITfolderExists(textField.getText().trim()+"/uabanner"))
 					invalid("GIT folder already exists!");
 				else if(f.folderExists(textField.getText().trim()))
 					valid();
@@ -164,7 +164,7 @@ class Setup_Menu
 			}
 			else if(rbNew.isSelected()){
 				//clone and create preference file
-				f.gitFolder = textField.getText()+"\\uabanner";
+				f.gitFolder = textField.getText()+"/uabanner";
 				f.cloneGIT(textField.getText());
 				done();
 			}

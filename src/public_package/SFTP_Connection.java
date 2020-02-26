@@ -22,7 +22,7 @@ import com.sshtools.ssh.SshException;
 import com.sshtools.ssh2.Ssh2Client;
 
 public class SFTP_Connection {
-	public final String environment;
+	public String environment;
 	protected String username;
 	protected final String password;
 	public SftpClient connection;

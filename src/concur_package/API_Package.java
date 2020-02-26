@@ -39,8 +39,10 @@ class API_Package {
 	String serverResponse;
 	private int vendorCount = 0;
 	private int userCount = 0;
+	protected boolean ready;
 
 	API_Package(Function_Library conn){
+		ready=false;
 		func_lib = conn;
 		if(func_lib.environment.equals("PROD"))
 			url="https://www.concursolutions.com";
@@ -48,7 +50,8 @@ class API_Package {
 			url="https://implementation.concursolutions.com";
 
 		setCredentials();
-		setAccessToken();
+		if(tokenParams!=null)
+			setAccessToken();
 	}
 
 	void reinit() {

@@ -3,6 +3,6 @@ class Driver {
 		if(args.length>0)
 			new public_package.Login(args[0]); //shortcut mode
 		else
-			new public_package.Login(null);
+			new public_package.Login("git");
 	}
 }

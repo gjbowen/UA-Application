@@ -27,8 +27,8 @@ class Employee_Menu {
 
 	public Employee_Menu(Function_Library conn) {
 		connection = conn;
-		this.initialize();
 		api = new API_Package(connection);
+		this.initialize();
 	}
 
 	private void initialize() {
@@ -61,7 +61,7 @@ class Employee_Menu {
 		//////////////////////////////////////////////////////////////////////////////////
 		JLabel lbl_person = new JLabel("CWID/PIDM");
 		lbl_person.setFont(new Font("Tahoma", Font.BOLD, 13));
-		lbl_person.setBounds(5, 8, 80, 23);
+		lbl_person.setBounds(5, 8, 100, 23);
 		subPanel_1.add(lbl_person);
 
 		cwidField_emp = new JTextField();
@@ -167,6 +167,8 @@ class Employee_Menu {
 
 		JButton btnSubmit_API = new JButton("Find via API");
 		btnSubmit_API.setBounds(5, 105, 240, 29);
+		if(!api.ready)
+			btnSubmit_API.setEnabled(false);
 		subPanel_1.add(btnSubmit_API);
 		btnSubmit_API.addActionListener(e2 -> {
 			lblStatus.setText("Status: Sending API GET request..");
