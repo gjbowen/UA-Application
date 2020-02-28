@@ -1,6 +1,6 @@
 package concur_package;
 
-import java.awt.Desktop;
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
-import javax.swing.JOptionPane;
+import javax.swing.*;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -53,7 +53,24 @@ class API_Package {
 		if(tokenParams!=null)
 			setAccessToken();
 	}
+	void tryAgain(){
 
+		JFileChooser chooser = new JFileChooser(System.getProperty("user.home")+"/Box Sync");
+		chooser.setPreferredSize(new Dimension(700, 500));
+
+		Action details = chooser.getActionMap().get("viewTypeDetails");
+		details.actionPerformed(null);
+		chooser.setDialogTitle("INVALID FILE - USE FILE IN \""+System.getProperty("user.home")+"/Box Sync/Business Admin Team Shared\"");
+
+		if(chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+			tokenParams= func_lib.getContents(chooser.getSelectedFile().getPath());
+			if(tokenParams!=null) {
+				setAccessToken();
+				if(!ready)
+					tryAgain();
+			}
+		}
+	}
 	void reinit() {
 		System.out.println("API has been reinitialized..");
 		vendors = new ArrayList<Vendor>();
@@ -198,14 +215,12 @@ class API_Package {
 		return retStr.toString();
 	}
 	private void setCredentials() {
+		String path = System.getProperty("user.home")+"/Box Sync/Business Admin Team Shared/Concur/";
 		if(func_lib.environment.equals("PROD"))
-			tokenParams = func_lib.getContents(
-					func_lib.sftp.makePath(new String[]{"Box Sync", "Business Admin Team Shared", "Concur", "API-PROD.dat"})
-			);
+			tokenParams = func_lib.getContents(path+"API-PROD.dat");
 		else
-			tokenParams = func_lib.getContents(
-					func_lib.sftp.makePath(new String[]{"Box Sync", "Business Admin Team Shared", "Concur", "API-TEST.dat"})
-			);	}
+			tokenParams = func_lib.getContents(path+"API-TEST.dat");
+	}
 	private String jsonRead(String jsonString){
 		try {
 			JSONObject jsonObject = new JSONObject(jsonString);
@@ -247,10 +262,11 @@ class API_Package {
 				sendGetRequest(urlSuffix);
 			}
 			else{
-				System.out.println("Response Code - "+responseCode);
+				System.err.println("ERROR - Response Code "+responseCode);
+				System.err.println(tokenParams);
 				JOptionPane.showMessageDialog(null,"Response Code - "+responseCode);
-				System.out.println("Exiting program..");
-				System.exit(1);
+				//System.out.println("Exiting program..");
+				//System.exit(1);
 			}
 		} catch (MalformedURLException | ProtocolException e) {
 			e.printStackTrace();
@@ -302,11 +318,11 @@ class API_Package {
 			}
 			else if (responseCode==400){
 				serverResponse="400 - Bad request. Record likely does not exist, or has already been processed.";
+				ready=false;
 			}
 			else {
 				responseCode(responseCode);
-				System.out.println("Exiting program..");
-				System.exit(0);
+				ready=false;
 			}
 		} catch (MalformedURLException | ProtocolException e) {
 			e.printStackTrace();
@@ -318,9 +334,9 @@ class API_Package {
 		if(code==200)
 			System.out.println("200 - GOOD!!");
 		else if(code==503)
-			System.out.println("503 - Service Unavailable");
+			System.err.println("503 - Service Unavailable");
 		else if(code==400)
-			System.out.println("400 - Bad Request");
+			System.err.println("400 - Bad Request");
 	}
 	private void setAccessToken() {
 		try {
@@ -350,6 +366,7 @@ class API_Package {
 			System.out.println("Post parameters: " + tokenParams);
 			responseCode(responseCode);
 			if(responseCode==200) {
+				ready=true;
 				BufferedReader in = new BufferedReader(
 						new InputStreamReader(con.getInputStream()));
 				String inputLine;
@@ -362,8 +379,7 @@ class API_Package {
 				access_token = jsonRead(response.toString());
 			}
 			else {
-				System.out.println("Error getting access token (code "+responseCode+"). Exiting program..");
-				System.exit(1);
+				System.err.println("Error getting access token (code "+responseCode+").");
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

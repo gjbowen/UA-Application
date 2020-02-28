@@ -38,11 +38,10 @@ public class Main_Menu
 			done = true;
 		}
 	}
-	/**
-	 * @wbp.parser.entryPoint
-	 */
+
+
 	private void initialize() {
-		func_lib.readPacked_Refs();
+		func_lib.getRemoteBranchList();
 		frame = new JFrame();
 
 		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(Main_Menu.class.getResource("/Jar Files/ua_background_mobile.jpg")));
@@ -57,7 +56,7 @@ public class Main_Menu
 		button_exit.setFont(new Font("Lucida Grande", 0, 15));
 		frame.getContentPane().add(button_exit);
 
-		lbl_branch = new JLabel(func_lib.getBranch());
+		lbl_branch = new JLabel(func_lib.getCurrentBranch());
 		lbl_branch.setBounds(10, 11, 132, 30);
 		lbl_branch.setFont(new Font("Tahoma", Font.PLAIN, 19));
 		lbl_branch.setSize( lbl_branch.getPreferredSize() );
@@ -187,7 +186,7 @@ public class Main_Menu
 				func_lib.hardReset();
 			}
 		});
-		btnPush.addActionListener(e -> func_lib.push(func_lib.getBranch()));
+		btnPush.addActionListener(e -> func_lib.push(func_lib.getCurrentBranch()));
 		btnFetch.addActionListener(arg0 -> func_lib.fetch());
 		btnSubmit_commit.addActionListener(e -> {
 			input = func_lib.validateInput(textField_commit.getText().trim());
@@ -201,7 +200,7 @@ public class Main_Menu
 		});
 		btnSubmit_switch.addActionListener(arg0 -> {
 			input = func_lib.validateInput(textField_switch.getText().trim());
-			if(!input.equals(func_lib.getBranch())) {
+			if(!input.equals(func_lib.getCurrentBranch())) {
 				func_lib.switchBranch(input);
 			}
 			textField_switch.setText("");
@@ -293,8 +292,8 @@ public class Main_Menu
 		panel.add(dropDownBox);
 	}
 	private void refreshInfo() {
-		func_lib.readPacked_Refs();
-		lbl_branch.setText(func_lib.getBranch());
+		func_lib.getRemoteBranchList();
+		lbl_branch.setText(func_lib.getCurrentBranch());
 	}
 	private static void addPopup(Component component, final JPopupMenu popup) {
 		component.addMouseListener(new MouseAdapter() {

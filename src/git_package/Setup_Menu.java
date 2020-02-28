@@ -159,7 +159,7 @@ class Setup_Menu
 			if(rbExists.isSelected()) {
 				//create preference file with the location
 				f.gitFolder = textField.getText();
-				f.print(f.gitFolder);
+				System.out.println(f.gitFolder);
 				done();
 			}
 			else if(rbNew.isSelected()){
@@ -177,8 +177,7 @@ class Setup_Menu
 		public_package.Preferences.addPreference("git",f.gitFolder);
 
 		frame.setVisible(false);
-
-
+		new git_package.Main_Menu(new Function_Library());
 
 	}
 	private void reset() {

@@ -14,7 +14,7 @@ import javax.swing.event.HyperlinkListener;
 class Employee_Menu {
 	JFrame frame;
 	private final Function_Library connection;
-	private final API_Package api;
+	private API_Package api;
 	private JTextField cwidField_emp;
 
 	private JTextField textField_column;
@@ -46,11 +46,7 @@ class Employee_Menu {
 		frame.getContentPane().add(panel);
 		panel.setLayout(null);
 
-		final JLabel lblStatus = new JLabel("Status: WAIT!");
-		lblStatus.setFont(new Font("AppleGothic", Font.PLAIN, 16));
-		lblStatus.setBounds(138, 404, 328, 35);
-		panel.add(lblStatus);
-		lblStatus.setText("");
+
 
 		Panel subPanel_1 = new Panel();
 		subPanel_1.setBackground(Color.LIGHT_GRAY);
@@ -90,7 +86,6 @@ class Employee_Menu {
 		subPanel_1.add(btnSubmit_findEmp);
 
 		btnSubmit_findEmp.addActionListener(e2 -> {
-			lblStatus.setText("Status: Finding CWID info..");
 			String message;
 			String person = cwidField_emp.getText().trim();
 			if (!person.equals("")) {
@@ -125,22 +120,15 @@ class Employee_Menu {
 
 				//finally, show it!
 				myFrame.setVisible(true);
-
-				lblStatus.setText("");
-			}
-			else {
-				lblStatus.setText("Status: CWID not given.");
-				//connection.findEmployeeCustom();
 			}
 		});
 
 		//////////////////////////////////////////////////////////////////////////////////////////
 
 		JButton submitButton6 = new JButton("Get information from tracking table");
-		submitButton6.setBounds(5, 70, 255, 29);
+		submitButton6.setBounds(5, 70, 290, 29);
 		subPanel_1.add(submitButton6);
 		submitButton6.addActionListener(e2 -> {
-			lblStatus.setText("Status: Getting person info from tracking table..");
 			String person = cwidField_emp.getText().trim();
 			String message;
 			if (!person.equals("")) {
@@ -157,43 +145,48 @@ class Employee_Menu {
 				} else {
 					JOptionPane.showMessageDialog(null, "CWID - " + person + " is not in tracking table");
 				}
-				lblStatus.setText("");
-			} else {
-				lblStatus.setText("Status: CWID not given.");
 			}
 		});
 
 		//////////////////////////////////////////////////////////////////////////
 
 		JButton btnSubmit_API = new JButton("Find via API");
-		btnSubmit_API.setBounds(5, 105, 240, 29);
+		btnSubmit_API.setBounds(5, 105, 290, 29);
 		if(!api.ready)
-			btnSubmit_API.setEnabled(false);
+			btnSubmit_API.setText("Set API Credentials");
 		subPanel_1.add(btnSubmit_API);
+
 		btnSubmit_API.addActionListener(e2 -> {
-			lblStatus.setText("Status: Sending API GET request..");
-			String message;
-			String person = cwidField_emp.getText().trim();
-			if (!person.equals("")) {
-				if(!connection.isCWID(person))
-					person = connection.jdbc.getCWIDFromPIDM(person);
+			if(!api.ready) {
+				api.tryAgain();
+				if(api.ready)
+					btnSubmit_API.setText("Find via API");
+			}
+			else {
+				String message;
+				String person = cwidField_emp.getText().trim();
+				if (!person.equals("")) {
+					if (!connection.isCWID(person))
+						person = connection.jdbc.getCWIDFromPIDM(person);
 
-				//do stuff
-				lblStatus.setText("");
-				api.reinit();
-				api.sendGetRequest("/api/v3.0/common/users?employeeID="+person);
-				message=api.usersToString();
+					//do stuff
+					api.reinit();
+					api.sendGetRequest("/api/v3.0/common/users?employeeID=" + person);
+					message = api.usersToString();
 
-				JTextArea textArea = new JTextArea(message);
-				JScrollPane scrollPane = new JScrollPane(textArea);
-				textArea.setFont(new Font("monospaced", Font.BOLD, 16));
-				scrollPane.setPreferredSize(new Dimension(700, 500));
-				scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-				scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-				JOptionPane.showMessageDialog(null, scrollPane, "API Search Results - "+person, JOptionPane.PLAIN_MESSAGE);
-
-			} else {
-				lblStatus.setText("Status: CWID not given.");
+					JTextArea textArea = new JTextArea(message);
+					JScrollPane scrollPane = new JScrollPane(textArea);
+					textArea.setFont(new Font("monospaced", Font.BOLD, 16));
+					scrollPane.setPreferredSize(new Dimension(700, 500));
+					scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+					scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+					if(!message.equals(""))
+						JOptionPane.showMessageDialog(null, scrollPane, "API Search Results - " + person, JOptionPane.PLAIN_MESSAGE);
+					else {
+						api.ready = false;
+						btnSubmit_API.setText("Set API Credentials");
+					}
+				}
 			}
 		});
 		////////////////////////////////////////////////////////////////////////////////////
@@ -210,7 +203,6 @@ class Employee_Menu {
 		button_Reactivated.setBounds(5, 5, 220, 29);
 		button_Reactivated.addActionListener(arg0 -> {
 			String message;
-			lblStatus.setText("Status: Finding all reactivated employees.");
 			message = connection.findAllDeleted();
 			JTextArea textArea = new JTextArea(message);
 			JScrollPane scrollPane = new JScrollPane(textArea);
@@ -218,7 +210,6 @@ class Employee_Menu {
 			textArea.setWrapStyleWord(true);
 			scrollPane.setPreferredSize(new Dimension(500, 500));
 			JOptionPane.showMessageDialog(null, scrollPane, "All Reactivated Employees", JOptionPane.PLAIN_MESSAGE);
-			lblStatus.setText("");
 		});
 		subPanel_2.add(button_Reactivated);
 
@@ -229,7 +220,6 @@ class Employee_Menu {
 		subPanel_2.add(btnSubmit_changedLogins);
 		btnSubmit_changedLogins.addActionListener(e2 -> {
 			String message;
-			lblStatus.setText("Status: Finding changed Login IDs.");
 			message = connection.findChangedLogin();
 			JTextArea textArea = new JTextArea(message);
 			JScrollPane scrollPane = new JScrollPane(textArea);
@@ -237,7 +227,6 @@ class Employee_Menu {
 			textArea.setWrapStyleWord(true);
 			scrollPane.setPreferredSize(new Dimension(800, 500));
 			JOptionPane.showMessageDialog(null, scrollPane, "Changed Login IDs", JOptionPane.PLAIN_MESSAGE);
-			lblStatus.setText("");
 		});
 
 		/////////////////////////////////////////////////////////////////////////////////////////
@@ -247,7 +236,6 @@ class Employee_Menu {
 		subPanel_2.add(btnSubmit_4);
 		btnSubmit_4.addActionListener(e2 -> {
 			String message;
-			lblStatus.setText("Status: Finding all deactivated employees.");
 			message = connection.findAllDeleted();
 			JTextArea textArea = new JTextArea(message);
 			JScrollPane scrollPane = new JScrollPane(textArea);
@@ -255,7 +243,6 @@ class Employee_Menu {
 			textArea.setWrapStyleWord(true);
 			scrollPane.setPreferredSize(new Dimension(500, 500));
 			JOptionPane.showMessageDialog(null, scrollPane, "All Deactivated Employees", JOptionPane.PLAIN_MESSAGE);
-			lblStatus.setText("");
 		});
 
 		//////////////////////////////////////////////////////
@@ -277,46 +264,17 @@ class Employee_Menu {
 		scrollPane2.setBounds(5, 20, 100, 190);
 		subPanel_3.add(scrollPane2);
 
-		JButton button305 = new JButton("Create 305");
+		JButton button305 = new JButton("305/350");
 		button305.setBounds(5, 213, 100, 29);
 		subPanel_3.add(button305);
 
 		button305.addActionListener(arg0 -> {
-			lblStatus.setText("Status: Creating 305 file..");
 			String people = editorPane.getText().trim();
 			if (!people.equals("")) {
-				String message = connection.findBatch305(people);
+				String message = connection.findBatch305(people)+"\n"+connection.findBatch350(people);
 				JTextArea textArea = new JTextArea(message);
-				JScrollPane scrollPane = new JScrollPane(textArea);
-				textArea.setLineWrap(true);
-				textArea.setWrapStyleWord(true);
-				scrollPane.setPreferredSize(new Dimension(1200, 500));
-				JOptionPane.showMessageDialog(null, scrollPane, "305 Batch Search", JOptionPane.PLAIN_MESSAGE);
-				lblStatus.setText("");
-			} else {
-				lblStatus.setText("Status: CWIDs not given");
-			}
-		});
-
-		JButton button350 = new JButton("Create 350");
-		button350.setBounds(5, 245, 100, 29);
-		subPanel_3.add(button350);
-
-		button350.addActionListener(arg0 -> {
-			lblStatus.setText("Status: Creating 350 file..");
-			String people = editorPane.getText().trim();
-			if (!people.equals("")) {
-				String message = connection.findBatch350(people);
-				JTextArea textArea = new JTextArea(message);
-				JScrollPane scrollPane = new JScrollPane(textArea);
-				textArea.setLineWrap(true);
-				textArea.setWrapStyleWord(true);
-				scrollPane.setPreferredSize(new Dimension(600, 500));
-				JOptionPane.showMessageDialog(null, scrollPane, "350 Batch Search", JOptionPane.PLAIN_MESSAGE);
-				lblStatus.setText("");
-
-			} else {
-				lblStatus.setText("Status: CWIDs not given");
+				textArea.setLineWrap(false);
+				JOptionPane.showMessageDialog(null, textArea, "305 Batch Search", JOptionPane.PLAIN_MESSAGE);
 			}
 		});
 

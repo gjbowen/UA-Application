@@ -71,7 +71,7 @@ public class Login
 			else if(app.equals("ar"))
 				new ar_package.Main_Menu(jdbc.connection,sftp.connection,ssh.session,userField.getText(),jdbc.password,env);
 			else if(app.equals("git"))
-				new Main_Menu(new Function_Library());
+				new git_package.Main_Menu(new Function_Library());
 
 			if(chckbxSaveLogin.isSelected())
 				save();

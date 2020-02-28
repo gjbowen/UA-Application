@@ -288,10 +288,9 @@ class Function_Library {
 		String line = "";
 		int count = 0;
 		Set<String> people = parsePeople(cwid);
-		File[] files = new File(System.getProperty("user.home") + "//Concur_Files//" + environment + "//Employee_Files").listFiles();
+		File[] files = new File(System.getProperty("user.home") + "/Concur_Files/" + environment + "/Employee_Files").listFiles();
 		File file = null;
 		String[] parsedLine = null;
-		StringBuilder retStr = new StringBuilder();
 
 		HashMap<String,String> approvers = new HashMap<String,String>();
 		HashMap<String,String> nonApprovers = new HashMap<String,String>();
@@ -320,12 +319,6 @@ class Function_Library {
 						nonApprovers.replace(parsedLine[4], line);
 					else
 						nonApprovers.put(parsedLine[4], line);
-
-					retStr.append(getDateFromFilename(file.getName()) + "  -  " + parsedLine[4] + "  -  "
-							+ parsedLine[3] + ", " + parsedLine[1] + " " + parsedLine[2] + "  -  Email: "
-							+ parsedLine[5] + "  -  Active: " + parsedLine[14] + "  -  Orgn: "
-							+ get305ORGN(parsedLine[4], file.getName().replace("305", "350")) + "  -  Approver: "
-							+ parsedLine[63] + "  -  Approver's CWID: " + parsedLine[58] + "\n");
 				}
 				br.close();
 
@@ -340,15 +333,26 @@ class Function_Library {
 		nonApprovers.forEach((k, v) -> {
 			results.add(v);
 		});
-		if (count == 0)
-			return "CWID " + cwid + " not found.";
+
+
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMdd");
 		LocalDateTime now = LocalDateTime.now();
 
 		writeListToFile("concur_employee_feed_305_"+dtf.format(now)+"_fix.txt","100,0,SSO,UPDATE,EN,N,N",results);
 		System.out.println("Done with 305 search.");
-
-		return retStr.toString();
+		if (people.size() != nonApprovers.size())
+			return "305 - Not enough non-approver records were found!\n"+
+					"    Given: "+people.size()+"\n"+
+					"    Found: "+nonApprovers.size()+"\n";
+		else if (people.size() != approvers.size())
+			return "305 - Not enough approver records were found!\n"+
+					"    Given: "+people.size()+"\n"+
+					"    Found: "+approvers.size()+"\n";
+		else
+			return "305 - Perfect! The input matches what was found.\n"+
+					"    Given: "+people.size()+"\n"+
+					"    Found non-approvers: "+nonApprovers.size()+"\n"+
+					"    Found approvers: "+approvers.size()+"\n";
 	}
 
 	String findBatch350(String cwid) {
@@ -358,7 +362,6 @@ class Function_Library {
 		File[] files = new File(System.getProperty("user.home") + "//Concur_Files//" + environment + "//350_Files").listFiles();
 		File file = null;
 		String[] parsedLine = null;
-		StringBuilder retStr = new StringBuilder();
 
 		HashMap<String,String> found = new HashMap<String,String>();
 
@@ -382,9 +385,6 @@ class Function_Library {
 						found.put(parsedLine[1], line);
 					}
 
-					retStr.append(getDateFromFilename(file.getName()) + "  -  " + parsedLine[1] + "  -  "
-							+ parsedLine[17]+ "  -  "
-							+ parsedLine[19]+"\n");
 				}
 				br.close();
 
@@ -402,11 +402,16 @@ class Function_Library {
 
 		writeListToFile("concur_employee_feed_350_"+dtf.format(now)+"_fix.txt","100,0,SSO,UPDATE,EN,N,N",results);
 
-		if (count == 0)
-			return "CWID " + cwid + " not found.";
 		System.out.println("Done with 350 search.");
 
-		return retStr.toString();
+		if (people.size() != found.size())
+			return "350 - Not enough records were found!\n"+
+					"    Given: "+people.size()+"\n"+
+					"    Found: "+found.size()+"\n";
+		else
+			return "350 - Perfect! The input matches what was found.\n"+
+					"    Given: "+people.size()+"\n"+
+					"    Found: "+found.size()+"\n";
 	}
 
 	private String get305ORGN(String cwid, String fileName) {
@@ -1600,15 +1605,7 @@ line := rpad(v_system_id,8)         || --8 SYSTEM_ID*
 			br.close();
 		} catch (IOException e2) {
 			System.err.println("File not found - "+file.getAbsolutePath());
-			JFileChooser chooser = new JFileChooser("C:\\Users\\"+userName+"\\Box Sync");
-			chooser.setPreferredSize(new Dimension(700, 500));
-			Action details = chooser.getActionMap().get("viewTypeDetails");
-			details.actionPerformed(null);
-			chooser.setDialogTitle("INVALID FILE - USE FILE IN \"C:\\Users\\"+userName+"\\Box Sync\\Business Admin Team Shared\"");
-			if(chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION)
-				return getContents(chooser.getSelectedFile().getPath());
-			else
-				return null;
+			return null;
 		}
 		return key.toString();
 	}
