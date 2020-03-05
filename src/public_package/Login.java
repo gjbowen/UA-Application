@@ -14,7 +14,6 @@ import javax.swing.JPasswordField;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
-import git_package.Main_Menu;
 import git_package.Function_Library;
 
 public class Login
@@ -27,7 +26,7 @@ public class Login
 	private JCheckBox chckbxSaveLogin,debugMode;
 	private boolean debug;
 	public Login(String app){
-		initialize(app);
+		this.initialize(app);
 	}
 	@SuppressWarnings("deprecation")
 	private void connect(String app) {
@@ -61,20 +60,20 @@ public class Login
 						jdbc.connection,
 						jdbc.userFirstName,
 						userField.getText(),
-						jdbc.password,
+						JDBC_Connection.password,
 						sftp.connection,
 						ssh.session,
 						env);
 			}
 			else if(app.equals("concur"))
-				new concur_package.Main_Menu(jdbc.connection,sftp.connection,ssh.session,userField.getText(),jdbc.password,env);
+				new concur_package.Main_Menu(jdbc.connection,sftp.connection,ssh.session,userField.getText(), JDBC_Connection.password,env);
 			else if(app.equals("ar"))
-				new ar_package.Main_Menu(jdbc.connection,sftp.connection,ssh.session,userField.getText(),jdbc.password,env);
+				new ar_package.Main_Menu(jdbc.connection,sftp.connection,ssh.session,userField.getText(), JDBC_Connection.password,env);
 			else if(app.equals("git"))
 				new git_package.Main_Menu(new Function_Library());
 
 			if(chckbxSaveLogin.isSelected())
-				save();
+				this.save();
 
 		}
 		else {
@@ -85,9 +84,16 @@ public class Login
 		}
 	}
 
+	public String getEnv() {
+		return env;
+	}
+
+	private void setEnv(String env) {
+		this.env = env;
+	}
+
 	@SuppressWarnings("deprecation")
 	private void initialize(String app){
-		env = "PROD";
 		frameLogin = new JFrame();
 		frameLogin.setIconImage(Toolkit.getDefaultToolkit().getImage(Master_Menu.class.getResource("/Jar Files/ua_background_mobile.jpg")));
 		frameLogin.setTitle("Login Menu");
@@ -127,7 +133,7 @@ public class Login
 
 		status = new JLabel("Status: Ready");
 		status.setFont(new Font("Dialog", Font.BOLD, 14));
-		status.setBounds(12, 158, 255, 37);
+		status.setBounds(12, 170, 350, 37);
 		status.setForeground(Color.BLACK);
 		frameLogin.getContentPane().add(status);
 
@@ -138,7 +144,7 @@ public class Login
 				status.setText("ENTER USERNAME AND PASSWORD");
 			}
 			else
-				connect(app);
+				this.connect(app);
 		});
 		button_Submit.setBounds(10, 207, 91, 55);
 		frameLogin.getContentPane().add(button_Submit);
@@ -164,21 +170,21 @@ public class Login
 		btnExit.addActionListener(e -> System.exit(0));
 		rdbtnSEVL.addActionListener(e -> {
 			if (rdbtnSEVL.isSelected()){
-				env = "SEVL";
+				this.setEnv("SEVL");
 				rdbtnTEST.setSelected(false);
 				rdbtnPROD.setSelected(false);
 			}
 		});
 		rdbtnTEST.addActionListener(e -> {
 			if (rdbtnTEST.isSelected()){
-				env = "TEST";
+				this.setEnv("TEST");
 				rdbtnSEVL.setSelected(false);
 				rdbtnPROD.setSelected(false);
 			}
 		});
 		rdbtnPROD.addActionListener(e -> {
 			if (rdbtnPROD.isSelected()){
-				env = "PROD";
+				this.setEnv("PROD");
 				rdbtnSEVL.setSelected(false);
 				rdbtnTEST.setSelected(false);
 			}
@@ -189,18 +195,18 @@ public class Login
 			userField.setText(map.get("alpha"));
 			passwordField.setText(map.get("omega"));
 			if(Preferences.contents.get("environment").equals("SEVL"))
-				env = "SEVL";
+				this.setEnv("SEVL");
 			else if(Preferences.contents.get("environment").equals("TEST"))
-				env = "TEST";
+				this.setEnv("TEST");
 			else
-				env = "PROD";
+				this.setEnv("PRID");
 			if(Preferences.contents.containsKey("debug")&&
 					Preferences.contents.get("debug").equals("false"))
 				debug = false;
 			else
 				debug = true;
 
-				connect(app);
+			this.connect(app);
 		}
 		else {
 			frameLogin.setVisible(true);

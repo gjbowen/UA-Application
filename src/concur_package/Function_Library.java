@@ -271,7 +271,6 @@ class Function_Library {
 		return "</span>";
 	}
 
-
 	private String toApproverRecord(String[] pLine){
 		pLine[58]="";
 		pLine[60]="";
@@ -284,6 +283,7 @@ class Function_Library {
 		str.deleteCharAt(str.length()-1);
 		return str.toString();
 	}
+
 	String findBatch305(String cwid) {
 		String line = "";
 		int count = 0;
@@ -354,7 +354,6 @@ class Function_Library {
 					"    Found non-approvers: "+nonApprovers.size()+"\n"+
 					"    Found approvers: "+approvers.size()+"\n";
 	}
-
 	String findBatch350(String cwid) {
 		String line = "";
 		int count = 0;
@@ -531,7 +530,7 @@ class Function_Library {
 		return maxFile;
 	}
 	String getLatestActiveDept() {
-		String path = System.getProperty("user.home") + "//Concur_Files//" + environment + "//Active_Departments";
+		String path = System.getProperty("user.home") + "/Concur_Files/" + environment + "/Active_Departments";
 		Integer max = 0;
 		String maxFile = "";
 		String fileName;
@@ -566,7 +565,6 @@ class Function_Library {
 			return !parsedLine.get(17).equals("") && Float.valueOf(parsedLine.get(17)) != 0;
 		return false;
 	}
-
 	private boolean isExpense(ArrayList<String> parsedLine) {
 		if (parsedLine.get(125).toUpperCase().equals("CASH"))
 			//if (!parsedLine.get(184).equals(""))
@@ -999,6 +997,123 @@ class Function_Library {
 		System.out.println("DONE");
 	}
 
+
+	private String buildSAE(ArrayList<String> parsedLine, String filePath, int line) {
+		String transAmount;
+		String message;
+
+		if (parsedLine.get(17).length() < 6 || parsedLine.get(17).equals("")) {
+			transAmount = "0.00";
+		} else {
+			String front = parsedLine.get(17).substring(0, parsedLine.get(17).indexOf("."));
+			String back = parsedLine.get(17).substring(parsedLine.get(17).indexOf(".") + 1,
+					parsedLine.get(17).indexOf(".") + 3);
+			transAmount = front + "." + back;
+		}
+		String file = filePath.split("\\\\")[filePath.split("\\\\").length-1];
+		message = "<br>File: " + createLink(file,filePath) + "<br>"
+				+ "Date: " + getDateFromFilename(file) + "<br>"
+				+ "Line: " + line + "<br>"
+				+ "Person: " + parsedLine.get(4) + " - " + parsedLine.get(5) + ", " + parsedLine.get(6) + "<br>"
+				+ "Report Key: " + parsedLine.get(19) + "<br>"
+				+ "Description: " + parsedLine.get(26) + "<br>"
+				+ parsedLine.get(41) + "<br>"
+				+ parsedLine.get(42) + "<br>"
+				+ parsedLine.get(62) + "<br>"
+				+ parsedLine.get(68) + "<br>"
+				+ parsedLine.get(70) + "<br>"
+				+ parsedLine.get(145) + "<br>"
+				+ "Transaction Amount: " + transAmount + "<br>"
+				+ "Account Code: " + parsedLine.get(62) + "<br>";
+
+		return message;
+	}
+	private String buildSRE(ArrayList<String> parsedLine, String fileName, int line) {
+		System.out.println("FOUND!!!!!!");
+		if(parsedLine.get(0).equals("REQUEST DETAIL")){ //86 in length
+			return "\nFile: " + fileName + "\n"
+					+ "Batch Date: " + parsedLine.get(2) + "\n"
+					+ "Line: " + line+ "\n"
+					+ "\tPerson: " + parsedLine.get(4) + " - " + parsedLine.get(5) + ", " + parsedLine.get(6) + "\n"
+					+ "\tFOAP: " + parsedLine.get(9) + "  " + parsedLine.get(10) + "  " + parsedLine.get(11) + "  " +  parsedLine.get(12) + "\n"
+					;
+		}
+		return null;
+	}
+
+	String searchSAE(String str, int column, String searchMode, String module) {
+		System.out.println("Search column " + column + " to see if it " + searchMode + " " + str );
+		String line = "";
+		int count = 0;
+		File[] files = new File(System.getProperty("user.home") + "//Concur_Files//" + environment + "//SAE_Files").listFiles();
+		File file = null;
+		ArrayList<String> parsedLine = null;
+		StringBuilder retStr = new StringBuilder();
+		retStr.append("Search column " + column + " to see if it " + searchMode + " " + str + "\n");
+		--column;
+		if (searchMode.equals("contains")) {
+			str = str.toLowerCase();
+		}
+		for (int i = 0; i < files.length; ++i) {
+			file = files[i];
+			if (file.getName().endsWith(".txt") && file.getName().startsWith("sae")) {
+				int fileLine = 0;
+				try {
+					BufferedReader br = new BufferedReader(new FileReader(file));
+					while ((line = br.readLine()) != null) {
+						++fileLine;
+						parsedLine = customSplitSpecific(line.replace(",", "").replace("\"", "").replace("|", ","),
+								',');
+
+						if (parsedLine.get(0).equals("EXTRACT") || parsedLine.size() < 63)
+							continue;
+
+						if (isPcard(parsedLine) && isExpense(parsedLine)) {
+							System.out.println("\tERROR - Line evaluated to BOTH pCard and Expense");
+							System.out.println(file.getName() + "\t" + fileLine);
+							continue;
+						}
+						if (!isPcard(parsedLine) && !isExpense(parsedLine)) {
+							System.out.println("\tERROR - Line evaluated to NEITHER pCard or Expense");
+							System.out.println("\t"+file.getName() + "\t" + "Line: "+fileLine);
+							continue;
+						}
+
+						// start the search
+						if (searchMode.equals("contains") && parsedLine.get(column).toLowerCase().contains(str)) {
+							retStr.append(buildSAE(parsedLine, file.getPath(), fileLine));
+							++count;
+						}
+						else if (searchMode.equals("startsWith") && parsedLine.get(column).startsWith(str)) {
+							retStr.append(buildSAE(parsedLine, file.getName(), fileLine));
+							++count;
+						}
+						else if (searchMode.equals("endsWith") && parsedLine.get(column).endsWith(str)) {
+							retStr.append(buildSAE(parsedLine, file.getName(), fileLine));
+							++count;
+						}
+						else if (searchMode.equals("equals") && parsedLine.get(column).equals(str)) {
+							retStr.append(buildSAE(parsedLine, file.getName(), fileLine));
+							++count;
+						}
+						else if (searchMode.equals("doesNotEqual") && !parsedLine.get(column).equals(str)) {
+							retStr.append(buildSAE(parsedLine, file.getName(), fileLine));
+							++count;
+						}
+					}
+					br.close();
+				} catch (IOException e2) {
+					e2.printStackTrace();
+					System.out.println("File not found");
+				}
+			}
+		}
+		System.out.println("Done with SAE search.");
+		if (count == 0) {
+			return "No results for: \nSearch column " + ++column + " to see if it " + searchMode + " " + str;
+		}
+		return retStr.toString();
+	}
 	String searchPRAE(String str, int column, String contains_or_equals) {
 		System.out.println("Initiating PRAE Report Key search...");
 		String line = "";
@@ -1094,126 +1209,6 @@ class Function_Library {
 
 		return retStr.toString();
 	}
-
-	private String buildSAE(ArrayList<String> parsedLine, String filePath, int line) {
-		String transAmount;
-		String message;
-
-		if (parsedLine.get(17).length() < 6 || parsedLine.get(17).equals("")) {
-			transAmount = "0.00";
-		} else {
-			String front = parsedLine.get(17).substring(0, parsedLine.get(17).indexOf("."));
-			String back = parsedLine.get(17).substring(parsedLine.get(17).indexOf(".") + 1,
-					parsedLine.get(17).indexOf(".") + 3);
-			transAmount = front + "." + back;
-		}
-		String file = filePath.split("\\\\")[filePath.split("\\\\").length-1];
-		message = "<br>File: " + createLink(file,filePath) + "<br>"
-				+ "Date: " + getDateFromFilename(file) + "<br>"
-				+ "Line: " + line + "<br>"
-				+ "Person: " + parsedLine.get(4) + " - " + parsedLine.get(5) + ", " + parsedLine.get(6) + "<br>"
-				+ "Report Key: " + parsedLine.get(19) + "<br>"
-				+ "Description: " + parsedLine.get(26) + "<br>"
-				+ parsedLine.get(41) + "<br>"
-				+ parsedLine.get(42) + "<br>"
-				+ parsedLine.get(62) + "<br>"
-				+ parsedLine.get(68) + "<br>"
-				+ parsedLine.get(70) + "<br>"
-				+ parsedLine.get(145) + "<br>"
-				+ "Transaction Amount: " + transAmount + "<br>"
-				+ "Account Code: " + parsedLine.get(62) + "<br>";
-
-		return message;
-	}
-	private String buildSRE(ArrayList<String> parsedLine, String fileName, int line) {
-		System.out.println("FOUND!!!!!!");
-		if(parsedLine.get(0).equals("REQUEST DETAIL")){ //86 in length
-			return "\nFile: " + fileName + "\n"
-					+ "Batch Date: " + parsedLine.get(2) + "\n"
-					+ "Line: " + line+ "\n"
-					+ "\tPerson: " + parsedLine.get(4) + " - " + parsedLine.get(5) + ", " + parsedLine.get(6) + "\n"
-					+ "\tFOAP: " + parsedLine.get(9) + "  " + parsedLine.get(10) + "  " + parsedLine.get(11) + "  " +  parsedLine.get(12) + "\n"
-					;
-		}
-
-
-		return null;
-	}
-
-	String searchSAE(String str, int column, String searchMode, String module) {
-		System.out.println("Search column " + column + " to see if it " + searchMode + " " + str );
-		String line = "";
-		int count = 0;
-		File[] files = new File(System.getProperty("user.home") + "//Concur_Files//" + environment + "//SAE_Files").listFiles();
-		File file = null;
-		ArrayList<String> parsedLine = null;
-		StringBuilder retStr = new StringBuilder();
-		retStr.append("Search column " + column + " to see if it " + searchMode + " " + str + "\n");
-		--column;
-		if (searchMode.equals("contains")) {
-			str = str.toLowerCase();
-		}
-		for (int i = 0; i < files.length; ++i) {
-			file = files[i];
-			if (file.getName().endsWith(".txt") && file.getName().startsWith("sae")) {
-				int fileLine = 0;
-				try {
-					BufferedReader br = new BufferedReader(new FileReader(file));
-					while ((line = br.readLine()) != null) {
-						++fileLine;
-						parsedLine = customSplitSpecific(line.replace(",", "").replace("\"", "").replace("|", ","),
-								',');
-
-						if (parsedLine.get(0).equals("EXTRACT") || parsedLine.size() < 63)
-							continue;
-
-						if (isPcard(parsedLine) && isExpense(parsedLine)) {
-							System.out.println("\tERROR - Line evaluated to BOTH pCard and Expense");
-							System.out.println(file.getName() + "\t" + fileLine);
-							continue;
-						}
-						if (!isPcard(parsedLine) && !isExpense(parsedLine)) {
-							System.out.println("\tERROR - Line evaluated to NEITHER pCard or Expense");
-							System.out.println("\t"+file.getName() + "\t" + "Line: "+fileLine);
-							continue;
-						}
-
-						// start the search
-						if (searchMode.equals("contains") && parsedLine.get(column).toLowerCase().contains(str)) {
-							retStr.append(buildSAE(parsedLine, file.getPath(), fileLine));
-							++count;
-						}
-						else if (searchMode.equals("startsWith") && parsedLine.get(column).startsWith(str)) {
-							retStr.append(buildSAE(parsedLine, file.getName(), fileLine));
-							++count;
-						}
-						else if (searchMode.equals("endsWith") && parsedLine.get(column).endsWith(str)) {
-							retStr.append(buildSAE(parsedLine, file.getName(), fileLine));
-							++count;
-						}
-						else if (searchMode.equals("equals") && parsedLine.get(column).equals(str)) {
-							retStr.append(buildSAE(parsedLine, file.getName(), fileLine));
-							++count;
-						}
-						else if (searchMode.equals("doesNotEqual") && !parsedLine.get(column).equals(str)) {
-							retStr.append(buildSAE(parsedLine, file.getName(), fileLine));
-							++count;
-						}
-					}
-					br.close();
-				} catch (IOException e2) {
-					e2.printStackTrace();
-					System.out.println("File not found");
-				}
-			}
-		}
-		System.out.println("Done with SAE search.");
-		if (count == 0) {
-			return "No results for: \nSearch column " + ++column + " to see if it " + searchMode + " " + str;
-		}
-		return retStr.toString();
-	}
-
 	String searchSRE(String str, int column, String searchMode) {
 		System.out.println("Search column " + column + " to see if it " + searchMode + " " + str );
 		String line = "";
@@ -1272,39 +1267,6 @@ class Function_Library {
 		return retStr.toString();
 	}
 
-	String searchVendorTerm(String id) {
-		String line = "";
-		int count = 0;
-		File[] files = new File(System.getProperty("user.home") + "//Concur_Files//" + environment + "//VENDOR_TERM_FEED_Files").listFiles();
-		File file = null;
-		String[] parsedLine = null;
-		StringBuilder retStr = new StringBuilder();
-		for (int i = 0; i < files.length; ++i) {
-			file = files[i];
-			if (file.getName().endsWith(".txt") && file.getName().contains("concur_vendor_term_feed")) {
-				try {
-					BufferedReader br = new BufferedReader(new FileReader(file));
-					while ((line = br.readLine()) != null) {
-						parsedLine = line.split(",");
-						if (parsedLine.length < 5 || !parsedLine[1].equals(id) && parsedLine[1] != id)
-							continue;
-						retStr.append("File: " + file.getName() + "\tName: " + parsedLine[2].replaceAll("\"", "")
-								+ "\tTax ID: " + parsedLine[3] + "\tEmail: " + parsedLine[52] + "\t" + parsedLine[15]
-								+ "\n");
-						++count;
-					}
-					br.close();
-				} catch (IOException e2) {
-					System.out.println("File not found");
-				}
-			}
-		}
-		System.out.println("Done with Vendor search.");
-		if (count == 0) {
-			return "Vendor " + id + " not found.";
-		}
-		return retStr.toString();
-	}
 
 	private Float formatAmount(String amount){
 		amount=amount.trim();
@@ -1431,6 +1393,39 @@ line := rpad(v_system_id,8)         || --8 SYSTEM_ID*
 		System.out.println("Done with Vendor search.");
 		if (count == 0) {
 			return "Vendor not found - " + id;
+		}
+		return retStr.toString();
+	}
+	String searchVendorTerm(String id) {
+		String line = "";
+		int count = 0;
+		File[] files = new File(System.getProperty("user.home") + "/Concur_Files/" + environment + "/Vendor_Term_Files").listFiles();
+		File file = null;
+		String[] parsedLine = null;
+		StringBuilder retStr = new StringBuilder();
+		for (int i = 0; i < files.length; ++i) {
+			file = files[i];
+			if (file.getName().endsWith(".txt") && file.getName().contains("concur_vendor_term_feed")) {
+				try {
+					BufferedReader br = new BufferedReader(new FileReader(file));
+					while ((line = br.readLine()) != null) {
+						parsedLine = line.split(",");
+						if (parsedLine.length < 5 || !parsedLine[1].equals(id) && parsedLine[1] != id)
+							continue;
+						retStr.append("File: " + file.getName() + "\tName: " + parsedLine[2].replaceAll("\"", "")
+								+ "\tTax ID: " + parsedLine[3] + "\tEmail: " + parsedLine[52] + "\t" + parsedLine[15]
+								+ "\n");
+						++count;
+					}
+					br.close();
+				} catch (IOException e2) {
+					System.out.println("File not found");
+				}
+			}
+		}
+		System.out.println("Done with Vendor search.");
+		if (count == 0) {
+			return "Vendor " + id + " not found.";
 		}
 		return retStr.toString();
 	}
@@ -1609,5 +1604,4 @@ line := rpad(v_system_id,8)         || --8 SYSTEM_ID*
 		}
 		return key.toString();
 	}
-
 }

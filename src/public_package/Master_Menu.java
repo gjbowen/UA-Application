@@ -26,26 +26,19 @@ public class Master_Menu
 	private Connection jdbc;
 	private SftpClient sftp;
 	private Session ssh;
-	private final String userName;
-	private final String password;
-	private String environment;
-	private final String firstName;
-	private JMenu option_button;
-	private JMenu environment_button;
-	private JMenu debug_button;
-    private JButton arProgram;
-    private JButton btnConcur;
-    private JButton btnGitProgram;
-    private JButton btnFileFetchProgram;
+	private final String firstName,userName,password;
+	private String env;
+	private JMenu option_button,environment_button,debug_button;
+    private JButton arProgram,btnConcur,btnGitProgram,btnFileFetchProgram;
 
-	public Master_Menu(Connection conn_jdbc, String first, String user, String pass, SftpClient conn_sftp, Session conn_ssh, String env){
-		jdbc=conn_jdbc;
-		userName=user;
-		password=pass;
-		sftp=conn_sftp;
-		ssh=conn_ssh;
-		environment=env;
-		firstName=first;
+	public Master_Menu(Connection jdbc, String first, String userName, String password, SftpClient sftp, Session ssh, String env){
+		this.jdbc=jdbc;
+		this.userName=userName;
+		this.password=password;
+		this.sftp=sftp;
+		this.ssh=ssh;
+		this.env=env;
+		this.firstName=first;
 		initialize();
 		setButtons();
 	}
@@ -85,15 +78,15 @@ public class Master_Menu
 			m3.setEnabled(false);
 		}
 
-		if(environment.equals("SEVL")) {
+		if(env.equals("SEVL")) {
 			environment_button.add(env_TEST);
 			environment_button.add(env_PROD);
 		}
-		if(environment.equals("TEST")) {
+		if(env.equals("TEST")) {
 			environment_button.add(env_SEVL);
 			environment_button.add(env_PROD);
 		}
-		if(environment.equals("PROD")) {
+		if(env.equals("PROD")) {
 			environment_button.add(env_SEVL);
 			environment_button.add(env_TEST);
 		}
@@ -129,24 +122,24 @@ public class Master_Menu
 		
 	}
 	private void updateEnvironment(String env) {
-		environment = env;
+		this.env = env;
 
-		System.out.println("Switching to "+environment+"..");
+		System.out.println("Switching to "+env+"..");
 
-		JDBC_Connection jdbc_connection =  new JDBC_Connection(userName,password,environment);
+		JDBC_Connection jdbc_connection =  new JDBC_Connection(userName,password,this.env);
 		jdbc_connection.jdbcConnect();
 		jdbc=jdbc_connection.connection;
 
-		SFTP_Connection sftp_connection = new SFTP_Connection(userName,password,environment);
+		SFTP_Connection sftp_connection = new SFTP_Connection(userName,password,this.env);
 		sftp_connection.sftpConnect();
 		sftp=sftp_connection.connection;
 
-		SSH_Connection ssh_connection = new SSH_Connection(userName,password,environment);
+		SSH_Connection ssh_connection = new SSH_Connection(userName,password,this.env);
 		ssh_connection.sshConnect();;
 		ssh=ssh_connection.session;
 
 		frameMenu.dispose();
-		Preferences.addPreference("environment", environment);
+		Preferences.addPreference("environment", this.env);
 
 		initialize();
 	}
@@ -165,7 +158,7 @@ public class Master_Menu
 	private void initialize(){
 		frameMenu = new JFrame();
 		frameMenu.setIconImage(Toolkit.getDefaultToolkit().getImage(Master_Menu.class.getResource("/Jar Files/ua_background_mobile.jpg")));
-		frameMenu.setTitle("Main Menu ("+environment+") - Welcome, " + firstName);
+		frameMenu.setTitle("Main Menu ("+env+") - Welcome, " + firstName);
 		frameMenu.setBounds(100, 100, 445, 336);
 		frameMenu.setDefaultCloseOperation(3);
 		frameMenu.getContentPane().setLayout(null);
@@ -185,7 +178,7 @@ public class Master_Menu
 		btnConcur.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		btnConcur.addActionListener(arg0 -> EventQueue.invokeLater(() -> {
 			try {
-				concur_package.Main_Menu window = new concur_package.Main_Menu(jdbc, sftp,ssh, userName, password, environment);
+				concur_package.Main_Menu window = new concur_package.Main_Menu(jdbc, sftp,ssh, userName, password, env);
 				window.frame.setVisible(true);
 				frameMenu.setVisible(false);
 			} catch (Exception e) {
@@ -200,7 +193,7 @@ public class Master_Menu
 			frameMenu.setVisible(false);
 			EventQueue.invokeLater(() -> {
 				try {
-					ar_package.Main_Menu window = new ar_package.Main_Menu(jdbc, sftp, ssh, userName, password, environment);
+					ar_package.Main_Menu window = new ar_package.Main_Menu(jdbc, sftp, ssh, userName, password, env);
 					window.frame.setVisible(true);
 					frameMenu.setVisible(false);
 				} catch (Exception e) {
@@ -231,7 +224,7 @@ public class Master_Menu
 		btnFileFetchProgram.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		btnFileFetchProgram.addActionListener(arg0 -> EventQueue.invokeLater(() -> {
 			try {
-				file_fetch_package.FileFetcher window = new file_fetch_package.FileFetcher(sftp,ssh, firstName, userName, password, environment);
+				file_fetch_package.FileFetcher window = new file_fetch_package.FileFetcher(sftp,ssh, firstName, userName, password, env);
 				window.frame.setVisible(true);
 				frameMenu.dispose();
 				frameMenu.setVisible(false);
