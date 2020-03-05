@@ -199,7 +199,7 @@ public class Login
 			else if(Preferences.contents.get("environment").equals("TEST"))
 				this.setEnv("TEST");
 			else
-				this.setEnv("PRID");
+				this.setEnv("PROD");
 			if(Preferences.contents.containsKey("debug")&&
 					Preferences.contents.get("debug").equals("false"))
 				debug = false;
