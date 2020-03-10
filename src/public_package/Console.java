@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 
-class Console {
+public class Console {
     private final JFrame frame = new JFrame();
     public Console() {
         JTextArea textArea = new JTextArea(24, 80);

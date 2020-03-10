@@ -554,7 +554,7 @@ public class JDBC_Connection {
 			return false;
 		}
 	}
-	void jdbcConnect() {
+	public void jdbcConnect() {
 		String JDBC_DRIVER = "oracle.jdbc.driver.OracleDriver";
 		try {
 			Class.forName(JDBC_DRIVER);

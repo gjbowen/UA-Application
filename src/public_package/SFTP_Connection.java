@@ -28,7 +28,7 @@ public class SFTP_Connection {
 	public SftpClient connection;
 	protected String dirDelim;
 
-	protected SFTP_Connection(String user, String pass, String env) {
+	public SFTP_Connection(String user, String pass, String env) {
 		environment = env;
 		username = user;
 		password = pass;
@@ -59,7 +59,7 @@ public class SFTP_Connection {
 		return str.toString();
 	}
 
-    void sftpConnect(){
+    public void sftpConnect(){
 		try {
 			String hostname = getInstance(environment);
 

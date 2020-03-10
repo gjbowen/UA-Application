@@ -289,7 +289,7 @@ class Employee_Menu {
 		JTextField textField_cwid = new JTextField();
 		JTextField textField_pidm = new JTextField();
 		JTextField textField_name = new JTextField();
-		JTextField textField_myBama = new JTextField();
+		JTextField textField_myBamappa = new JTextField();
 		JTextField textField_email = new JTextField();
 
 		JLabel lblCwid = new JLabel("CWID");

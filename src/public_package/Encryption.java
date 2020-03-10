@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-class Encryption {
+public class Encryption {
 	private static String fileName;
 	private static void setFileName() {
 		fileName = System.getProperty("user.home")+"/.project2";
@@ -40,7 +40,7 @@ class Encryption {
 		}
 		return map;
 	}
-	static void deleteFile(){
+	public static void deleteFile(){
 		setFileName();
 		File file = new File(fileName);
 		if(file.exists())

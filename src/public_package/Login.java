@@ -14,6 +14,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
+import ar_package.Football_Menu;
 import git_package.Function_Library;
 
 public class Login
@@ -39,18 +40,29 @@ public class Login
 		SFTP_Connection sftp = new SFTP_Connection(userField.getText(), passwordField.getText(),env);
 		SSH_Connection ssh = new SSH_Connection(userField.getText(), passwordField.getText(),env);
 
-		Thread t3 = new Thread(() -> ssh.sshConnect());
-		t3.start();
-
-		Thread t2 = new Thread(() -> sftp.sftpConnect());
-		t2.start();
-
 		Thread t1 = new Thread(() -> jdbc.jdbcConnect());
 		t1.start();
 
-		while (t1.isAlive() ||t2.isAlive() ||t3.isAlive()  ) {
-			//holds off until both are done...
+		if(app!=null && app.equals("football")){
+			while (t1.isAlive()) {
+				//holds off until its done...
+			}
 		}
+		else{
+			Thread t2 = new Thread(() -> sftp.sftpConnect());
+			t2.start();
+			Thread t3 = new Thread(() -> ssh.sshConnect());
+			t3.start();
+
+			while (t1.isAlive() ||t2.isAlive() ||t3.isAlive()  ) {
+				//holds off until both are done...
+			}
+		}
+
+
+
+
+
 
 		if(jdbc.connected()) {
 			frameLogin.dispose(); // hide login menu
@@ -71,6 +83,8 @@ public class Login
 				new ar_package.Main_Menu(jdbc.connection,sftp.connection,ssh.session,userField.getText(), JDBC_Connection.password,env);
 			else if(app.equals("git"))
 				new git_package.Main_Menu(new Function_Library());
+			else if(app.equals("football"))
+				new ar_package.Football_Menu  ( new ar_package.Function_Library(jdbc.connection,sftp.connection,ssh.session,userField.getText(),JDBC_Connection.password,env));;
 
 			if(chckbxSaveLogin.isSelected())
 				this.save();
@@ -83,6 +97,9 @@ public class Login
 			frameLogin.setVisible(true);
 		}
 	}
+
+
+
 
 	public String getEnv() {
 		return env;
@@ -189,7 +206,7 @@ public class Login
 				rdbtnTEST.setSelected(false);
 			}
 		});
-		
+
 		if (Encryption.readFile() != null){
 			Map<String, String> map = Encryption.readFile();
 			userField.setText(map.get("alpha"));

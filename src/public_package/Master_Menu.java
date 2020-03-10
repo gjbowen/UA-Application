@@ -28,7 +28,7 @@ public class Master_Menu
 	private Session ssh;
 	private final String firstName,userName,password;
 	private String env;
-	private JMenu option_button,environment_button,debug_button;
+//	private JMenu option_button,environment_button,debug_button;
     private JButton arProgram,btnConcur,btnGitProgram,btnFileFetchProgram;
 
 	public Master_Menu(Connection jdbc, String first, String userName, String password, SftpClient sftp, Session ssh, String env){
@@ -42,13 +42,12 @@ public class Master_Menu
 		initialize();
 		setButtons();
 	}
-	
-	private void addMenuBar() {
+
+	public JMenuBar getMenuBar(String env) {
 		// menu bar
 		JMenuItem m1,m3,m4,env_SEVL,env_TEST,env_PROD;
 		JMenuBar mb;
 		mb = new JMenuBar();
-		frameMenu.setJMenuBar(mb);
 
 		// item on menu bar
 		m4 = new JMenuItem("Sign Out");
@@ -60,9 +59,9 @@ public class Master_Menu
 		env_PROD = new JMenuItem("PROD");
 
 		// pop-up menus
-		option_button = new JMenu("Options");
-		environment_button = new JMenu("Change Sessions");
-		debug_button = new JMenu("Debug Mode");
+		JMenu option_button = new JMenu("Options");
+		JMenu environment_button = new JMenu("Change Sessions");
+		JMenu debug_button = new JMenu("Debug Mode");
 
 		// add item to the drop-downs
 		option_button.add(m4);
@@ -119,7 +118,7 @@ public class Master_Menu
 			Encryption.deleteFile();
 			Login window1 = new Login(null);
 		});
-		
+		return mb;
 	}
 	private void updateEnvironment(String env) {
 		this.env = env;
@@ -162,7 +161,7 @@ public class Master_Menu
 		frameMenu.setBounds(100, 100, 445, 336);
 		frameMenu.setDefaultCloseOperation(3);
 		frameMenu.getContentPane().setLayout(null);
-		addMenuBar();
+		frameMenu.setJMenuBar(getMenuBar(this.env));
 		
 		JButton button_exit = new JButton("Exit");
 		button_exit.setFont(new Font("Lucida Grande", 0, 15));

@@ -27,13 +27,11 @@ public class Main_Menu
 		environment=env;
 		fun = new Function_Library(conn_jdbc,conn_sftp,conn_ssh,user,pass,environment);
 		initialize();
-
-
 	}
 	private void openFootball() {
 		EventQueue.invokeLater(() -> {
 			try{
-				Football_Menu window = new Football_Menu(fun,environment);
+				Football_Menu window = new Football_Menu(fun);
 				window.frame.setVisible(true);
 				//frame.setVisible(false);
 			}
@@ -285,13 +283,15 @@ public class Main_Menu
 
 		JLabel lblCadence = new JLabel("Get Cadence Files");
 		lblCadence.setFont(new Font("Tahoma", Font.BOLD, 12));
-		lblCadence.setBounds(494, 105, 120, 14);
+		lblCadence.setBounds(494, 105, 150, 14);
 		frame.getContentPane().add(lblCadence);
 
 		JButton btnCadence_recent = new JButton("Recent");
 		btnCadence_recent.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		btnCadence_recent.setBounds(494, 125, 90, 65);
 		frame.getContentPane().add(btnCadence_recent);
+
+
 
 		btnCadence_recent.addActionListener(e -> {
 			JDialog dlgProgress;
@@ -362,6 +362,11 @@ public class Main_Menu
 			//frame.setVisible(false);
 		});
 
+		if(fun.ssh.session==null||fun.sftp.connection==null){
+			btnCadence_recent.setVisible(false);
+			btnCadence_all.setVisible(false);
+			lblCadence.setVisible(false);
+		}
 
 		button_exit.addActionListener(e -> System.exit(0));
 		frame.setVisible(true);

@@ -10,16 +10,16 @@ import java.time.format.DateTimeFormatter;
 import com.jcraft.jsch.Session;
 import com.sshtools.sftp.SftpClient;
 
-class Function_Library {
+public class Function_Library {
 	final String environment;
 	final String firstName;
-	final JDBC jdbc;
-	final SFTP sftp;
-	final SSH ssh;
+	JDBC jdbc;
+	SFTP sftp;
+	SSH ssh;
 	final String userName;
 
 	final String password;
-	Function_Library(Connection conn_jdbc, SftpClient conn_sftp, Session conn_ssh, String user, String pass, String env) {
+	public Function_Library(Connection conn_jdbc, SftpClient conn_sftp, Session conn_ssh, String user, String pass, String env) {
 		jdbc=new JDBC(conn_jdbc,user,pass,env);
 		sftp=new SFTP(conn_sftp,user,pass,env);
 		ssh =new SSH(conn_ssh,user,pass,env);

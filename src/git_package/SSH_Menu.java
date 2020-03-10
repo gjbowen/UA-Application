@@ -141,19 +141,20 @@ class SSH_Menu
 			}
 			else if(rbNew.isSelected()){
 				f.generateKeys(textField.getText().trim());
-				if(f.folderExists(f.getUserHome()+"\\.ssh")) {
+				if(f.folderExists(f.getUserHome()+"/.ssh")) {
 					int response;
 					String message;
-					if(f.folderExists("H:/.ssh"))
+					if(f.isWindows() && f.folderExists("H:/.ssh"))
 						message="SSH key files have been added to: \n"
 								+ "    "+f.getUserHome()+"\\.ssh \n"
 								+ "    H:\\.ssh \n\n";
 					else
 						message="SSH key files have been added to: \n"
-								+ "    "+f.getUserHome()+"\\.ssh \n";
+								+ "    "+f.getUserHome()+"/.ssh \n";
 					message = message
 							+"Key has been copied to clipboard to paste on the webpage. \n"
-							+ "The new key MUST be added to your Bitbucket account. "
+							+ "The new key MUST be added to your Bitbucket account: \n"
+							+ f.getBitBucketURL() +"\n"
 							+ "Would you like to add it now? \n\n";
 					response=f.okCancel(message);
 					if(response==0) {

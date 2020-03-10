@@ -182,7 +182,7 @@ public class Function_Library {
 		} else{
 			String command =
 					"cd \""+location+"\"\n" +
-					"git clone ssh://git@fisheye01.ua.edu:7999/ban/uabanner.git\n";
+							"git clone ssh://git@fisheye01.ua.edu:7999/ban/uabanner.git\n";
 			cmd(command);
 		}
 		System.err.println("Clone complete!");
@@ -191,18 +191,18 @@ public class Function_Library {
 	private void createBranch(String newBranch) {
 		if(hasRemoteBranch(newBranch))
 			cmd("cd \"" +	gitFolder +"\" && "
-							+ "git checkout prod && "
-							+ "git pull --progress -v --no-rebase \"origin\" prod && "
-							+ "git checkout -b " + newBranch + " && "
-							+ "git pull --progress -v --no-rebase \"origin\" "+newBranch +" && "
-							+ "exit ");
+					+ "git checkout prod && "
+					+ "git pull --progress -v --no-rebase \"origin\" prod && "
+					+ "git checkout -b " + newBranch + " && "
+					+ "git pull --progress -v --no-rebase \"origin\" "+newBranch +" && "
+					+ "exit ");
 		else
 			cmd("cd \"" +	gitFolder +"\" && "
-							+ "git checkout prod && "
-							+ "git pull --progress -v --no-rebase \"origin\" prod && "
-							+ "git checkout -b " + newBranch + " && "
-							//+ "git pull --no-rebase && "
-							+ "exit");
+					+ "git checkout prod && "
+					+ "git pull --progress -v --no-rebase \"origin\" prod && "
+					+ "git checkout -b " + newBranch + " && "
+					//+ "git pull --no-rebase && "
+					+ "exit");
 	}
 	public void switchBranch(String branch) {
 		if (!branch.equals(getCurrentBranch())) {
@@ -211,14 +211,14 @@ public class Function_Library {
 			else {
 				if(hasRemoteBranch(branch))
 					cmd("cd \"" +	gitFolder +"\" && "
-									+ "git checkout "+branch + " && "
-									+ "git pull --no-rebase \"origin\" "+branch+" && "
-									+ "exit");
+							+ "git checkout "+branch + " && "
+							+ "git pull --no-rebase \"origin\" "+branch+" && "
+							+ "exit");
 				else
 					cmd("cd \"" +	gitFolder +"\" && "
-									+ "git checkout "+branch + " && "
-									//+ "git pull --no-rebase \"origin\" "+switchedBranch+" && "
-									+ "exit");
+							+ "git checkout "+branch + " && "
+							//+ "git pull --no-rebase \"origin\" "+switchedBranch+" && "
+							+ "exit");
 			}
 		}
 	}
@@ -475,20 +475,17 @@ public class Function_Library {
 			} catch (IOException | URISyntaxException   e) {
 				e.printStackTrace();
 			}
-		else{
-			if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
-				try {
-					Desktop.getDesktop().browse(new URI(url));
-				} catch (IOException e) {
-					e.printStackTrace();
-				} catch (URISyntaxException e) {
-					e.printStackTrace();
-				}
+		else if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
+			try {
+				Desktop.getDesktop().browse(new URI(url));
+			} catch (IOException | URISyntaxException e) {
+				e.printStackTrace();
 			}
 		}
+
 	}
 	public void addSSHPage() {
-		openLink("http://fisheye01.ua.edu:7990/stash/plugins/servlet/ssh/account/keys/add");
+		openLink(getBitBucketURL());
 	}
 	private boolean hasRemoteBranch(String branch) {
 		return remoteBranches.contains(branch);
@@ -497,7 +494,9 @@ public class Function_Library {
 		File file = new File(gitFolder+"/.git/refs/heads/"+branch);
 		return file.exists();
 	}
-
+	protected String getBitBucketURL(){
+		return "http://fisheye01.ua.edu:7990/stash/plugins/servlet/ssh/account/keys/add";
+	}
 	public String getCurrentBranch() {
 		String line;
 		String branch = null;

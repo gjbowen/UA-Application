@@ -1,21 +1,15 @@
 package ar_package;
+import public_package.*;
+
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Toolkit;
+import java.sql.Connection;
 import java.util.ArrayList;
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.JSeparator;
-import javax.swing.JTextArea;
+import javax.swing.*;
 
-class Football_Menu
-{	
+public class Football_Menu {
 	JFrame frame;
 	private JTextField textField_name;
 	private JTextField textField_cwid;
@@ -24,12 +18,110 @@ class Football_Menu
 	private JTextField textField_email;
 	private JTextField textField_myBama;
 	private final Function_Library fun;
-	private final String environment;
+	private String environment;
 	private JTextField textField_year;
 
-	public Football_Menu(Function_Library function_lib, String mode){
-		environment=mode;
+	public Football_Menu(Function_Library function_lib){
+		environment=function_lib.environment;
 		fun = function_lib;
+		initialize();
+	}
+	public JMenuBar getMenuBar(String env) {
+		// menu bar
+		JMenuItem m1,m3,m4,env_SEVL,env_TEST,env_PROD;
+		JMenuBar mb;
+		mb = new JMenuBar();
+
+		// item on menu bar
+		m4 = new JMenuItem("Sign Out");
+		m1 = new JMenuItem("ENABLE");
+		m3 = new JMenuItem("DISABLE");
+
+		env_SEVL = new JMenuItem("SEVL");
+		env_TEST = new JMenuItem("TEST");
+		env_PROD = new JMenuItem("PROD");
+
+		// pop-up menus
+		JMenu option_button = new JMenu("Options");
+		JMenu environment_button = new JMenu("Change Sessions");
+		JMenu debug_button = new JMenu("Debug Mode");
+
+		// add item to the drop-downs
+		option_button.add(m4);
+
+		debug_button.add(m1);
+		debug_button.add(m3);
+		if(Preferences.contents.get("debug").equals("true")) {
+			m1.setEnabled(false);
+			m3.setEnabled(true);
+		}
+		else {
+			m1.setEnabled(true);
+			m3.setEnabled(false);
+		}
+		if(env.equals("SEVL")) {
+			environment_button.add(env_TEST);
+			environment_button.add(env_PROD);
+		}
+		if(env.equals("TEST")) {
+			environment_button.add(env_SEVL);
+			environment_button.add(env_PROD);
+		}
+		if(env.equals("PROD")) {
+			environment_button.add(env_SEVL);
+			environment_button.add(env_TEST);
+		}
+
+		// add an item to the menu bar
+		mb.add(option_button);
+		mb.add(environment_button);
+		mb.add(debug_button);
+
+		m1.addActionListener(arg0 -> {
+			m1.setEnabled(false);
+			m3.setEnabled(true);
+			public_package.Console console = new public_package.Console();
+			Preferences.addPreference("debug", "true");
+		});
+
+		m3.addActionListener(arg0 -> {
+			m1.setEnabled(true);
+			m3.setEnabled(false);
+			Preferences.addPreference("debug", "false");
+		});
+		// change environments
+		env_SEVL.addActionListener(arg0 -> updateEnvironment("SEVL"));
+		// change environments
+		env_TEST.addActionListener(arg0 -> updateEnvironment("TEST"));
+		// change environments
+		env_PROD.addActionListener(arg0 -> updateEnvironment("PROD"));
+		m4.addActionListener(arg0 -> {
+			frame.dispose();
+			Encryption.deleteFile();
+			Login window1 = new Login(null);
+		});
+		return mb;
+	}
+	private void updateEnvironment(String env) {
+		this.environment = env;
+
+		System.out.println("Switching to "+env+"..");
+
+		fun.jdbc =  new JDBC(null,fun.userName,fun.password,env);
+		fun.jdbc.jdbcConnect();
+
+		if(fun.sftp.connection!=null){
+			fun.sftp = new SFTP(null,fun.userName,fun.password,fun.environment);
+			fun.sftp.sftpConnect();
+		}
+		if(fun.ssh.session!=null) {
+			fun.ssh = new SSH(null,fun.userName,fun.password,fun.environment);
+			fun.ssh.sshConnect();;
+		}
+
+		frame.dispose();
+		Preferences.addPreference("environment", env);
+
 		initialize();
 	}
 
@@ -42,6 +134,7 @@ class Football_Menu
 		frame.setBounds(100, 100, 722, 553);
 		frame.setDefaultCloseOperation(3);
 		frame.getContentPane().setLayout(null);
+		frame.setJMenuBar(getMenuBar(environment));
 
 		JButton button_exit = new JButton("Exit");
 		button_exit.setFont(new Font("Lucida Grande", 0, 15));
@@ -82,7 +175,7 @@ class Football_Menu
 			textField_myBama.setText(values.get(4));
 		});
 		convertButton.setBounds(181, 387, 122, 23);
-		frame.getContentPane().add(convertButton);	
+		frame.getContentPane().add(convertButton);
 
 		textField_cwid = new JTextField();
 		textField_cwid.setText("");
@@ -167,13 +260,23 @@ class Football_Menu
 		separator_1.setBounds(14, 421, 682, 14);
 		frame.getContentPane().add(separator_1);
 
-		JButton btnClose = new JButton("Close");
-		btnClose.addActionListener(arg0 -> {
+		JButton btnAR = new JButton("AR");
+		btnAR.addActionListener(arg0 -> {
 			frame.dispose();
 		});
-		btnClose.setFont(new Font("Dialog", Font.PLAIN, 15));
-		btnClose.setBounds(574, 446, 122, 57);
-		frame.getContentPane().add(btnClose);
+		btnAR.setFont(new Font("Dialog", Font.PLAIN, 15));
+		btnAR.setBounds(574, 446, 122, 57);
+		frame.getContentPane().add(btnAR);
+		btnAR.addActionListener(e ->{
+			ar_package.Main_Menu window = new ar_package.Main_Menu(fun.jdbc.connection,
+					fun.sftp.connection,
+					fun.ssh.session,
+					fun.userName,
+					fun.password,
+					fun.environment);
+			window.frame.setVisible(true);
+		});
+
 
 		textField_year = new JTextField();
 		textField_year.setText(fun.jdbc.getFootballYear());
@@ -280,7 +383,7 @@ class Football_Menu
 		});
 		button_groups.setBounds(574, 93, 94, 23);
 		frame.getContentPane().add(button_groups);
-		
+
 		JButton button = new JButton("Games");
 		button.addActionListener(e -> {
 			String message = fun.jdbc.getFootballGames(textField_year.getText().trim());
@@ -295,7 +398,9 @@ class Football_Menu
 		});
 		button.setBounds(574, 143, 94, 23);
 		frame.getContentPane().add(button);
-
+		frame.setVisible(true);
 		button_exit.addActionListener(e -> System.exit(0));
+
+
 	}
 }
