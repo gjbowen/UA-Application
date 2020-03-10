@@ -9,11 +9,11 @@ import java.util.ArrayList;
 
 public class SSH_Connection {
     public Session session;
-    private final String host;
+    public String host;
     protected final String user;
     private final String password;
     protected String fileName;
-    protected SSH_Connection(String userName, String pass, String env) {
+    public SSH_Connection(String userName, String pass, String env) {
         host = getInstance(env);
         user = userName;
         password = pass;
@@ -36,7 +36,7 @@ public class SSH_Connection {
             e.printStackTrace();
         }
     }
-    private String getInstance(String environment) {
+    public String getInstance(String environment) {
         if (environment.equals("SEVL"))
             return "js-dev.ua.edu";
         else if (environment.equals("TEST"))

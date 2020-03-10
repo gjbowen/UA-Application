@@ -310,7 +310,7 @@ class JDBC extends public_package.JDBC_Connection{
 							row = rsmd.getColumnName(i)+" "+group+": "+result+" - "+group;
 						}
 						else {
-							System.out.println(rsmd.getColumnName(i));
+							//System.out.println(rsmd.getColumnName(i));
 							row = rsmd.getColumnName(i)+": "+result;
 						}
 					}
@@ -320,7 +320,7 @@ class JDBC extends public_package.JDBC_Connection{
 							row = row+"\n"+rsmd.getColumnName(i)+": "+result+" - "+group;
 						}
 						else {
-							System.out.println(rsmd.getColumnName(i));
+//							System.out.println(rsmd.getColumnName(i));
 							row = row+"\n"+rsmd.getColumnName(i)+": "+result;
 						}
 					}
@@ -431,7 +431,6 @@ class JDBC extends public_package.JDBC_Connection{
 						date_ordered = result;
 					else if(rsmd.getColumnName(i).trim().equals("OPT_IN_DATE"))
 						opt_in_date = result;
-
 				}
 			}
 			stmt.close();
@@ -484,7 +483,6 @@ class JDBC extends public_package.JDBC_Connection{
 			return "Freshman/transfer ordered package E and "+plan_purchased+".";
 		else if(group.equals("GRP15") && reg_number.equals(""))
 			return "Freshman/transfer ordered package E and can purchase an additional package.";
-
 		else
 			return "UNKNOWN/UNDEFINED REASON\n\n"+
 					"  group: "+group+"\n"+
@@ -534,7 +532,6 @@ class JDBC extends public_package.JDBC_Connection{
 		}
 		return null;
 	}
-
 
 	String getCategoryCodes(String code) {
 		Statement stmt;

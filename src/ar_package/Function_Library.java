@@ -11,7 +11,7 @@ import com.jcraft.jsch.Session;
 import com.sshtools.sftp.SftpClient;
 
 public class Function_Library {
-	final String environment;
+	String environment;
 	final String firstName;
 	JDBC jdbc;
 	SFTP sftp;

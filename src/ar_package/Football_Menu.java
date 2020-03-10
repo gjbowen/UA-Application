@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 import javax.swing.*;
 
-public class Football_Menu {
+public class Football_Menu{
 	JFrame frame;
 	private JTextField textField_name;
 	private JTextField textField_cwid;
@@ -18,15 +18,13 @@ public class Football_Menu {
 	private JTextField textField_email;
 	private JTextField textField_myBama;
 	private final Function_Library fun;
-	private String environment;
 	private JTextField textField_year;
-
 	public Football_Menu(Function_Library function_lib){
-		environment=function_lib.environment;
 		fun = function_lib;
 		initialize();
 	}
-	public JMenuBar getMenuBar(String env) {
+
+	public JMenuBar getMenuBar() {
 		// menu bar
 		JMenuItem m1,m3,m4,env_SEVL,env_TEST,env_PROD;
 		JMenuBar mb;
@@ -59,15 +57,16 @@ public class Football_Menu {
 			m1.setEnabled(true);
 			m3.setEnabled(false);
 		}
-		if(env.equals("SEVL")) {
+
+		if(fun.environment.equals("SEVL")) {
 			environment_button.add(env_TEST);
 			environment_button.add(env_PROD);
 		}
-		if(env.equals("TEST")) {
+		if(fun.environment.equals("TEST")) {
 			environment_button.add(env_SEVL);
 			environment_button.add(env_PROD);
 		}
-		if(env.equals("PROD")) {
+		if(fun.environment.equals("PROD")) {
 			environment_button.add(env_SEVL);
 			environment_button.add(env_TEST);
 		}
@@ -103,24 +102,34 @@ public class Football_Menu {
 		return mb;
 	}
 	private void updateEnvironment(String env) {
-		this.environment = env;
+		fun.environment = env;
 
 		System.out.println("Switching to "+env+"..");
 
-		fun.jdbc =  new JDBC(null,fun.userName,fun.password,env);
-		fun.jdbc.jdbcConnect();
-
-		if(fun.sftp.connection!=null){
-			fun.sftp = new SFTP(null,fun.userName,fun.password,fun.environment);
-			fun.sftp.sftpConnect();
-		}
-		if(fun.ssh.session!=null) {
-			fun.ssh = new SSH(null,fun.userName,fun.password,fun.environment);
-			fun.ssh.sshConnect();;
+		if(fun.jdbc!=null){
+			JDBC_Connection jdbc_connection =  new JDBC_Connection(fun.userName,fun.password,fun.environment);
+			jdbc_connection.jdbcConnect();
+			fun.jdbc.connection=jdbc_connection.connection;
+			fun.jdbc.environment=fun.environment;
 		}
 
+		if(fun.sftp!=null) {
+			SFTP_Connection sftp_connection = new SFTP_Connection(fun.userName, fun.password, fun.environment);
+			sftp_connection.sftpConnect();
+			//keep the object, update the variables
+			fun.sftp.connection = sftp_connection.connection;
+			fun.sftp.environment = fun.environment;
+		}
+
+		if(fun.ssh!=null) {
+			//use the parent for a new connection
+			SSH_Connection ssh_connection = new SSH_Connection(fun.userName, fun.password, fun.environment);
+			ssh_connection.sshConnect();
+			fun.ssh.session = ssh_connection.session;
+			fun.ssh.host = fun.ssh.getInstance(env);
+		}
 		frame.dispose();
-		Preferences.addPreference("environment", env);
+		Preferences.addPreference("environment", fun.environment);
 
 		initialize();
 	}
@@ -130,15 +139,15 @@ public class Football_Menu {
 		frame = new JFrame();
 		frame.getContentPane().setFont(new Font("Tahoma", Font.BOLD, 12));
 		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(Football_Menu.class.getResource("/Jar Files/ua_background_mobile.jpg")));
-		frame.setTitle("Football Menu ("+environment+") - Welcome, " + fun.firstName);
+		frame.setTitle("Football Menu ("+fun.environment+") - Welcome, " + fun.firstName);
 		frame.setBounds(100, 100, 722, 553);
 		frame.setDefaultCloseOperation(3);
 		frame.getContentPane().setLayout(null);
-		frame.setJMenuBar(getMenuBar(environment));
+		frame.setJMenuBar(getMenuBar());
 
 		JButton button_exit = new JButton("Exit");
 		button_exit.setFont(new Font("Lucida Grande", 0, 15));
-		button_exit.setBounds(14, 446, 122, 57);
+		button_exit.setBounds(14, 426, 122, 57);
 		frame.getContentPane().add(button_exit);
 
 		textField_name = new JTextField();
@@ -173,6 +182,8 @@ public class Football_Menu {
 			textField_name.setText(values.get(2));
 			textField_email.setText(values.get(3));
 			textField_myBama.setText(values.get(4));
+
+			textField_person.setText(values.get(1));
 		});
 		convertButton.setBounds(181, 387, 122, 23);
 		frame.getContentPane().add(convertButton);
@@ -260,23 +271,14 @@ public class Football_Menu {
 		separator_1.setBounds(14, 421, 682, 14);
 		frame.getContentPane().add(separator_1);
 
-		JButton btnAR = new JButton("AR");
-		btnAR.addActionListener(arg0 -> {
+		JButton btnClose = new JButton("Close");
+		btnClose.addActionListener(arg0 -> {
 			frame.dispose();
 		});
-		btnAR.setFont(new Font("Dialog", Font.PLAIN, 15));
-		btnAR.setBounds(574, 446, 122, 57);
-		frame.getContentPane().add(btnAR);
-		btnAR.addActionListener(e ->{
-			ar_package.Main_Menu window = new ar_package.Main_Menu(fun.jdbc.connection,
-					fun.sftp.connection,
-					fun.ssh.session,
-					fun.userName,
-					fun.password,
-					fun.environment);
-			window.frame.setVisible(true);
-		});
 
+		btnClose.setFont(new Font("Dialog", Font.PLAIN, 15));
+		btnClose.setBounds(574, 426, 122, 57);
+		frame.getContentPane().add(btnClose);
 
 		textField_year = new JTextField();
 		textField_year.setText(fun.jdbc.getFootballYear());
@@ -400,7 +402,5 @@ public class Football_Menu {
 		frame.getContentPane().add(button);
 		frame.setVisible(true);
 		button_exit.addActionListener(e -> System.exit(0));
-
-
 	}
 }

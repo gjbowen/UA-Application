@@ -7,9 +7,10 @@ import javax.swing.*;
 
 import com.jcraft.jsch.Session;
 import com.sshtools.sftp.SftpClient;
+import public_package.*;
 
 public class Main_Menu
-{	
+{
 	public JFrame frame;
 	private JTextField textField_name;
 	private JTextField textField_cwid;
@@ -20,14 +21,122 @@ public class Main_Menu
 	private JTextField textField_categoryCodes;
 	private JTextField textField_email;
 	private JTextField textField_myBama;
-	private final Function_Library fun;
-	private final String environment;
+	Function_Library fun;
 
 	public Main_Menu(Connection conn_jdbc, SftpClient conn_sftp, Session conn_ssh, String user, String pass, String env){
-		environment=env;
-		fun = new Function_Library(conn_jdbc,conn_sftp,conn_ssh,user,pass,environment);
+		fun = new Function_Library(conn_jdbc,conn_sftp,conn_ssh,user,pass,env);
 		initialize();
 	}
+	public JMenuBar getMenuBar() {
+		// menu bar
+		JMenuItem m1,m3,m4,env_SEVL,env_TEST,env_PROD;
+		JMenuBar mb;
+		mb = new JMenuBar();
+
+		// item on menu bar
+		m4 = new JMenuItem("Sign Out");
+		m1 = new JMenuItem("ENABLE");
+		m3 = new JMenuItem("DISABLE");
+
+		env_SEVL = new JMenuItem("SEVL");
+		env_TEST = new JMenuItem("TEST");
+		env_PROD = new JMenuItem("PROD");
+
+		// pop-up menus
+		JMenu option_button = new JMenu("Options");
+		JMenu environment_button = new JMenu("Change Sessions");
+		JMenu debug_button = new JMenu("Debug Mode");
+
+		// add item to the drop-downs
+		option_button.add(m4);
+
+		debug_button.add(m1);
+		debug_button.add(m3);
+		if(Preferences.contents.get("debug").equals("true")) {
+			m1.setEnabled(false);
+			m3.setEnabled(true);
+		}
+		else {
+			m1.setEnabled(true);
+			m3.setEnabled(false);
+		}
+
+		if(fun.environment.equals("SEVL")) {
+			environment_button.add(env_TEST);
+			environment_button.add(env_PROD);
+		}
+		if(fun.environment.equals("TEST")) {
+			environment_button.add(env_SEVL);
+			environment_button.add(env_PROD);
+		}
+		if(fun.environment.equals("PROD")) {
+			environment_button.add(env_SEVL);
+			environment_button.add(env_TEST);
+		}
+
+		// add an item to the menu bar
+		mb.add(option_button);
+		mb.add(environment_button);
+		mb.add(debug_button);
+
+		m1.addActionListener(arg0 -> {
+			m1.setEnabled(false);
+			m3.setEnabled(true);
+			public_package.Console console = new public_package.Console();
+			Preferences.addPreference("debug", "true");
+		});
+
+		m3.addActionListener(arg0 -> {
+			m1.setEnabled(true);
+			m3.setEnabled(false);
+			Preferences.addPreference("debug", "false");
+		});
+		// change environments
+		env_SEVL.addActionListener(arg0 -> updateEnvironment("SEVL"));
+		// change environments
+		env_TEST.addActionListener(arg0 -> updateEnvironment("TEST"));
+		// change environments
+		env_PROD.addActionListener(arg0 -> updateEnvironment("PROD"));
+		m4.addActionListener(arg0 -> {
+			frame.dispose();
+			Encryption.deleteFile();
+			Login window1 = new Login(null);
+		});
+		return mb;
+	}
+	private void updateEnvironment(String env) {
+		fun.environment = env;
+
+		System.out.println("Switching to "+env+"..");
+
+		if(fun.jdbc!=null){
+			JDBC_Connection jdbc_connection =  new JDBC_Connection(fun.userName,fun.password,fun.environment);
+			jdbc_connection.jdbcConnect();
+			fun.jdbc.connection=jdbc_connection.connection;
+			fun.jdbc.environment=fun.environment;
+		}
+
+		if(fun.sftp!=null) {
+			SFTP_Connection sftp_connection = new SFTP_Connection(fun.userName, fun.password, fun.environment);
+			sftp_connection.sftpConnect();
+			//keep the object, update the variables
+			fun.sftp.connection = sftp_connection.connection;
+			fun.sftp.environment = fun.environment;
+		}
+
+		if(fun.ssh!=null) {
+			//use the parent for a new connection
+			SSH_Connection ssh_connection = new SSH_Connection(fun.userName, fun.password, fun.environment);
+			ssh_connection.sshConnect();
+			fun.ssh.session = ssh_connection.session;
+			fun.ssh.host = fun.ssh.getInstance(env);
+		}
+		frame.dispose();
+		Preferences.addPreference("environment", fun.environment);
+
+		initialize();
+	}
+
 	private void openFootball() {
 		EventQueue.invokeLater(() -> {
 			try{
@@ -45,16 +154,17 @@ public class Main_Menu
 		frame = new JFrame();
 		frame.getContentPane().setFont(new Font("Tahoma", Font.BOLD, 12));
 		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(Main_Menu.class.getResource("/Jar Files/ua_background_mobile.jpg")));
-		frame.setTitle("Main Menu ("+environment+") - Welcome, " + fun.firstName);
+		frame.setTitle("Main Menu ("+fun.environment+") - Welcome, " + fun.firstName);
 		frame.setBounds(100, 100, 722, 457);
 		frame.setDefaultCloseOperation(3);
 		frame.getContentPane().setLayout(null);
+		frame.setJMenuBar(getMenuBar());
 		//
 		//frame.setVisible(true);
 		//
 		JButton button_exit = new JButton("Exit");
 		button_exit.setFont(new Font("Lucida Grande", 0, 15));
-		button_exit.setBounds(10, 350, 122, 57);
+		button_exit.setBounds(10, 330, 122, 57);
 		frame.getContentPane().add(button_exit);
 
 		textField_name = new JTextField();
@@ -91,7 +201,7 @@ public class Main_Menu
 			textField_myBama.setText(values.get(4));
 		});
 		convertButton.setBounds(177, 284, 122, 23);
-		frame.getContentPane().add(convertButton);	
+		frame.getContentPane().add(convertButton);
 
 		textField_cwid = new JTextField();
 		textField_cwid.setText("");
@@ -266,7 +376,7 @@ public class Main_Menu
 			});
 		});
 		btnClose.setFont(new Font("Dialog", Font.PLAIN, 15));
-		btnClose.setBounds(570, 350, 122, 57);
+		btnClose.setBounds(570, 330, 122, 57);
 		frame.getContentPane().add(btnClose);
 
 		JButton btnFootballStream = new JButton("Football Program");

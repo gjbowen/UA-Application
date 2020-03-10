@@ -11,12 +11,12 @@ import java.util.ArrayList;
 public class JDBC_Connection {
 	protected ResultSet rs;
 	public Connection connection;
-	private final String environment;
-	private final String username;
+	public String environment;
+	private String username;
 	static public String password;
 	String userFirstName;
 
-	protected JDBC_Connection(String user, String pass,String env) {
+	public JDBC_Connection(String user, String pass, String env) {
 		environment = env;
 		username = user;
 		password = pass;
